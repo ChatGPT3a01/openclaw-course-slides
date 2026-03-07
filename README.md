@@ -6,7 +6,8 @@
 
 **從安裝到全能 AI 助手——組裝你的 AI 超能力**
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-線上簡報-blue?style=for-the-badge&logo=github)](https://chatgpt3a01.github.io/openclaw-course-slides/)
+[![線上簡報](https://img.shields.io/badge/GitHub%20Pages-線上簡報-blue?style=for-the-badge&logo=github)](https://chatgpt3a01.github.io/openclaw-course-slides/)
+[![下載簡報](https://img.shields.io/badge/Download-下載ZIP-28A745?style=for-the-badge&logo=download)](https://github.com/ChatGPT3a01/openclaw-course-slides/archive/refs/heads/main.zip)
 [![License](https://img.shields.io/badge/授權-阿亮老師課程專用-red?style=for-the-badge)](https://github.com/ChatGPT3a01/openclaw-course-slides)
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
@@ -19,68 +20,70 @@
 
 ## 📖 簡報總覽
 
+> 點擊章節名稱可直接開啟線上簡報
+
 <table>
 <tr>
 <td width="50%">
 
-### 🔰 入門篇（CH0 – CH4）
+### 🔰 [入門篇](https://chatgpt3a01.github.io/openclaw-course-slides/part1-%E5%85%A5%E9%96%80%E7%AF%87.html)（CH0 – CH4）
 
-- 📌 CH0 認識 AI 自主代理
-- 📌 CH1 環境準備與帳號申請
-- 📌 CH2 Antigravity 快速上手
-- 📌 CH3 Claude Code 快速上手
-- 📌 CH4 三王聯手實戰練習
-
-</td>
-<td width="50%">
-
-### 📦 安裝篇（CH5 – CH8）
-
-- 📌 CH5 安裝 OpenClaw 三種方式
-- 📌 CH6 LINE 對話初體驗
-- 📌 CH7 Telegram 機器人
-- 📌 CH8 拍照辨識與視覺
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🖥️ 操作篇（CH9 – CH10）
-
-- ⚡ CH9 TUI / CLI / Dashboard
-- ⚡ CH10 龍蝦人格設定
+- 📌 [CH0 認識 AI 自主代理](https://chatgpt3a01.github.io/openclaw-course-slides/ch00.html)
+- 📌 [CH1 環境準備與帳號申請](https://chatgpt3a01.github.io/openclaw-course-slides/ch01.html)
+- 📌 [CH2 Antigravity 快速上手](https://chatgpt3a01.github.io/openclaw-course-slides/ch02.html)
+- 📌 [CH3 Claude Code 快速上手](https://chatgpt3a01.github.io/openclaw-course-slides/ch03.html)
+- 📌 [CH4 三王聯手實戰練習](https://chatgpt3a01.github.io/openclaw-course-slides/ch04.html)
 
 </td>
 <td width="50%">
 
-### 🌐 通道篇（CH11 – CH14）
+### 📦 [安裝篇](https://chatgpt3a01.github.io/openclaw-course-slides/part2-%E5%AE%89%E8%A3%9D%E7%AF%87.html)（CH5 – CH8）
 
-- ⚡ CH11 LINE 進階設定
-- ⚡ CH12 Cloudflare 正式域名
-- ⚡ CH13 更多通道串接
-- ⚡ CH14 多重分身術
+- 📌 [CH5 安裝 OpenClaw 三種方式](https://chatgpt3a01.github.io/openclaw-course-slides/ch05.html)
+- 📌 [CH6 LINE 對話初體驗](https://chatgpt3a01.github.io/openclaw-course-slides/ch06.html)
+- 📌 [CH7 Telegram 機器人](https://chatgpt3a01.github.io/openclaw-course-slides/ch07.html)
+- 📌 [CH8 拍照辨識與視覺](https://chatgpt3a01.github.io/openclaw-course-slides/ch08.html)
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 🧩 技能篇（CH15 – CH17）
+### 🖥️ [操作篇](https://chatgpt3a01.github.io/openclaw-course-slides/part3-%E6%93%8D%E4%BD%9C%E7%AF%87.html)（CH9 – CH10）
 
-- 🚀 CH15 Skills 生態系
-- 🚀 CH16 生活應用技能
-- 🚀 CH17 技能開發實戰
+- ⚡ [CH9 TUI / CLI / Dashboard](https://chatgpt3a01.github.io/openclaw-course-slides/ch09.html)
+- ⚡ [CH10 龍蝦人格設定](https://chatgpt3a01.github.io/openclaw-course-slides/ch10.html)
 
 </td>
 <td width="50%">
 
-### 🚀 進階篇（CH18 – CH21）
+### 🌐 [通道篇](https://chatgpt3a01.github.io/openclaw-course-slides/part4-%E9%80%9A%E9%81%93%E7%AF%87.html)（CH11 – CH14）
 
-- 🚀 CH18 控制電腦
-- 🚀 CH19 多機協作 Nodes
-- 🚀 CH20 語音通話 Twilio
-- 🚀 CH21 自動化與排程
+- ⚡ [CH11 LINE 進階設定](https://chatgpt3a01.github.io/openclaw-course-slides/ch11.html)
+- ⚡ [CH12 Cloudflare 正式域名](https://chatgpt3a01.github.io/openclaw-course-slides/ch12.html)
+- ⚡ [CH13 更多通道串接](https://chatgpt3a01.github.io/openclaw-course-slides/ch13.html)
+- ⚡ [CH14 多重分身術](https://chatgpt3a01.github.io/openclaw-course-slides/ch14.html)
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🧩 [技能篇](https://chatgpt3a01.github.io/openclaw-course-slides/part5-%E6%8A%80%E8%83%BD%E7%AF%87.html)（CH15 – CH17）
+
+- 🚀 [CH15 Skills 生態系](https://chatgpt3a01.github.io/openclaw-course-slides/ch15.html)
+- 🚀 [CH16 生活應用技能](https://chatgpt3a01.github.io/openclaw-course-slides/ch16.html)
+- 🚀 [CH17 技能開發實戰](https://chatgpt3a01.github.io/openclaw-course-slides/ch17.html)
+
+</td>
+<td width="50%">
+
+### 🚀 [進階篇](https://chatgpt3a01.github.io/openclaw-course-slides/part6-%E9%80%B2%E9%9A%8E%E7%AF%87.html)（CH18 – CH21）
+
+- 🚀 [CH18 控制電腦](https://chatgpt3a01.github.io/openclaw-course-slides/ch18.html)
+- 🚀 [CH19 多機協作 Nodes](https://chatgpt3a01.github.io/openclaw-course-slides/ch19.html)
+- 🚀 [CH20 語音通話 Twilio](https://chatgpt3a01.github.io/openclaw-course-slides/ch20.html)
+- 🚀 [CH21 自動化與排程](https://chatgpt3a01.github.io/openclaw-course-slides/ch21.html)
 
 </td>
 </tr>
@@ -117,6 +120,20 @@ openclaw-course-slides/
 ├── images/CH00 ~ CH21/               ← 截圖資源
 └── README.md
 ```
+
+---
+
+## 🔗 相關資源
+
+| 資源 | 說明 | 連結 |
+|:---:|:---|:---:|
+| 🦞 **龍蝦佈署教學** | OpenClaw 完整安裝指南與教學文件 | [前往 →](https://github.com/ChatGPT3a01/Moltbot-Tutorial) |
+| 🎭 **龍蝦人格生成器** | 線上工具：自訂龍蝦 AI 的世界觀與人格 | [前往 →](https://chatgpt3a01.github.io/lobster-workspace-generator/) |
+| 🧩 **AI Skill 工作坊** | AI 技能擴充包與教學資源 | [前往 →](https://github.com/ChatGPT3a01/AI-Skill-Workshop) |
+| 📊 **HTML 簡報製作教學** | AI 協作簡報實戰：從手繪到上線 | [前往 →](https://github.com/ChatGPT3a01/html-slides-workshop) |
+| 📚 **NotebookLM 課程** | NotebookLM AI 全能智慧王完整教材 | [前往 →](https://github.com/ChatGPT3a01/NotebookLM-AI-Course) |
+| 🎵 **Gemini 音樂生成** | Gemini AI 作曲完整教學 | [前往 →](https://github.com/ChatGPT3a01/Gemini-Music-Generation-Tutorial) |
+| 🤖 **GAS LINE Bot** | Google Apps Script 自動化 LINE Bot | [前往 →](https://github.com/ChatGPT3a01/GAS-Automation-LineBot) |
 
 ---
 
