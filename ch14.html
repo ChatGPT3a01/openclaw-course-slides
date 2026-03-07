@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH14 多重分身</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH14 — 多重分身</div>
+        <div class="nav-buttons">
+            <a href="part4-通道篇.html" class="nav-btn">🌐 通道篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch13.html" class="nav-btn">⬅️ CH13</a>
+            <a href="ch15.html" class="nav-btn">CH15 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🦞🦞🦞</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH14 | 多重分身</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    一隻龍蝦當工作秘書、一隻當學習夥伴、一隻當英文教師——多隻龍蝦各自有不同人設與專長，各司其職
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>理解「一隻龍蝦守多通道」和「多隻龍蝦」的差別</li>
+                        <li>學會設定多個 OpenClaw 實例</li>
+                        <li>了解跨頻道記憶與訊息路由的運作方式</li>
+                        <li>實戰建立一個「雙龍蝦」系統</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 目前架構的問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.1 一隻龍蝦守多個頻道</h2>
+                <p>到目前為止，不管是 LINE、Telegram 還是 Discord，背後都是<strong>同一隻龍蝦</strong>、同一個人設、同一套記憶。</p>
+
+                <img src="images/CH14/ch14_01_multi_gateway_diagram.png" alt="多重分身架構圖" class="screenshot">
+
+                <pre>
+LINE ──────┐
+           │
+Telegram ──┼── 龍蝦（一個 Gateway、一套人設、一個 AI 大腦）
+           │
+Discord ───┘</pre>
+
+                <h3>這樣有什麼問題？</h3>
+                <table>
+                    <tr><th>情境</th><th>問題</th></tr>
+                    <tr><td>工作群組用龍蝦，語氣太輕鬆</td><td>一套人設無法同時正式又輕鬆</td></tr>
+                    <tr><td>給家人用，不想讓他們看到工作記憶</td><td>一套記憶沒辦法分人顯示</td></tr>
+                    <tr><td>想用不同 AI 模型處理不同的事</td><td>一隻龍蝦只能設一個模型</td></tr>
+                    <tr><td>英文助手用英文、中文助手用中文</td><td>一份 IDENTITY.md 只能設一種語言</td></tr>
+                </table>
+
+                <div class="box warning">
+                    ⚡ 這時候，你就需要「多重分身」——同時跑多隻龍蝦，每隻有獨立的設定。
+                </div>
+                <span class="slide-number">2 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: 多重分身的概念 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.2 多隻龍蝦各司其職</h2>
+                <p>多重分身的概念很直覺：在電腦上跑<strong>多個 OpenClaw Gateway</strong>，每個 Gateway 有自己的設定。</p>
+
+                <pre>
+LINE Bot A ─── Gateway A（port 18789）─── 工作秘書人設
+                                          AI: GPT-5.2
+
+LINE Bot B ─── Gateway B（port 18790）─── 學習夥伴人設
+                                          AI: Gemini 3 Flash
+
+Telegram ──── Gateway C（port 18791）─── 英文教師人設
+                                          AI: Claude Sonnet 4.6</pre>
+
+                <h3>每隻龍蝦獨立擁有</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📄 設定檔</h3>
+                        <p>不同的 <code>openclaw.json</code></p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🏠 工作區</h3>
+                        <p>不同的 IDENTITY.md、SOUL.md</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📡 通道連線</h3>
+                        <p>不同的 LINE Bot / Telegram Bot</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🧠 AI 模型</h3>
+                        <p>可以用不同的模型</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🔌 埠號</h3>
+                        <p>每個 Gateway 用不同的 port</p>
+                    </div>
+                </div>
+                <span class="slide-number">3 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 設定多個工作區 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.2 設定多個工作區與設定檔</h2>
+
+                <h3>建立第二隻龍蝦的工作區</h3>
+                <pre># 建立新的工作區資料夾
+mkdir C:\Users\你的名稱\.openclaw\workspace-work
+
+# 複製預設工作區的檔案當範本
+Copy-Item C:\Users\你的名稱\.openclaw\workspace\* `
+    C:\Users\你的名稱\.openclaw\workspace-work\ -Recurse</pre>
+
+                <img src="images/CH14/ch14_02_workspace_folders.png" alt="多工作區資料夾" class="screenshot">
+
+                <h3>建立第二份設定檔</h3>
+                <pre># 複製一份設定檔
+Copy-Item C:\Users\你的名稱\.openclaw\openclaw.json `
+    C:\Users\你的名稱\.openclaw\openclaw-work.json</pre>
+
+                <p>修改 <code>openclaw-work.json</code> 的內容：</p>
+                <ul>
+                    <li><strong>Gateway 埠號</strong>——改成 <code>18790</code>（不能跟第一隻一樣）</li>
+                    <li><strong>LINE Channel 資訊</strong>——換成第二個 LINE Bot 的 Channel ID、Secret、Token</li>
+                    <li><strong>AI 模型</strong>——可以用不同的模型</li>
+                    <li><strong>工作區路徑</strong>——指向 <code>workspace-work</code></li>
+                </ul>
+                <span class="slide-number">4 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 啟動多隻龍蝦 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.2 啟動多隻龍蝦</h2>
+
+                <pre># 第一隻（預設）
+openclaw gateway start
+
+# 第二隻（指定設定檔）
+openclaw gateway start --config C:\Users\你的名稱\.openclaw\openclaw-work.json</pre>
+
+                <p>兩隻龍蝦會分別在不同的埠號上運行。如果你用 Cloudflare Tunnel（CH12），需要為每隻龍蝦設定不同的子域名。</p>
+
+                <div class="box info">
+                    💡 <strong>資源佔用很低</strong>：每隻龍蝦的 Gateway 大約佔 100-200MB 記憶體。8GB RAM 的電腦同時跑 2-3 隻完全沒問題。真正消耗資源的是 AI 模型的 API 呼叫（在雲端處理）。
+                </div>
+
+                <h3>你需要準備的東西</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="concept-card">
+                        <h3>📱 多個 LINE Bot</h3>
+                        <p>回到 LINE Developers Console 多建幾個 Messaging API Channel</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📁 多個工作區資料夾</h3>
+                        <p>每隻龍蝦有自己的一套設定檔（IDENTITY.md 等）</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔌 不同的埠號</h3>
+                        <p>每個 Gateway 用不同的 port（18789、18790、18791...）</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔑 可共用 API Key</h3>
+                        <p>多隻龍蝦可以共用同一個 AI API Key，費用合併計算</p>
+                    </div>
+                </div>
+                <span class="slide-number">5 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 跨頻道記憶與訊息路由 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.3 跨頻道記憶與訊息路由</h2>
+
+                <h3>多隻龍蝦之間的記憶</h3>
+                <p>每隻龍蝦有自己的工作區，所以它們的記憶是<strong>完全獨立的</strong>。你跟工作秘書龍蝦說的話，學習夥伴龍蝦不會知道。</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>🔗 共用 USER.md</h3>
+                        <p>用符號連結（symlink）讓多個工作區共享同一份 USER.md，讓龍蝦們都知道你是誰</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🧠 共用 MEMORY.md</h3>
+                        <p>讓多隻龍蝦共享長期記憶（要小心隱私問題）</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔒 各自獨立</h3>
+                        <p>最安全的做法，完全不共享，工作與生活分開</p>
+                    </div>
+                </div>
+
+                <h3>建立符號連結（Windows）</h3>
+                <pre># 讓第二隻龍蝦的 USER.md 指向第一隻的
+New-Item -ItemType SymbolicLink `
+    -Path "C:\Users\你的名稱\.openclaw\workspace-work\USER.md" `
+    -Target "C:\Users\你的名稱\.openclaw\workspace\USER.md" -Force</pre>
+
+                <h3>訊息路由</h3>
+                <p>每個通道連到哪隻龍蝦，訊息就去哪。使用者感知不到背後有多隻龍蝦——他們只是在跟不同的 Bot 聊天。</p>
+                <span class="slide-number">6 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 模式切換（同一隻龍蝦） -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.3 同一隻龍蝦也能切換風格</h2>
+                <p>如果你只有一個 LINE Bot，但想在不同情境切換人設，可以用<strong>「模式切換」</strong>——在同一隻龍蝦裡切換不同的行為風格。</p>
+
+                <pre style="background: #f8f9fa; color: #333;">
+你：切換到工作模式
+龍蝦：好的，我現在切換到工作秘書模式。有什麼需要幫忙的？</pre>
+
+                <h3>在 IDENTITY.md 裡定義多種模式</h3>
+                <pre>## 模式
+
+### 日常模式（預設）
+- 語氣輕鬆、像朋友聊天
+- 可以開玩笑
+
+### 工作模式
+- 語氣正式、有條理
+- 回覆注重效率
+
+### 學習模式
+- 有耐心、循序漸進
+- 會出小測驗
+
+當使用者說「切換到 XX 模式」，就切換到對應的風格。</pre>
+
+                <div class="box info">
+                    💡 這比跑多隻龍蝦<strong>簡單得多</strong>，適合「不想搞太複雜但想有不同風格」的使用者。
+                </div>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>😊 日常模式</h3>
+                        <p>輕鬆聊天、開玩笑</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>💼 工作模式</h3>
+                        <p>正式、有條理、高效率</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📚 學習模式</h3>
+                        <p>耐心、循序漸進、出題</p>
+                    </div>
+                </div>
+                <span class="slide-number">7 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 實戰雙龍蝦系統 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.4 實戰：建立雙龍蝦系統</h2>
+
+                <table>
+                    <tr><th></th><th>🦞 龍蝦 A：小蝦（生活助手）</th><th>🦞 龍蝦 B：龍蝦秘書（工作助手）</th></tr>
+                    <tr><td><strong>通道</strong></td><td>LINE Bot A</td><td>LINE Bot B</td></tr>
+                    <tr><td><strong>人設</strong></td><td>輕鬆、幽默、愛聊天</td><td>專業、有條理、效率導向</td></tr>
+                    <tr><td><strong>AI 模型</strong></td><td>Gemini 3 Flash（免費、快）</td><td>GPT-5.2（高品質）</td></tr>
+                    <tr><td><strong>埠號</strong></td><td>18789</td><td>18790</td></tr>
+                    <tr><td><strong>用途</strong></td><td>查天氣、找餐廳、聊天</td><td>寫報告、整理資料、行程管理</td></tr>
+                </table>
+
+                <img src="images/CH14/ch14_03_dual_lobster_chat.png" alt="雙龍蝦聊天" class="screenshot">
+
+                <h3>完整步驟</h3>
+                <ol>
+                    <li>在 LINE Developers Console 建立第二個 Messaging API Channel</li>
+                    <li>建立新工作區 <code>workspace-work</code> + 新設定檔 <code>openclaw-work.json</code></li>
+                    <li>修改 IDENTITY.md 為工作秘書人設，修改設定檔（埠號、Channel 資訊、AI 模型）</li>
+                    <li>設定 Cloudflare Tunnel 第二條路由（或用 ngrok）</li>
+                    <li>啟動兩隻龍蝦並分別測試</li>
+                </ol>
+                <span class="slide-number">8 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: Cloudflare 多路由 + 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>14.4 Cloudflare 多路由設定 + 常見問題</h2>
+
+                <h3>Cloudflare Tunnel 設定多條路由</h3>
+                <pre>ingress:
+  - hostname: bot.mylobster.xyz
+    service: http://localhost:18789
+  - hostname: work.mylobster.xyz
+    service: http://localhost:18790
+  - service: http_status:404</pre>
+
+                <pre># DNS 路由設定
+cloudflared tunnel route dns lobster work.mylobster.xyz
+
+# LINE Developers Console
+# 第二個 Bot 的 Webhook URL：
+# https://work.mylobster.xyz/line/webhook</pre>
+
+                <h3>常見問題</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                    <div class="concept-card">
+                        <h3>🔑 共用 API Key？</h3>
+                        <p>可以。API Key 跟 AI 服務商帳號綁定，不是跟龍蝦綁定。費用合併計算。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📱 一個 Bot 跑多隻？</h3>
+                        <p>不行。一個 LINE Bot 只能連一個 Webhook URL。想用多隻就需要多個 Bot，或用「模式切換」。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔐 配對獨立嗎？</h3>
+                        <p>是的。每隻龍蝦有自己的配對系統，兩邊都需要各自完成配對。</p>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">14.6 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr); text-align: left;">
+                    <div class="concept-card">
+                        <h3>🦞 一隻守多通道</h3>
+                        <p>最簡單，適合大部分人。一隻龍蝦同時回覆 LINE、Telegram、Discord。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔄 模式切換</h3>
+                        <p>中等複雜度。在同一隻龍蝦裡切換不同風格——日常、工作、學習模式。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🦞🦞 多隻各司其職</h3>
+                        <p>最靈活。完全獨立的設定、記憶和通道，適合進階用戶。</p>
+                    </div>
+                </div>
+
+                <div class="box info" style="text-align: left; margin-top: 20px;">
+                    <p><strong>通道篇完結！</strong>你的龍蝦現在可以：</p>
+                    <ul style="margin-bottom: 0;">
+                        <li>住在各種平台上（CH13 更多通道）</li>
+                        <li>有正式的網址（CH12 Cloudflare Tunnel）</li>
+                        <li>有漂亮的介面（CH11 LINE 進階設定）</li>
+                        <li>有多重分身（CH14 本章）</li>
+                    </ul>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 20px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH15 Skills 生態系</strong><br>
+                    進入第五篇「技能篇」！OpenClaw 有一個強大的 <strong>Skills（技能）系統</strong>，可以讓龍蝦學會各種新本領——天氣查詢、Email 管理、日曆整合、AI 拍照......看看龍蝦還能變得多強！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch15.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH15 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">10 / 10</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

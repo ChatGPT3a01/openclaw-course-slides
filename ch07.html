@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH7 Telegram 對話教學</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH7 — Telegram 對話教學</div>
+        <div class="nav-buttons">
+            <a href="part2-安裝篇.html" class="nav-btn">📦 安裝篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch06.html" class="nav-btn">⬅️ CH6</a>
+            <a href="ch08.html" class="nav-btn">CH8 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">✈️</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH7 | Telegram 對話教學</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    讓龍蝦多一個家——用 Telegram 和龍蝦聊天，體驗比 LINE 更快速的 Bot 設定流程與獨家功能
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>了解 Telegram 和 LINE 在機器人功能上的差異</li>
+                        <li>用 BotFather 在一分鐘內建立 Telegram 機器人</li>
+                        <li>將 Telegram 連接到 OpenClaw，同時支援 LINE 和 Telegram</li>
+                        <li>熟悉 Telegram 獨有的 Bot 功能（指令選單、群組、Inline 模式）</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Telegram vs LINE 比較 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.1 Telegram 有什麼不一樣？</h2>
+                <p>LINE 是你服務別人的主力平台（台灣人都用），<strong>Telegram 是你自己測試和開發的最佳遊樂場</strong>（設定快、限制少、功能多）。兩個都學起來，是最理想的組合。</p>
+
+                <table>
+                    <tr><th>比較項目</th><th>Telegram</th><th>LINE</th></tr>
+                    <tr><td>建立 Bot 要多久</td><td>1 分鐘（和 BotFather 聊三句話）</td><td>15-20 分鐘（開發者帳號 + Channel 設定）</td></tr>
+                    <tr><td>需要開發者帳號嗎</td><td>不需要</td><td>需要（LINE Developers）</td></tr>
+                    <tr><td>需要填表單嗎</td><td>不需要</td><td>需要（而且欄位不少）</td></tr>
+                    <tr><td>自動回覆衝突</td><td>不會發生</td><td>需要手動關閉</td></tr>
+                    <tr><td>指令選單</td><td>內建（按 <code>/</code> 自動列出）</td><td>需要額外設定 Rich Menu</td></tr>
+                    <tr><td>群組中使用 Bot</td><td>簡單（直接 <code>@</code> 呼叫）</td><td>需要邀請加入 + 額外設定</td></tr>
+                    <tr><td>傳送檔案限制</td><td>最大 2GB</td><td>最大 200MB</td></tr>
+                    <tr><td>Webhook 設定</td><td>自動（外掛幫你搞定）</td><td>手動（要去 Console 填 URL）</td></tr>
+                    <tr><td>台灣用戶數</td><td>較少</td><td>極多（幾乎人人有）</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 <strong>一句話總結</strong>：LINE 是服務別人的主力平台，Telegram 是自己開發測試的最佳遊樂場。兩個都學起來最理想！
+                </div>
+                <span class="slide-number">2 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: 安裝 Telegram + 找到 BotFather -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.2 安裝 Telegram & 找到 BotFather</h2>
+
+                <h3>安裝 Telegram</h3>
+                <p>Telegram 支援幾乎所有平台，建議同時在手機和電腦上安裝：</p>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>📱 手機版</h3>
+                        <p>App Store（iPhone）或 Google Play（Android）搜尋「Telegram」下載</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💻 電腦版</h3>
+                        <p><code>desktop.telegram.org</code><br>打指令比較方便</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌐 網頁版</h3>
+                        <p><code>web.telegram.org</code><br>不想裝軟體也行</p>
+                    </div>
+                </div>
+
+                <h3>找到 BotFather</h3>
+                <p>BotFather 是 Telegram 官方的「機器人管理機器人」——你透過和 BotFather 聊天來建立和管理你的機器人。</p>
+                <p><strong>【步驟 1】</strong> 打開 Telegram，在搜尋欄輸入 <code>@BotFather</code>，找到有<strong>藍色勾勾認證</strong>的帳號。</p>
+
+                <img src="images/CH07/ch07_01_botfather_search.png" alt="BotFather 搜尋" class="screenshot">
+
+                <div class="box warning">
+                    ⚠️ <strong>一定要認準藍色勾勾！</strong>Telegram 上有很多冒牌的 BotFather。如果加錯帳號，Bot Token 可能會被盜用。
+                </div>
+
+                <p><strong>【步驟 2】</strong> 點進 BotFather，按底部的 <strong>「START」</strong> 按鈕開始對話。</p>
+                <span class="slide-number">3 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 建立你的機器人 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.3 用 BotFather 建立機器人</h2>
+                <p>整個過程就像在餐廳點餐——你跟服務生說你要什麼，服務生幫你準備好。<strong>三句對話，不到一分鐘</strong>。</p>
+
+                <img src="images/CH07/ch07_02_botfather_create.png" alt="BotFather 建立機器人" class="screenshot">
+
+                <h3>步驟流程</h3>
+                <table>
+                    <tr><th>步驟</th><th>你做的事</th><th>BotFather 的回應</th></tr>
+                    <tr><td><strong>步驟 3</strong></td><td>輸入 <code>/newbot</code></td><td>問你機器人的顯示名稱</td></tr>
+                    <tr><td><strong>步驟 4</strong></td><td>輸入顯示名稱（可中文）<br>例如：<code>龍蝦小助手</code></td><td>問你機器人的 username</td></tr>
+                    <tr><td><strong>步驟 5</strong></td><td>輸入英文 username（必須以 <code>bot</code> 結尾）<br>例如：<code>my_lobster_ai_bot</code></td><td>恭喜！給你 Bot Token</td></tr>
+                </table>
+
+                <h3>取得 Bot Token</h3>
+                <pre>7123456789:AAHxxx-xxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
+                <p>這串 Token 就是你機器人的「鑰匙」。<strong>請立刻複製存到帳號清單裡</strong>。</p>
+
+                <div class="box warning">
+                    ⚠️ <strong>Bot Token 就像你家鑰匙</strong>——絕對不要貼在公開的地方（GitHub、部落格、社群）。如果洩漏了，回到 BotFather 輸入 <code>/revoke</code> 重新產生一組新的。
+                </div>
+                <span class="slide-number">4 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 設定機器人資訊 + 連接 OpenClaw -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.4 將 Telegram 連接到 OpenClaw</h2>
+
+                <h3>選用：設定機器人額外資訊</h3>
+                <table>
+                    <tr><th>BotFather 指令</th><th>用途</th></tr>
+                    <tr><td><code>/setdescription</code></td><td>設定機器人的簡介（搜尋到時會看到）</td></tr>
+                    <tr><td><code>/setabouttext</code></td><td>設定「關於」頁面的文字</td></tr>
+                    <tr><td><code>/setuserpic</code></td><td>上傳機器人的大頭照</td></tr>
+                    <tr><td><code>/setcommands</code></td><td>設定指令選單（按 <code>/</code> 就能看到所有指令）</td></tr>
+                </table>
+
+                <h3>安裝 Telegram 外掛 + 設定 Token</h3>
+                <p>只需要<strong>兩個指令</strong>就完成連接：</p>
+                <pre>
+# 步驟 1：安裝 Telegram 外掛
+openclaw plugins install @openclaw/telegram
+
+# 步驟 2：設定 Bot Token
+openclaw config set channels.telegram.botToken "你的Bot Token"
+
+# 步驟 3：重啟龍蝦
+openclaw gateway restart</pre>
+
+                <div class="box info">
+                    💡 <strong>為什麼只要一個 Token？</strong>LINE 需要設定 Channel ID、Channel Secret、Channel Access Token 三個值。Telegram 架構更簡潔——一個 Bot Token 就包含所有驗證資訊。
+                </div>
+
+                <h3>Webhook 自動設定</h3>
+                <p>Telegram 外掛啟動時會<strong>自動</strong>幫你設定好 Webhook。不需要像 LINE 那樣手動填 URL。外掛會偵測你的對外網址（ngrok / Cloudflare Tunnel / Codespaces），然後自動註冊。</p>
+                <span class="slide-number">5 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 第一次 Telegram 對話 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.5 第一次 Telegram 對話</h2>
+
+                <img src="images/CH07/ch07_03_telegram_chat.png" alt="Telegram 首次對話" class="screenshot">
+
+                <h3>對話流程</h3>
+                <table>
+                    <tr><th>步驟</th><th>操作</th><th>說明</th></tr>
+                    <tr><td><strong>步驟 1</strong></td><td>搜尋你的機器人 username</td><td>例如 <code>@my_lobster_ai_bot</code></td></tr>
+                    <tr><td><strong>步驟 2</strong></td><td>點擊「START」按鈕</td><td>開始和機器人的對話</td></tr>
+                    <tr><td><strong>步驟 3</strong></td><td>完成配對</td><td>龍蝦回覆配對碼，到終端機執行：<br><code>openclaw pairing approve telegram 配對碼</code></td></tr>
+                    <tr><td><strong>步驟 4</strong></td><td>再傳一次訊息</td><td>龍蝦正常回覆你了！</td></tr>
+                </table>
+
+                <h3>試試各種對話</h3>
+                <p>你在 CH6 學到的所有對話方式——文字聊天、任務型對話、角色扮演、多輪修改——在 Telegram 上<strong>全部都能用</strong>。</p>
+                <pre>
+你好，我從 Telegram 找你
+
+幫我列出五個台北的必去景點
+
+把上面的清單翻成英文</pre>
+
+                <div class="box success">
+                    ✅ 龍蝦是同一隻龍蝦，只是換了一個窗口和你聊天。回覆和在 LINE 上一樣流暢自然。
+                </div>
+                <span class="slide-number">6 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: Telegram 獨有功能 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.6 Telegram 獨有的好用功能</h2>
+                <p>這些是 LINE Bot 做不到（或做起來很麻煩）的功能：</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="concept-card">
+                        <h3>📋 斜線指令選單</h3>
+                        <p>在輸入框打 <code>/</code>，指令選單自動彈出。所有可用指令一目了然，不用背，點一下就執行。</p>
+                        <table style="font-size: 16px; margin-top: 10px;">
+                            <tr><th>指令</th><th>功能</th></tr>
+                            <tr><td><code>/start</code></td><td>開始對話</td></tr>
+                            <tr><td><code>/help</code></td><td>使用說明</td></tr>
+                            <tr><td><code>/status</code></td><td>運行狀態</td></tr>
+                            <tr><td><code>/clear</code></td><td>清除記錄</td></tr>
+                        </table>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👥 群組中使用龍蝦</h3>
+                        <p>把龍蝦加入群組，用 <code>@</code> 呼叫：</p>
+                        <pre style="font-size: 14px; padding: 12px;">@my_lobster_ai_bot 明天台北天氣如何？</pre>
+                        <p style="font-size: 16px;">群組裡每個人都能呼叫龍蝦，每個人的對話是獨立的，龍蝦不會搞混。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✨ Inline 模式</h3>
+                        <p>在<strong>任何聊天視窗</strong>輸入 <code>@你的機器人名稱 問題</code>，不用切換視窗就能即時呼叫龍蝦。</p>
+                        <pre style="font-size: 14px; padding: 12px;">@my_lobster_ai_bot 翻譯：我想訂位</pre>
+                        <p style="font-size: 16px;">到 BotFather 輸入 <code>/setinline</code> 啟用。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📁 大型檔案傳送</h3>
+                        <p>LINE 檔案上限 200MB，<strong>Telegram 上限 2GB</strong>。如果要傳大型 PDF、影片、資料集讓龍蝦處理，用 Telegram 更方便。</p>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>隱私模式</strong>：Bot 預設開啟 Privacy Mode，在群組中只能看到 <code>@</code> 它的訊息和 <code>/</code> 指令。要關閉可到 BotFather 輸入 <code>/setprivacy</code>，但請謹慎使用。
+                </div>
+                <span class="slide-number">7 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: LINE 和 Telegram 同時使用 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.7 LINE 和 Telegram 同時使用</h2>
+                <p>現在你的龍蝦同時連接了兩個平台，帶來了一些有趣的特性：</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>🧠 跨平台記憶</h3>
+                        <p>龍蝦的記憶是<strong>跨頻道共享</strong>的。你在 LINE 說的事情，在 Telegram 也記得。</p>
+                        <pre style="font-size: 14px; padding: 12px;">（LINE）記住我下禮拜三要開會
+（Telegram）我下禮拜有什麼行程？
+龍蝦：你之前提到下禮拜三要開會。</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👤 使用者分別管理</h3>
+                        <p>每個平台的配對獨立。LINE 和 Telegram 的帳號，龍蝦視為不同使用者（除非你特別設定）。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎯 選擇最佳場景</h3>
+                        <p>根據情境選擇最方便的平台使用。</p>
+                    </div>
+                </div>
+
+                <h3>使用場景推薦</h3>
+                <table>
+                    <tr><th>情境</th><th>推薦用</th><th>原因</th></tr>
+                    <tr><td>在外面用手機快速問問題</td><td>LINE</td><td>台灣人都有，隨手就開</td></tr>
+                    <tr><td>在電腦前工作時使用</td><td>Telegram</td><td>電腦版體驗更好</td></tr>
+                    <tr><td>需要傳大檔案</td><td>Telegram</td><td>上限 2GB</td></tr>
+                    <tr><td>想在群組中使用</td><td>Telegram</td><td>群組 Bot 功能更完善</td></tr>
+                    <tr><td>分享給朋友或同事用</td><td>LINE</td><td>對方不用額外安裝 App</td></tr>
+                </table>
+                <span class="slide-number">8 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>7.8 常見問題 FAQ</h2>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr;">
+                    <div class="concept-card">
+                        <h3>Q1：Bot 建好了但龍蝦不回覆？</h3>
+                        <p>依序檢查：</p>
+                        <ul>
+                            <li>Bot Token 有沒有正確設定：<code>openclaw config set channels.telegram.botToken "你的token"</code></li>
+                            <li>Gateway 有沒有重啟：<code>openclaw gateway restart</code></li>
+                            <li>地端安裝的話，ngrok 有沒有在運行</li>
+                            <li>第一次要完成配對流程（拿到配對碼然後 approve）</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Q2：在群組裡 @ 龍蝦但它沒反應？</h3>
+                        <p>確認機器人有被正確加入群組，且群組設定允許 Bot 接收訊息。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Q3：BotFather 說 username 已被使用？</h3>
+                        <p>Bot username 是全球唯一的。換一個更獨特的名字，加入你的名字或獨特字串，例如 <code>aliang_lobster_2026_bot</code>。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Q4：Telegram 和 LINE 會互相干擾嗎？</h3>
+                        <p><strong>不會</strong>。兩個頻道完全獨立運作。龍蝦收到 LINE 訊息用 LINE 回覆，收到 Telegram 訊息用 Telegram 回覆，不會搞混。</p>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">7.9 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>🤖 BotFather</h3>
+                        <p>和 BotFather 聊三句話，<strong>一分鐘建立</strong> Telegram 機器人。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔌 兩行指令連接</h3>
+                        <p>安裝 Telegram 外掛 + 設定 Bot Token，<strong>就兩個指令</strong>搞定。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✨ 獨家功能</h3>
+                        <p>斜線指令選單、群組 Bot、<strong>Inline 模式</strong>、2GB 檔案傳送。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌐 雙平台</h3>
+                        <p>龍蝦同時住在 LINE 和 Telegram，<strong>跨頻道記憶共享</strong>。</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 30px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH8 拍照與視覺辨識功能</strong><br>
+                    到目前為止你和龍蝦的互動都是「傳文字、收文字」。下一章要解鎖龍蝦的<strong>視覺能力</strong>——傳照片讓龍蝦辨識、分析截圖、翻譯路標，甚至讓龍蝦「自拍」回傳照片給你！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch08.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH8 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">10 / 10</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

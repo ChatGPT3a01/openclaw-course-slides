@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH1 環境準備與帳號申請</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .danger { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        .step-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH1 — 環境準備與帳號申請</div>
+        <div class="nav-buttons">
+            <a href="part1-入門篇.html" class="nav-btn">📚 入門篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch00.html" class="nav-btn">⬅️ CH0</a>
+            <a href="ch02.html" class="nav-btn">CH2 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- ========== Slide 1: 封面 + 學習目標 ========== -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🧰</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH1 | 環境準備與帳號申請</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    安裝 AI 工具就像組裝電腦——先把所有「零件」備齊，後面才能順利開工。<br>這一章把帳號、密鑰、工具設定一次搞定！
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 650px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>確認電腦是否符合系統需求</li>
+                        <li>擁有一組可用的 Gmail 帳號</li>
+                        <li>在 LINE Developers 建立 Messaging API Channel，取得三組關鍵資料</li>
+                        <li>在 Telegram 建立 Bot，取得 Bot Token</li>
+                        <li>至少取得一個 AI 模型 API Key（推薦 Gemini 免費方案）</li>
+                        <li>註冊 ngrok 帳號與 GitHub 帳號</li>
+                        <li>了解 API Key 的安全觀念</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 2: 系統需求總覽 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.1 系統需求確認</h2>
+                <p>好消息是：要求不高！只要你的電腦能正常上網、能打字，基本上就夠了。</p>
+
+                <h3>硬體需求</h3>
+                <table>
+                    <tr><th>項目</th><th>最低需求</th><th>建議配備</th></tr>
+                    <tr><td>作業系統</td><td>Windows 10 / macOS 12 / Ubuntu 22</td><td><strong>Windows 11</strong>（本書主要示範）</td></tr>
+                    <tr><td>記憶體（RAM）</td><td>4 GB</td><td>8 GB 以上</td></tr>
+                    <tr><td>硬碟空間</td><td>2 GB 可用空間</td><td>5 GB 以上</td></tr>
+                    <tr><td>網路</td><td>能上網</td><td>穩定的寬頻網路</td></tr>
+                </table>
+
+                <h3>確認你的 Windows 版本</h3>
+                <p><span class="step-badge">步驟 1</span> 按下 <code>Windows 鍵 + R</code>，在「執行」視窗輸入 <code>winver</code>，按 Enter。</p>
+                <img src="images/CH01/ch01_01_winver.png" alt="winver 視窗顯示 Windows 版本" class="screenshot">
+
+                <div class="box info">
+                    💡 如果你的電腦比較舊，別擔心！CH5 會教你用 <strong>GitHub Codespaces</strong> 免費雲端方案，讓龍蝦跑在雲端上，只要能開瀏覽器就能用。
+                </div>
+
+                <h3>軟體環境總覽（這一章先不用安裝）</h3>
+                <table>
+                    <tr><th>軟體</th><th>用途</th><th>什麼時候安裝</th></tr>
+                    <tr><td><strong>Node.js</strong> v22+</td><td>OpenClaw 的運行環境</td><td>CH5 安裝龍蝦時</td></tr>
+                    <tr><td><strong>ngrok</strong></td><td>讓 LINE 能連到你的電腦</td><td>CH5 安裝龍蝦時</td></tr>
+                    <tr><td><strong>Git</strong></td><td>程式碼版本控制</td><td>CH3 Claude Code 時</td></tr>
+                    <tr><td><strong>Google Antigravity</strong></td><td>AI 開發環境</td><td>CH2 Antigravity 時</td></tr>
+                </table>
+                <span class="slide-number">2 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 3: Gmail 帳號申請 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.2 Gmail 帳號申請</h2>
+                <p>Gmail 是後面幾乎所有服務的<strong>「萬用通行證」</strong>——LINE Developers、Google AI Studio、OpenAI、GitHub、ngrok⋯⋯幾乎所有平台都支援「用 Google 帳號一鍵登入」。</p>
+
+                <div class="box success">
+                    ✅ 如果你已經有 Gmail 帳號，確認記得帳號和密碼後就可以直接跳到下一張投影片！
+                </div>
+
+                <h3>申請步驟</h3>
+                <p><span class="step-badge">步驟 1</span> 打開瀏覽器，前往 <code>https://accounts.google.com/signup</code></p>
+                <p><span class="step-badge">步驟 2</span> 依序填入以下資料：</p>
+                <table>
+                    <tr><th>欄位</th><th>怎麼填</th><th>範例</th></tr>
+                    <tr><td>名字</td><td>你的名字</td><td>小明</td></tr>
+                    <tr><td>姓氏</td><td>你的姓氏</td><td>王</td></tr>
+                    <tr><td>使用者名稱</td><td>你想要的 Email 名稱</td><td><code>wangming2026</code></td></tr>
+                    <tr><td>密碼</td><td>至少 8 個字元，建議英數混合</td><td><code>MyP@ss1234</code></td></tr>
+                    <tr><td>確認密碼</td><td>再輸入一次密碼</td><td><code>MyP@ss1234</code></td></tr>
+                </table>
+                <p><span class="step-badge">步驟 3</span> 點「下一步」，填寫手機號碼（方便日後找回密碼）。</p>
+                <p><span class="step-badge">步驟 4</span> 閱讀並同意服務條款，點「我同意」即可完成。</p>
+
+                <img src="images/CH01/ch01_02_gmail_signup.png" alt="Google 帳號註冊頁面" class="screenshot">
+
+                <div class="box warning">
+                    ⚠️ <strong>密碼安全提醒</strong>：不要用生日、電話號碼、或 <code>password123</code> 這種容易被猜到的密碼。建議用英文大小寫 + 數字 + 符號的組合。
+                </div>
+
+                <pre>📝 記下來！
+Gmail 帳號：_______________@gmail.com
+Gmail 密碼：_______________</pre>
+                <span class="slide-number">3 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 4: LINE Developers 帳號（登入 + Provider） ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.3 LINE 機器人申請（上）——登入與建立 Provider</h2>
+                <p>這一段是本章最關鍵的部分。我們要在 LINE 官方帳號管理後台建立一個 <strong>Messaging API Channel</strong>——簡單來說就是<strong>替龍蝦在 LINE 上開一個帳號</strong>。完成後，你會拿到三組重要資料：</p>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🔑 Channel ID</h3>
+                        <p>一串純數字，就像機器人的「身份證號碼」</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🔐 Channel Secret</h3>
+                        <p>英數混合字串，用來驗證訊息來源</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🎫 Access Token</h3>
+                        <p>超長字串，機器人的「通行證」</p>
+                    </div>
+                </div>
+
+                <h3>步驟 1：登入 LINE 官方帳號管理後台</h3>
+                <p>打開瀏覽器，前往 <code>https://manager.line.biz/</code>，點右上角 <strong>Log in</strong>。推薦選擇「用 LINE 帳號登入」——就是你手機上平常用的 LINE。</p>
+                <img src="images/CH01/ch01_03_line_dev_home.png" alt="LINE 官方帳號管理後台首頁" class="screenshot">
+
+                <h3>步驟 2：建立 Provider</h3>
+                <p>Provider 是一個「組織」的概念——一個 Provider 底下可以有很多個機器人。點 <strong>Create</strong>，輸入名稱（例如「我的AI助手」、「龍蝦工作室」），然後確認。</p>
+                <img src="images/CH01/ch01_04_line_provider.png" alt="建立 Provider 畫面" class="screenshot">
+
+                <div class="box info">
+                    💡 Provider 名稱隨便取就好，之後可以改。
+                </div>
+                <span class="slide-number">4 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 5: LINE Channel 建立 + 取得 ID/Secret/Token ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.3 LINE 機器人申請（中）——建立 Channel</h2>
+
+                <h3>步驟 3：建立 Messaging API Channel</h3>
+                <p>點進 Provider 後，點 <strong>Create a Messaging API channel</strong>，填寫以下表單：</p>
+                <table>
+                    <tr><th>欄位</th><th>怎麼填</th><th>範例</th></tr>
+                    <tr><td>Channel type</td><td>已自動選好，不用改</td><td>Messaging API</td></tr>
+                    <tr><td>Company or owner's country</td><td>選 <strong>Taiwan</strong></td><td>Taiwan</td></tr>
+                    <tr><td>Channel name</td><td>機器人的顯示名稱</td><td>龍蝦小助手</td></tr>
+                    <tr><td>Channel description</td><td>簡短說明</td><td>我的AI聊天機器人</td></tr>
+                    <tr><td>Category / Subcategory</td><td>選一個接近的類別</td><td>Education / School</td></tr>
+                    <tr><td>Email address</td><td>你的 Email</td><td>yourname@gmail.com</td></tr>
+                </table>
+                <p>填好後勾選同意條款，點 <strong>Create</strong>。</p>
+                <img src="images/CH01/ch01_05_line_channel_create.png" alt="建立 Messaging API Channel 填寫畫面" class="screenshot">
+
+                <h3>步驟 4：取得 Channel ID 和 Channel Secret</h3>
+                <p>在 <strong>Basic settings</strong> 頁面，你可以找到 <strong>Channel ID</strong>（純數字）和 <strong>Channel Secret</strong>（英數混合），把它們複製到記事本。</p>
+                <img src="images/CH01/ch01_06_line_channel_id.png" alt="Channel ID 和 Channel Secret" class="screenshot">
+
+                <pre>📝 記下來！
+Channel ID：_______________
+Channel Secret：_______________</pre>
+                <span class="slide-number">5 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 6: LINE Access Token + 關閉自動回覆 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.3 LINE 機器人申請（下）——Token 與自動回覆</h2>
+
+                <h3>步驟 5：取得 Channel Access Token</h3>
+                <p>切換到上方的 <strong>Messaging API</strong> 標籤，一路往下滑到最底部，找到 <strong>Channel access token (long-lived)</strong>，點 <strong>Issue</strong> 按鈕產生 Token，然後完整複製。</p>
+                <img src="images/CH01/ch01_07_line_access_token.png" alt="Channel Access Token" class="screenshot">
+
+                <div class="box warning">
+                    ⚠️ Access Token 通常超過 100 個字元，複製時務必確認沒有漏掉！建議貼到記事本後目視確認開頭和結尾。
+                </div>
+
+                <h3>步驟 6：關閉自動回覆——千萬不能忘！</h3>
+                <p>LINE 預設會開啟「自動回覆」，會跟龍蝦的回覆打架，每次收到<strong>雙重回覆</strong>。我們必須關掉它：</p>
+                <ol>
+                    <li>在 Channel 的 <strong>Messaging API</strong> 標籤，找到 <strong>Auto-reply messages</strong>，點 <strong>Edit</strong></li>
+                    <li>在「回應設定」頁面調整以下三項：</li>
+                </ol>
+                <table>
+                    <tr><th>設定項目</th><th>改成</th></tr>
+                    <tr><td>回應模式</td><td><strong>Bot</strong></td></tr>
+                    <tr><td>自動回應訊息</td><td><strong>停用</strong></td></tr>
+                    <tr><td>Webhook</td><td><strong>啟用</strong></td></tr>
+                </table>
+                <img src="images/CH01/ch01_08_line_auto_reply_off.png" alt="LINE 官方帳號回應設定頁面" class="screenshot">
+
+                <div class="box danger">
+                    🚨 <strong>再次強調</strong>：跳過這一步 = 每次對話收到雙重回覆！阿亮老師上課時，每期總會有同學忘記做這一步。
+                </div>
+
+                <pre>📝 記下來！
+Channel Access Token：_______________</pre>
+                <span class="slide-number">6 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 7: Telegram Bot 建立 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.4 Telegram Bot 申請</h2>
+                <p>比起 LINE 的繁複步驟，Telegram 簡直是一陣清風。不需要開發者帳號、不需要填表單——跟 <strong>@BotFather</strong> 聊天，一分鐘就能建好！</p>
+
+                <h3>步驟 1-2：搜尋 BotFather 並開啟建立表單</h3>
+                <p>在 Telegram 搜尋欄輸入 <code>BotFather</code>，找到帶藍色勾勾的 <strong>@BotFather</strong>，點 <strong>Open App</strong>（或 <strong>START</strong>），會出現 <strong>New bot</strong> 建立表單。</p>
+                <img src="images/CH01/ch01_09a_telegram_botfather_form.png" alt="BotFather New bot 表單" class="screenshot">
+
+                <h3>步驟 3-4：填寫表單並建立</h3>
+                <table>
+                    <tr><th>欄位</th><th>怎麼填</th><th>範例</th></tr>
+                    <tr><td><strong>Bot Name</strong></td><td>機器人的顯示名稱，隨便取</td><td>龍蝦小助手</td></tr>
+                    <tr><td><strong>About</strong>（選填）</td><td>簡短說明</td><td>阿亮老師的龍蝦AI</td></tr>
+                    <tr><td><strong>t.me/username_bot</strong></td><td>帳號名稱，結尾必須是 <code>bot</code></td><td>my_lobster_ai_bot</td></tr>
+                </table>
+                <p>填好後點 <strong>Create Bot</strong>。</p>
+                <img src="images/CH01/ch01_09b_telegram_botfather_fill.png" alt="填寫 Bot 資料" class="screenshot">
+
+                <h3>步驟 5：取得 Bot Token</h3>
+                <p>建立成功！BotFather 會顯示你的 Bot Token，點 <strong>Copy</strong> 複製下來。</p>
+                <img src="images/CH01/ch01_09c_telegram_botfather_token.png" alt="複製 Bot Token" class="screenshot">
+
+                <div class="box warning">
+                    ⚠️ <strong>Bot Token 就是你機器人的鑰匙</strong>，任何人拿到都可以操控你的機器人。千萬不要分享給不認識的人！
+                </div>
+
+                <pre>📝 記下來！
+Telegram Bot Token：_______________</pre>
+                <span class="slide-number">7 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 8: AI API Keys — Gemini ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.5 AI 模型 API Key（一）——Google Gemini</h2>
+                <p>OpenClaw 本身不是 AI，它是一個<strong>框架</strong>（身體）。身體裡面需要裝一顆「腦」才能運作——這顆腦就是 AI 模型的 API Key。</p>
+
+                <table>
+                    <tr><th>模型</th><th>提供商</th><th>費用</th><th>推薦指數</th><th>適合對象</th></tr>
+                    <tr style="background: #d4edda;"><td><strong>Gemini</strong></td><td>Google</td><td>免費額度充足</td><td>⭐⭐⭐⭐⭐</td><td>新手首選</td></tr>
+                    <tr><td>GPT</td><td>OpenAI</td><td>需儲值 US$5 起</td><td>⭐⭐⭐⭐</td><td>想用最強模型</td></tr>
+                    <tr><td>Claude</td><td>Anthropic</td><td>需儲值 US$5 起</td><td>⭐⭐⭐⭐</td><td>用 Claude Code 的人</td></tr>
+                    <tr><td>Ollama</td><td>社群開源</td><td>完全免費</td><td>⭐⭐⭐</td><td>有獨顯的技術愛好者</td></tr>
+                </table>
+
+                <div class="box success">
+                    ✅ <strong>阿亮老師建議</strong>：先申請 Google Gemini 就好——免費、好用、額度充足。上手之後再依需求考慮其他選項。
+                </div>
+
+                <h3>Gemini API Key 申請步驟</h3>
+                <p><span class="step-badge">步驟 1</span> 前往 <code>https://aistudio.google.com/</code>，用 Gmail 登入。</p>
+                <p><span class="step-badge">步驟 2</span> 點左側 <strong>Get API key</strong>（或直接前往 <code>https://aistudio.google.com/apikey</code>）。</p>
+                <p><span class="step-badge">步驟 3</span> 點 <strong>Create API key</strong> → <strong>Create API key in new project</strong>。</p>
+                <p><span class="step-badge">步驟 4</span> API Key 產生後<strong>立刻複製</strong>！</p>
+
+                <img src="images/CH01/ch01_10_gemini_api_key.png" alt="Google AI Studio API Key 頁面" class="screenshot">
+
+                <div class="box info">
+                    💡 <strong>免費額度</strong>：Gemini 2.5 Flash 每分鐘 30 次請求、Gemini 2.5 Pro 每分鐘 5 次，個人使用綽綽有餘！
+                </div>
+
+                <pre>📝 記下來！
+Google AI API Key：_______________（以 AIza 開頭）</pre>
+                <span class="slide-number">8 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 9: AI API Keys — OpenAI + Anthropic ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.5 AI 模型 API Key（二）——OpenAI 與 Anthropic</h2>
+                <p>這兩個是<strong>選用</strong>的付費方案。如果只想先用免費方案，可以直接跳到下一張投影片。</p>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>🟢 OpenAI GPT</h3>
+                        <p><span class="step-badge">1</span> 前往 <code>platform.openai.com</code></p>
+                        <p>（注意不是 chat.openai.com！）</p>
+                        <p><span class="step-badge">2</span> 用 Google 帳號註冊</p>
+                        <p><span class="step-badge">3</span> <strong>Settings → Billing</strong>，加入信用卡並儲值 <strong>US$5</strong>（約台幣 160 元，夠用 1000+ 次對話）</p>
+                        <p><span class="step-badge">4</span> <strong>API keys → Create new secret key</strong>，取名為 <code>lobster-ai</code></p>
+                        <p><span class="step-badge">5</span> <strong>立刻複製</strong>！OpenAI 的 Key 只會顯示一次</p>
+                        <pre style="font-size: 14px;">OpenAI API Key：sk-___________</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🟣 Anthropic Claude</h3>
+                        <p><span class="step-badge">1</span> 前往 <code>console.anthropic.com</code></p>
+                        <p><span class="step-badge">2</span> 用 Google 或 GitHub 帳號註冊</p>
+                        <p><span class="step-badge">3</span> <strong>Settings → Billing</strong>，加入信用卡並儲值 <strong>US$5</strong></p>
+                        <p><span class="step-badge">4</span> <strong>API keys → Create Key</strong>，取名後複製</p>
+                        <p style="margin-top: 10px;">推薦模型：</p>
+                        <ul>
+                            <li><strong>Claude Opus 4.6</strong>：最強，適合複雜任務</li>
+                            <li><strong>Claude Sonnet 4.6</strong>：性價比高，日常使用</li>
+                        </ul>
+                        <pre style="font-size: 14px;">Anthropic API Key：sk-ant-___________</pre>
+                    </div>
+                </div>
+
+                <img src="images/CH01/ch01_11_openai_api_key.png" alt="OpenAI API Key 建立成功" class="screenshot" style="max-width: 48%; display: inline-block;">
+                <img src="images/CH01/ch01_12_anthropic_api_key.png" alt="Anthropic Console API Key" class="screenshot" style="max-width: 48%; display: inline-block; float: right;">
+
+                <span class="slide-number">9 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 10: ngrok 帳號 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.6 ngrok 帳號申請</h2>
+                <p>ngrok 是一條「隧道」——它把你電腦上的龍蝦服務打通到外面，讓 LINE 伺服器能夠連進來。</p>
+
+                <pre style="font-size: 18px; text-align: center; background: linear-gradient(135deg, #1a1a2e, #16213e); color: #e0e0e0;">
+LINE 伺服器（日本） 🇯🇵
+        ↕  ngrok 隧道（打通內外）🔗
+你的電腦（龍蝦在 localhost:18789 上運行）💻</pre>
+
+                <h3>申請步驟</h3>
+                <p><span class="step-badge">步驟 1</span> 前往 <code>https://dashboard.ngrok.com/signup</code>，推薦用 Google 帳號一鍵註冊。</p>
+                <p><span class="step-badge">步驟 2</span> 註冊完成後進入 Dashboard，點左側 <strong>Your Authtoken</strong>，複製 Authtoken。</p>
+
+                <img src="images/CH01/ch01_13_ngrok_authtoken.png" alt="ngrok Dashboard Authtoken 頁面" class="screenshot">
+
+                <div class="box info">
+                    💡 <strong>免費版小限制</strong>：每次重啟 ngrok，網址會改變，需手動到 LINE 後台更新 Webhook URL。一天通常只需做一次。在 CH12 學了 <strong>Cloudflare Tunnel</strong> 後就能徹底解決。
+                </div>
+
+                <pre>📝 記下來！
+ngrok Authtoken：_______________</pre>
+                <span class="slide-number">10 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 11: GitHub 帳號 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.7 GitHub 帳號申請</h2>
+                <p>GitHub 是全球最大的程式碼托管平台。在這本書裡，它有兩個重要用途：</p>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>☁️ GitHub Codespaces</h3>
+                        <p>CH5 會教。免費的雲端開發環境，在瀏覽器裡跑龍蝦——不需要本機安裝。每月免費 <strong>60 小時</strong>。</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🤖 Claude Code</h3>
+                        <p>CH3 會教。Claude Code 需要用 Git 來管理檔案版本，Git 的遠端倉庫通常就託管在 GitHub 上。</p>
+                    </div>
+                </div>
+
+                <h3>註冊步驟</h3>
+                <p><span class="step-badge">步驟 1</span> 前往 <code>https://github.com/signup</code></p>
+                <p><span class="step-badge">步驟 2</span> 依序填寫 Email（Gmail）、密碼、使用者名稱，通過人機驗證。</p>
+                <p><span class="step-badge">步驟 3</span> 到 Gmail 收驗證信，點確認連結。</p>
+                <p><span class="step-badge">步驟 4</span> 選擇方案：選 <strong>Free</strong>（免費），已包含所有需要的功能。</p>
+
+                <img src="images/CH01/ch01_14_github_signup.png" alt="GitHub 註冊成功後的首頁" class="screenshot">
+
+                <pre>📝 記下來！
+GitHub 帳號：_______________
+GitHub 密碼：_______________</pre>
+                <span class="slide-number">11 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 12: 安全須知 + 帳號準備清單 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.9 安全須知 + 帳號準備清單</h2>
+
+                <h3>🔒 API Key = 提款卡密碼</h3>
+                <p>曾有人不小心把 API Key 上傳到 GitHub，不到 24 小時被盜用，帳單飆到 <strong>US$1,200</strong>（約台幣 38,000 元）！</p>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3>✅ 應該做的事</h3>
+                        <ul>
+                            <li>把 Key 存在加密檔案裡（例如 7-Zip）</li>
+                            <li>用完記事本就關掉</li>
+                            <li>在 OpenAI 設定每月用量上限</li>
+                            <li>懷疑洩露就立刻重新產生 Key</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card" style="border-color: #dc3545;">
+                        <h3>❌ 千萬不要做</h3>
+                        <ul>
+                            <li>把 Key 貼在公開社群</li>
+                            <li>把含 Key 的檔案上傳 GitHub</li>
+                            <li>多人共用一組 Key</li>
+                            <li>把 Key 用 Email 寄給自己</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>📋 帳號準備總清單</h3>
+                <table>
+                    <tr><th>服務</th><th>需要的資料</th><th>狀態</th></tr>
+                    <tr><td>Gmail</td><td>帳號 + 密碼</td><td>☐</td></tr>
+                    <tr><td>LINE Developers</td><td>Channel ID + Secret + Access Token</td><td>☐</td></tr>
+                    <tr><td>LINE 回應設定</td><td>關閉自動回覆 + 啟用 Webhook</td><td>☐</td></tr>
+                    <tr><td>Telegram Bot</td><td>Bot Token</td><td>☐</td></tr>
+                    <tr><td>Google Gemini</td><td>API Key（AIza 開頭）</td><td>☐ ★推薦</td></tr>
+                    <tr><td>OpenAI（選用）</td><td>API Key（sk- 開頭）</td><td>☐</td></tr>
+                    <tr><td>Anthropic（選用）</td><td>API Key（sk-ant- 開頭）</td><td>☐</td></tr>
+                    <tr><td>ngrok</td><td>Authtoken</td><td>☐</td></tr>
+                    <tr><td>GitHub</td><td>帳號 + 密碼</td><td>☐</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 <strong>最重要的四項</strong>：Gmail、LINE 三組資料、Gemini API Key、ngrok Authtoken。其他可以等用到再申請。
+                </div>
+                <span class="slide-number">12 / 13</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 13: 小結與展望 ========== -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">1.11 小結與展望</h2>
+
+                <p style="font-size: 24px; margin-bottom: 30px;">恭喜你完成了全書最「苦工」的一章！🎉</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>✅ 系統確認</h3>
+                        <p>確認了 Windows 版本與硬體需求</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✅ Gmail</h3>
+                        <p>準備好萬用通行證</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✅ LINE 機器人</h3>
+                        <p>取得三組資料，關閉自動回覆</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✅ Telegram Bot</h3>
+                        <p>跟 BotFather 建立機器人</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✅ AI API Key</h3>
+                        <p>至少取得 Gemini 免費金鑰</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✅ ngrok + GitHub</h3>
+                        <p>隧道工具與雲端平台帳號</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 30px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH2 Google Antigravity 快速上手</strong><br>
+                    食材都備齊了，從下一章開始正式開火！你將學會如何用 Antigravity 的圖形化介面跟 AI 協作、派出多個 Agent 同時工作、用自然語言建立完整應用程式。<br>
+                    原來「寫程式」可以像跟朋友聊天一樣簡單！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch02.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH2 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">13 / 13</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

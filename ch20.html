@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH20 語音通話（Twilio）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH20 — 語音通話 Twilio</div>
+        <div class="nav-buttons">
+            <a href="part6-進階篇.html" class="nav-btn">🚀 進階篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch19.html" class="nav-btn">⬅️ CH19</a>
+            <a href="ch21.html" class="nav-btn">CH21 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">📞</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH20 | 語音通話（Twilio）</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    給龍蝦一個電話號碼，讓它能接打電話——開車問事情、長輩不會打字、語音客服，通通搞定
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>認識 Twilio 的功能和費用</li>
+                        <li>學會申請 Twilio 帳號和電話號碼</li>
+                        <li>設定龍蝦接聽語音通話</li>
+                        <li>了解語音通話的實際應用場景</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 為什麼需要語音通話 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>為什麼要讓龍蝦接電話？</h2>
+                <p>到目前為止，你跟龍蝦的互動都是靠「文字」。但你有沒有想過，直接<strong>打電話給龍蝦</strong>？</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                    <div class="concept-card">
+                        <h3>🚗 開車族</h3>
+                        <p>開車時不方便打字，直接打電話問龍蝦事情，安全又方便</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👴 長輩友善</h3>
+                        <p>長輩不會用 LINE 打字，但他們很會打電話——電話就是最好的介面</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📱 外出查資料</h3>
+                        <p>在外面需要龍蝦幫你查資料，拿起手機撥個號碼就搞定</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🏪 語音客服</h3>
+                        <p>做小生意的人，用龍蝦接聽客戶來電，自動回答問題</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    💡 這就是 OpenClaw 的 <strong>Twilio 語音通話</strong>功能——給龍蝦一個電話號碼，讓它能接打電話。
+                </div>
+                <span class="slide-number">2 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: Twilio 是什麼 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.1 Twilio 是什麼？</h2>
+                <p>Twilio 是全球最大的「通訊平台即服務」（CPaaS）公司。它讓開發者透過 API 來打電話、傳簡訊。你不需要了解電話系統底層技術——Twilio 都幫你包好了。</p>
+
+                <img src="images/CH20/ch20_01_twilio_console.png" alt="Twilio Console" class="screenshot">
+
+                <h3>Twilio 能做什麼</h3>
+                <table>
+                    <tr><th>功能</th><th>說明</th></tr>
+                    <tr><td><strong>接聽電話</strong></td><td>給龍蝦一個電話號碼，使用者打來龍蝦自動接聽</td></tr>
+                    <tr><td><strong>撥打電話</strong></td><td>龍蝦主動撥打電話給指定號碼</td></tr>
+                    <tr><td><strong>語音辨識</strong></td><td>來電者說的話，即時轉成文字給龍蝦</td></tr>
+                    <tr><td><strong>語音合成</strong></td><td>龍蝦的文字回覆，用語音唸出來給來電者聽</td></tr>
+                    <tr><td><strong>簡訊</strong></td><td>龍蝦也可以收發 SMS 簡訊</td></tr>
+                </table>
+                <span class="slide-number">3 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 費用說明 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.1.3 Twilio 費用說明</h2>
+                <p>Twilio 不是免費的——它是商業服務。但費用比你想像的低：</p>
+
+                <table>
+                    <tr><th>項目</th><th>費用（美元）</th><th>說明</th></tr>
+                    <tr><td><strong>電話號碼</strong></td><td>$1.15/月</td><td>美國號碼月租費</td></tr>
+                    <tr><td><strong>接聽電話</strong></td><td>$0.0085/分鐘</td><td>每分鐘不到 0.3 台幣</td></tr>
+                    <tr><td><strong>語音辨識</strong></td><td>$0.02/15 秒</td><td>Twilio 內建的 STT</td></tr>
+                    <tr><td><strong>語音合成</strong></td><td>免費~$0.01/句</td><td>看你用哪種 TTS</td></tr>
+                    <tr><td><strong>撥打電話</strong></td><td>$0.014/分鐘</td><td>撥打美國號碼</td></tr>
+                </table>
+
+                <div class="box success">
+                    ✅ <strong>免費試用</strong>：Twilio 新帳號有免費額度（約 $15），足夠你測試和學習。你不需要一開始就花錢。
+                </div>
+
+                <div class="box warning">
+                    ⚠️ 台灣號碼也有，但月租費較高（約 $11/月）。如果只是學習和測試，用美國號碼就夠了。
+                </div>
+                <span class="slide-number">4 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 申請 Twilio 帳號 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.2 申請 Twilio 帳號</h2>
+
+                <h3>註冊步驟</h3>
+                <ol>
+                    <li>到 <code>https://www.twilio.com/try-twilio</code> 註冊</li>
+                    <li>填寫 Email、密碼</li>
+                    <li>驗證手機號碼（台灣的 +886 號碼可以用）</li>
+                    <li>回答幾個問題（選「Voice」和「With code」）</li>
+                    <li>完成註冊，進入 Console</li>
+                </ol>
+
+                <h3>取得 Account SID 和 Auth Token</h3>
+                <p>在 Twilio Console 首頁就能看到兩個重要的值：</p>
+                <pre>Account SID：AC1234567890abcdef...
+Auth Token：（點擊眼睛圖示顯示）</pre>
+
+                <div class="box warning">
+                    ⚠️ <strong>Auth Token 是密碼等級的敏感資訊</strong>，不要分享給任何人，不要放到 GitHub 上。
+                </div>
+
+                <h3>購買電話號碼</h3>
+                <img src="images/CH20/ch20_02_twilio_buy_number.png" alt="購買電話號碼" class="screenshot">
+                <ol>
+                    <li>在 Console 左側選單點 <strong>Phone Numbers → Manage → Buy a number</strong></li>
+                    <li>選擇國家（建議選美國 United States，最便宜）</li>
+                    <li>勾選「Voice」能力</li>
+                    <li>選一個你喜歡的號碼，按 <strong>Buy</strong></li>
+                    <li>試用帳號免費買一個號碼</li>
+                </ol>
+                <span class="slide-number">5 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 設定龍蝦接聽語音通話 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.3 設定龍蝦接聽語音通話</h2>
+
+                <h3>安裝 Twilio 外掛</h3>
+                <pre>openclaw plugins install twilio-voice</pre>
+
+                <h3>設定認證資訊（TOOLS.md）</h3>
+                <pre>## Twilio（語音通話）
+- Account SID: 你的_Account_SID
+- Auth Token: 你的_Auth_Token
+- 電話號碼: +1xxxxxxxxxx（你買的號碼）
+- 語音語言: zh-TW（中文）
+- TTS 引擎: google（Google 語音合成）</pre>
+
+                <h3>設定 Webhook</h3>
+                <img src="images/CH20/ch20_03_twilio_webhook.png" alt="Twilio Webhook 設定" class="screenshot">
+                <ol>
+                    <li>進入 <strong>Phone Numbers → Manage → Active numbers</strong></li>
+                    <li>點擊你的號碼</li>
+                    <li>在 <strong>Voice Configuration</strong> 區塊：</li>
+                    <ul>
+                        <li><strong>A call comes in</strong> → Webhook</li>
+                        <li>URL 填入：<code>https://lobster.你的域名.com/twilio/voice</code></li>
+                        <li>方法選 <strong>POST</strong></li>
+                    </ul>
+                    <li>按 <strong>Save configuration</strong></li>
+                </ol>
+
+                <pre>openclaw gateway restart    # 重啟 Gateway</pre>
+                <span class="slide-number">6 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 語音通話運作原理 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.4 語音通話的運作原理</h2>
+
+                <img src="images/CH20/ch20_04_call_flow.png" alt="通話流程圖" class="screenshot">
+
+                <h3>通話流程</h3>
+                <pre style="font-size: 15px; line-height: 1.5;">
+1. 你撥打 Twilio 號碼
+2. Twilio 接聽，通知 OpenClaw（透過 Webhook）
+3. OpenClaw 送出歡迎語（TTS 語音合成 → 播放給你聽）
+4. 你開始說話
+5. Twilio 即時語音辨識（STT），把你的話轉成文字
+6. OpenClaw 把文字送給 AI 模型處理
+7. AI 產生回覆文字
+8. TTS 把回覆轉成語音，播放給你聽
+9. 重複 4-8 直到掛斷</pre>
+
+                <div class="box info">
+                    💡 整個過程的延遲大約 <strong>1-3 秒</strong>——你說完話後，龍蝦需要一兩秒才會回答。比打字聊天稍微慢一點，但完全可以接受。
+                </div>
+                <span class="slide-number">7 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: STT 與 TTS 引擎 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>語音辨識（STT）與語音合成（TTS）</h2>
+
+                <h3>語音辨識（STT）引擎</h3>
+                <table>
+                    <tr><th>引擎</th><th>中文支援</th><th>準確度</th><th>費用</th></tr>
+                    <tr><td>Twilio 內建</td><td>✅ zh-TW</td><td>中等</td><td>包含在通話費裡</td></tr>
+                    <tr><td>Google STT</td><td>✅ zh-TW</td><td>高</td><td>額外計費</td></tr>
+                    <tr><td>Deepgram</td><td>✅（有限）</td><td>高</td><td>額外計費</td></tr>
+                </table>
+
+                <h3>語音合成（TTS）引擎</h3>
+                <table>
+                    <tr><th>引擎</th><th>中文音質</th><th>自然度</th><th>費用</th></tr>
+                    <tr><td>Twilio 內建</td><td>一般</td><td>★★☆☆</td><td>免費</td></tr>
+                    <tr><td>Google TTS</td><td>好</td><td>★★★☆</td><td>低</td></tr>
+                    <tr><td>ElevenLabs</td><td>很好</td><td>★★★★</td><td>中</td></tr>
+                    <tr><td>OpenAI TTS</td><td>很好</td><td>★★★★</td><td>中</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 建議先用 Twilio 內建的 STT/TTS，夠用了。如果覺得音質不夠好再升級到 ElevenLabs 或 OpenAI TTS。
+                </div>
+                <span class="slide-number">8 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 實際應用場景 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.5 實際應用場景</h2>
+
+                <img src="images/CH20/ch20_05_voice_chat.png" alt="語音通話聊天" class="screenshot">
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                    <div class="concept-card">
+                        <h3>🎙️ 個人語音助手</h3>
+                        <p>打電話問行程、改行程、查資料。「幫我查一下明天下午有什麼行程？」「把四點半的改到五點。」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👴 長輩友善介面</h3>
+                        <p>阿公打電話問天氣：「明天要不要帶傘？」龍蝦：「明天台中 22 度，有小雨喔，出門記得帶傘。」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🏪 語音客服機器人</h3>
+                        <p>客戶打來問營業時間、訂位。龍蝦自動回答、幫忙預約，不用你親自接電話。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⏰ 電話提醒</h3>
+                        <p>搭配 HEARTBEAT.md，龍蝦每天早上八點打電話報行程和天氣：「早安！今天有一個行程：下午 2 點看牙醫。」</p>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 進階設定與常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>20.6 進階設定與常見問題</h2>
+
+                <h3>進階設定</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>🎙️ 通話錄音</h3>
+                        <p>自動錄音方便回顧，設定保留天數，儲存到 workspace/data/recordings/</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🚫 來電黑名單</h3>
+                        <p>避免騷擾電話。可設黑名單或白名單模式（只接白名單電話）</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⏱️ 通話時長限制</h3>
+                        <p>避免意外高額費用。最長 10 分鐘、每日上限 30 分鐘</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 30px;">常見問題</h3>
+                <table style="font-size: 17px;">
+                    <tr><th style="width: 35%;">問題</th><th>回答</th></tr>
+                    <tr><td>台灣手機可以打美國號碼嗎？</td><td>可以，但有國際通話費。建議用 LINE Out 或其他 VoIP 撥打更便宜</td></tr>
+                    <tr><td>語音辨識聽不懂台灣國語？</td><td>設定 <code>zh-TW</code>，說慢一點、安靜環境，或升級 Google STT</td></tr>
+                    <tr><td>通話中可以操作電腦嗎？</td><td>可以！搭配 Desktop Agent（CH18），語音指令操作電腦</td></tr>
+                    <tr><td>可以多人同時打嗎？</td><td>可以，每通電話獨立對話、獨立計費</td></tr>
+                    <tr><td>有其他選擇嗎？</td><td>目前官方支援 Twilio，社群開發中 SIP/WebRTC 方案</td></tr>
+                </table>
+                <span class="slide-number">10 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">20.8 小結與展望</h2>
+
+                <p style="font-size: 22px; color: #666; margin-bottom: 30px;">這一章讓你的龍蝦學會了「說話」！</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>🔑 Twilio 帳號</h3>
+                        <p>註冊、取得 SID/Token、購買電話號碼</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔧 語音通話設定</h3>
+                        <p>安裝外掛、設定 Webhook、測試通話</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⚙️ 通話原理</h3>
+                        <p>STT 語音辨識 + AI 處理 + TTS 語音合成</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌟 實際應用</h3>
+                        <p>個人助手、長輩友善、客服機器人、電話提醒</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 30px;">
+                    <p>你的龍蝦現在是一個真正的<strong>全方位 AI 助手</strong>——能打字聊天、能看圖片、能操控電腦、能打電話。</p>
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH21 自動化與排程</strong><br>
+                    教你打造一隻全自動的龍蝦——不用你開口，它就會主動幫你做事。每天自動報天氣、到時間自動提醒行程、收到特定訊息自動處理！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch21.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH21 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">11 / 11</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

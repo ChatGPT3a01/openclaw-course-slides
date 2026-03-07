@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH21 自動化與排程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH21 — 自動化與排程</div>
+        <div class="nav-buttons">
+            <a href="part6-進階篇.html" class="nav-btn">🚀 進階篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch20.html" class="nav-btn">⬅️ CH20</a>
+            <a href="index.html" class="nav-btn">🏠 總覽</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🤖</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH21 | 自動化與排程</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    從「被動 AI」進化到「主動 AI」——不用你開口，龍蝦就會自動幫你做事
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>深入理解 HEARTBEAT.md 的完整語法</li>
+                        <li>學會設定複雜的排程任務</li>
+                        <li>認識事件驅動的自動化</li>
+                        <li>實戰打造全自動 AI 助手</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: HEARTBEAT.md 完整語法 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.1 HEARTBEAT.md 完整語法</h2>
+                <p>在 CH16 學過基礎，現在來看完整的語法：</p>
+
+                <pre>## 任務名稱
+- 排程: &lt;cron 表達式 或 自然語言&gt;
+- 通道: &lt;要推播到哪個通道&gt;
+- 對象: &lt;推播給誰（用戶 ID 或群組 ID）&gt;
+- 動作: &lt;要做什麼&gt;
+- 條件: &lt;（可選）什麼情況下才執行&gt;
+- 靜默: &lt;（可選）true/false，不回報執行結果&gt;</pre>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>⏰ 排程</h3>
+                        <p>什麼時候做？Cron 表達式或自然語言</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📡 通道 + 對象</h3>
+                        <p>結果推到哪裡？LINE / Discord / Telegram</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎯 動作 + 條件</h3>
+                        <p>做什麼？什麼情況才做？</p>
+                    </div>
+                </div>
+                <span class="slide-number">2 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: 排程表達式 Cron -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.1.2 排程表達式</h2>
+
+                <img src="images/CH21/ch21_01_cron_visual.png" alt="Cron 表達式視覺化" class="screenshot">
+
+                <h3>Cron 表達式：<code>分 時 日 月 星期</code></h3>
+                <table>
+                    <tr><th>Cron 範例</th><th>意思</th><th>自然語言寫法</th></tr>
+                    <tr><td><code>0 8 * * *</code></td><td>每天早上 8:00</td><td><code>每天 08:00</code></td></tr>
+                    <tr><td><code>30 12 * * 1-5</code></td><td>平日中午 12:30</td><td><code>平日 12:30</code></td></tr>
+                    <tr><td><code>0 9 * * 1</code></td><td>每週一早上 9:00</td><td><code>每週一 09:00</code></td></tr>
+                    <tr><td><code>0 0 1 * *</code></td><td>每月 1 號凌晨</td><td><code>每月 1 號 00:00</code></td></tr>
+                    <tr><td><code>*/30 * * * *</code></td><td>每 30 分鐘</td><td><code>每 30 分鐘</code></td></tr>
+                    <tr><td><code>0 8,12,18 * * *</code></td><td>每天 8/12/18 點</td><td><code>每天 08:00, 12:00, 18:00</code></td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 不熟 Cron 語法沒關係——OpenClaw 支援<strong>自然語言</strong>排程，它會自動幫你轉換！
+                </div>
+                <span class="slide-number">3 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 通道、對象與條件 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.1.3 通道、對象與條件</h2>
+
+                <h3>指定推播目標</h3>
+                <pre>## 每日天氣（推送到 LINE）
+- 排程: 每天 07:30
+- 通道: line
+- 對象: U1234567890abcdef（你的 LINE User ID）
+- 動作: 查詢今天的天氣並推播
+
+## 群組早安（推送到 LINE 群組）
+- 排程: 每天 08:00
+- 通道: line
+- 對象: C1234567890abcdef（群組 ID）
+- 動作: 傳送早安問候和今日重點新聞</pre>
+
+                <h3>條件執行——不是每次都做</h3>
+                <pre>## 下雨提醒
+- 排程: 每天 06:30
+- 條件: 今天有降雨機率 > 50%
+- 動作: 提醒帶傘，並告知降雨時段
+
+## 股票警報
+- 排程: 每 30 分鐘（平日 09:00-13:30）
+- 條件: 台積電股價跌破 800 或漲破 900
+- 動作: 推播股價變動通知</pre>
+
+                <div class="box info">
+                    💡 龍蝦會先檢查條件是否成立，<strong>條件成立才執行</strong>。不會收到一堆不需要的通知。
+                </div>
+                <span class="slide-number">4 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 定時任務實戰 — 每日報告 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.2 定時任務實戰</h2>
+
+                <img src="images/CH21/ch21_02_daily_timeline.png" alt="每日時間軸" class="screenshot">
+
+                <h3>全自動 AI 秘書的一天</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                    <div class="concept-card">
+                        <h3>🌅 07:30 早安報告</h3>
+                        <p>天氣穿衣建議、今日行程、重點新聞 3 則、勵志小語</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🍜 12:00 午間提醒</h3>
+                        <p>下午行程提醒、天氣建議是否適合外出午餐</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💼 18:00 下班摘要</h3>
+                        <p>今日完成事項、未完成清單、明日行程預覽</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌙 22:00 睡前新聞</h3>
+                        <p>今日重點新聞 5 則、輕鬆語氣說晚安</p>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    ✅ 把多個排程組合起來，龍蝦就變成你的<strong>每日 AI 秘書</strong>——從早到晚幫你整理資訊！
+                </div>
+                <span class="slide-number">5 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 完整早安報告範例 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>早安報告實際效果</h2>
+
+                <img src="images/CH21/ch21_03_morning_report_full.png" alt="完整早安報告" class="screenshot">
+
+                <div style="background: #f0f8ff; border: 2px solid #667eea; border-radius: 16px; padding: 25px; margin: 20px 0;">
+                    <p style="font-size: 17px; margin: 0;">
+                        <strong>龍蝦（LINE 07:30）</strong><br><br>
+                        ☀️ 早安老師！今天是 3/8（六）<br><br>
+                        🌤️ 天氣：24°C，多雲轉陣雨<br>
+                        🧥 穿著建議：薄外套，帶傘<br><br>
+                        📅 今日課表：<br>
+                        1. 08:00-09:30 三年甲班 數學<br>
+                        2. 10:00-11:30 三年乙班 數學<br>
+                        3. 13:30-15:00 教師研習<br><br>
+                        📋 學生請假：<br>
+                        - 王小明（三甲）感冒請假<br><br>
+                        💡「教育是點燃火焰，而非灌滿水桶。」— 葉慈
+                    </p>
+                </div>
+
+                <h3>週期任務也能做</h3>
+                <ul>
+                    <li><strong>每週五 17:00</strong> — 週報整理（本週完成事項 + YouTube 表現）</li>
+                    <li><strong>每月最後一天 20:00</strong> — 月度回顧報告</li>
+                    <li><strong>每天 08:00（條件）</strong> — 查生日清單，有人生日就提醒</li>
+                </ul>
+                <span class="slide-number">6 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 系統維護任務 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>系統維護自動化</h2>
+                <p>不只是生活助手，龍蝦也能當你的<strong>系統管理員</strong>：</p>
+
+                <pre>## 磁碟空間檢查
+- 排程: 每週日 03:00
+- 靜默: true
+- 動作: |
+    檢查 C: 和 D: 的剩餘空間。
+    如果任一磁碟剩餘空間 < 10GB，推播通知。
+    否則不用回報。
+
+## 龍蝦健康檢查
+- 排程: 每天 04:00
+- 靜默: true
+- 動作: |
+    執行 openclaw doctor 自我檢查。
+    如果有任何異常，推播到 LINE 通知。
+    正常的話不用回報。
+
+## 備份提醒
+- 排程: 每月 1 號 09:00
+- 通道: line
+- 動作: 提醒進行每月資料備份</pre>
+
+                <div class="box info">
+                    💡 <strong>靜默模式</strong>：背景任務用 <code>靜默: true</code>，正常不打擾你，有異常才通知。
+                </div>
+                <span class="slide-number">7 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 事件驅動自動化 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.3 事件驅動自動化</h2>
+
+                <img src="images/CH21/ch21_04_event_driven.png" alt="事件驅動" class="screenshot">
+
+                <table>
+                    <tr><th>類型</th><th>排程（定時）</th><th>事件驅動</th></tr>
+                    <tr><td><strong>觸發方式</strong></td><td>固定時間</td><td>特定事件發生時</td></tr>
+                    <tr><td><strong>範例</strong></td><td>每天 8 點報天氣</td><td>收到 Email 時自動摘要</td></tr>
+                    <tr><td><strong>比喻</strong></td><td>⏰ 鬧鐘</td><td>🔔 門鈴</td></tr>
+                </table>
+
+                <h3>OpenClaw 支援的事件</h3>
+                <table style="font-size: 16px;">
+                    <tr><th>事件</th><th>觸發條件</th><th>範例用途</th></tr>
+                    <tr><td><code>email-received</code></td><td>收到新 Email</td><td>自動摘要重要信件</td></tr>
+                    <tr><td><code>calendar-event</code></td><td>行事曆即將開始</td><td>提前 15 分鐘提醒</td></tr>
+                    <tr><td><code>file-changed</code></td><td>資料夾有新檔案</td><td>自動整理下載檔案</td></tr>
+                    <tr><td><code>webhook-received</code></td><td>收到外部 Webhook</td><td>GitHub Issue 自動回覆</td></tr>
+                    <tr><td><code>keyword-detected</code></td><td>訊息含特定關鍵字</td><td>特殊指令觸發</td></tr>
+                    <tr><td><code>price-alert</code></td><td>股價/匯率觸發條件</td><td>投資警報</td></tr>
+                </table>
+                <span class="slide-number">8 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 事件驅動設定範例 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>事件驅動設定範例</h2>
+
+                <pre style="font-size: 15px;">## Email 自動摘要
+- 事件: email-received
+- 條件: 寄件者是老闆（boss@company.com）
+- 動作: |
+    自動讀取信件內容，產生摘要，
+    並推播到 LINE 告訴我：
+    「老闆寄了一封信：[摘要]，需要回覆嗎？」
+
+## 行程提前提醒
+- 事件: calendar-event
+- 條件: 事件開始前 15 分鐘
+- 通道: line
+- 動作: |
+    推播提醒：
+    「15 分鐘後有行程：[事件名稱]，在 [地點]。」
+
+## 下載資料夾自動整理
+- 事件: file-changed
+- 條件: ~/Downloads/ 有新檔案
+- 靜默: true
+- 動作: |
+    檢查新下載的檔案類型：
+    - PDF → 移到 文件/PDF/
+    - 圖片 → 移到 圖片/下載/
+    - ZIP → 移到 壓縮檔/
+
+## GitHub Issue 自動回覆
+- 事件: webhook-received
+- 條件: 來源是 GitHub，事件類型 issues.opened
+- 動作: 自動判斷 bug/feature，友善初始回覆</pre>
+                <span class="slide-number">9 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 全自動 AI 助手實戰 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.4 實戰：全自動 AI 助手</h2>
+                <p>假設你是老師兼 YouTube 頻道經營者，完整的 HEARTBEAT.md 會這樣運作：</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <div class="concept-card" style="border-color: #ffc107;">
+                        <h3>🌧️ 06:30（條件觸發）</h3>
+                        <p>「今天降雨機率 80%，記得帶傘！也提醒學生帶雨具喔。」</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3>☀️ 06:45（定時任務）</h3>
+                        <p>早安報告：天氣 + 課表 + 請假學生 + 教學金句</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #2196f3;">
+                        <h3>📧 14:00（事件觸發）</h3>
+                        <p>「教育局來信！主旨：教師研習計畫。需要在週五前報名。要幫你回覆嗎？」</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #764ba2;">
+                        <h3>📝 16:30（定時任務）</h3>
+                        <p>今日教學摘要：上課紀錄 + 出缺席統計 + 明天課表</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #e91e63;">
+                        <h3>📊 每週五 17:00</h3>
+                        <p>教學週報：上課時數 + 出缺席統計 + YouTube 本週表現</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #ff9800;">
+                        <h3>📈 每月最後一天</h3>
+                        <p>月度回顧：出缺席總表 + YouTube 數據 + 下月重要日期</p>
+                    </div>
+                </div>
+                <span class="slide-number">10 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 注意事項與常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>21.5 注意事項與常見問題</h2>
+
+                <h3>自動化的四大原則</h3>
+                <table>
+                    <tr><th>原則</th><th>說明</th></tr>
+                    <tr><td><strong>合併通知</strong></td><td>把同一時段的多個通知合併成一則</td></tr>
+                    <tr><td><strong>善用條件</strong></td><td>加條件過濾，不要每次都推播</td></tr>
+                    <tr><td><strong>善用靜默</strong></td><td>背景任務用靜默模式，有異常才通知</td></tr>
+                    <tr><td><strong>分級重要性</strong></td><td>重要的即時推播，不重要的收到週報裡</td></tr>
+                </table>
+
+                <h3>費用估算（用 Gemini 3 Flash）</h3>
+                <table style="font-size: 17px;">
+                    <tr><th>任務</th><th>預估每次消耗</th><th>每月成本</th></tr>
+                    <tr><td>天氣查詢</td><td>~500 tokens</td><td>每天 1 次 ≈ $0.5/月</td></tr>
+                    <tr><td>新聞摘要</td><td>~2000 tokens</td><td>每天 1 次 ≈ $2/月</td></tr>
+                    <tr><td>Email 摘要</td><td>~1000 tokens/封</td><td>看 Email 量</td></tr>
+                    <tr><td>週報</td><td>~3000 tokens</td><td>每月 4 次 ≈ $0.5/月</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 以上加起來每月約 <strong>$3-5 美元</strong>（100-150 台幣）。用 Ollama 本地模型則<strong>完全免費</strong>！
+                </div>
+
+                <h3>常見問題快答</h3>
+                <ul>
+                    <li><strong>任務數量上限？</strong>建議控制在 15 個以內</li>
+                    <li><strong>時間準確嗎？</strong>可能 1-2 分鐘誤差，日常使用沒差</li>
+                    <li><strong>關機還會執行嗎？</strong>不會，所以用 Nodes 把主控放雲端</li>
+                    <li><strong>可以測試嗎？</strong><code>openclaw heartbeat run "早安報告"</code></li>
+                </ul>
+                <span class="slide-number">11 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 12: 全書完結 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span style="font-size: 80px; display: block; margin-bottom: 15px;">🎉🦞🎉</span>
+                <h1 style="font-size: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px;">恭喜完成全書旅程！</h1>
+                <p style="font-size: 20px; color: #666; max-width: 700px; margin: 0 auto 25px;">從 CH0 到 CH21，你的龍蝦從「只會回話的聊天機器人」進化成了——</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); text-align: left; max-width: 900px;">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>💬 會聊天</h3>
+                        <p>LINE / TG / Discord 多通道聊天</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>👁️ 會看圖</h3>
+                        <p>辨識圖片 + AI 自拍</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🖥️ 能操控電腦</h3>
+                        <p>瀏覽器 + 桌面代理</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📞 能打電話</h3>
+                        <p>Twilio 語音通話</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🤖 全自動管家</h3>
+                        <p>排程 + 事件驅動</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🌐 跨機協作</h3>
+                        <p>Nodes 多機分散式</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: center; margin: 25px auto; max-width: 700px;">
+                    <p style="font-size: 22px; margin-bottom: 8px;">🦞 <strong>你的龍蝦之旅，才剛剛開始。</strong></p>
+                    <p style="margin-bottom: 0; font-size: 17px;">歡迎繼續查閱附錄：指令速查表、疑難排解、AI 模型比較、學習資源</p>
+                </div>
+
+                <div style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                    <a href="index.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        🏠 返回課程總覽
+                    </a>
+                    <a href="part6-進階篇.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        🚀 回到進階篇
+                    </a>
+                </div>
+                <span class="slide-number">12 / 12</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

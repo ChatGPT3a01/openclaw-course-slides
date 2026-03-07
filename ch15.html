@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH15 Skills 生態系</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH15 — Skills 生態系</div>
+        <div class="nav-buttons">
+            <a href="part5-技能篇.html" class="nav-btn">📚 技能篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch14.html" class="nav-btn">⬅️ CH14</a>
+            <a href="ch16.html" class="nav-btn">CH16 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">⚡</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH15 | Skills 生態系</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    龍蝦本身會聊天，但查天氣、管行程、寄 Email 這些需要「跟外部服務互動」的能力，就要靠 Skills（技能）來擴充
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>理解 Skills 的概念和運作原理</li>
+                        <li>認識官方 60+ Skills 的八大分類</li>
+                        <li>學會安裝、管理、設定技能</li>
+                        <li>知道哪些技能最值得裝</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 什麼是 Skills -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.1 什麼是 Skills？</h2>
+                <p>Skills 就像手機上的 App——你的手機本身可以打電話、拍照，但你裝了 Uber 才能叫車、裝了 Foodpanda 才能訂餐。龍蝦也一樣，裝了天氣技能才能查天氣、裝了行事曆技能才能管行程。</p>
+
+                <p>在 OpenClaw 的架構裡，Skill 是一個<strong>擴充龍蝦能力的模組</strong>。每個 Skill 定義了：</p>
+                <ul>
+                    <li><strong>龍蝦能做什麼新的事</strong>（例如查天氣、寄 Email）</li>
+                    <li><strong>怎麼跟外部服務互動</strong>（例如呼叫天氣 API、連接 Gmail）</li>
+                    <li><strong>什麼時候觸發</strong>（例如使用者說「天氣」的時候）</li>
+                </ul>
+
+                <div class="box info">
+                    💡 <strong>一句話總結</strong>：AI 模型本身「會思考」，Skills 則讓龍蝦「能行動」。
+                </div>
+
+                <img src="images/CH15/ch15_01_skill_flow.png" alt="Skill 運作流程" class="screenshot">
+                <span class="slide-number">2 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: Skill 運作流程 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Skill 運作流程</h2>
+                <p>當你跟龍蝦說「今天台北天氣如何？」，背後發生了六個步驟：</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>① 傳訊息</h3>
+                        <p>你：「今天台北天氣如何？」</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>② AI 判斷</h3>
+                        <p>龍蝦的 AI 大腦判斷：這是在問天氣</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>③ 選技能</h3>
+                        <p>AI 決定使用「天氣技能」</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>④ 呼叫 API</h3>
+                        <p>天氣技能去呼叫天氣 API，拿到資料</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>⑤ 整理回覆</h3>
+                        <p>AI 把天氣資料整理成自然語言</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>⑥ 回覆你</h3>
+                        <p>「今天台北 26°C，多雲偶陣雨...」</p>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    ✅ <strong>關鍵</strong>：AI 模型會<strong>自己判斷</strong>該用哪個技能。你不需要打特殊指令，用自然語言說話就好。
+                </div>
+                <span class="slide-number">3 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: SKILL.md 格式 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>SKILL.md 格式</h2>
+                <p>每個技能都有一個 <code>SKILL.md</code> 定義檔，告訴龍蝦這個技能是什麼、能做什麼：</p>
+
+                <pre>---
+name: weather
+description: 查詢全球各城市的即時天氣、未來預報和氣象資訊。
+---
+
+# Weather（天氣查詢）
+
+目標：根據使用者提供的城市或位置，查詢即時天氣資訊。
+
+## 功能
+- 查詢即時天氣（溫度、濕度、風速、天氣狀況）
+- 查詢未來 3-7 天預報
+- 紫外線指數 / 穿衣建議
+
+## 使用方式
+- 「今天天氣怎麼樣？」
+- 「台北明天會下雨嗎？」
+- 「東京這週的天氣預報」
+
+## 需要的設定
+- API Key：在 TOOLS.md 裡設定 OpenWeatherMap API Key
+- 預設城市：在 TOOLS.md 裡設定使用者所在城市</pre>
+
+                <div class="box info">
+                    💡 龍蝦讀了這個檔案，就知道這個技能的用途和使用時機——就像招聘時的「職位說明書」。
+                </div>
+                <span class="slide-number">4 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 八大分類（上）-->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.2 官方 60+ Skills 八大分類（上）</h2>
+
+                <img src="images/CH15/ch15_02_skill_categories.png" alt="八大分類" class="screenshot">
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                    <div class="concept-card">
+                        <h3>🏠 生活實用類</h3>
+                        <p><strong>weather</strong> 天氣查詢、<strong>news</strong> 新聞摘要、<strong>translate</strong> 翻譯、<strong>calculator</strong> 計算、<strong>timer</strong> 計時器、<strong>recipe</strong> 食譜、<strong>currency</strong> 匯率</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💼 生產力類</h3>
+                        <p><strong>google-calendar</strong> 行事曆、<strong>notion</strong> 資料庫、<strong>email</strong> 收寄信、<strong>todo</strong> 待辦、<strong>notes</strong> 筆記、<strong>summary</strong> 摘要、<strong>web-search</strong> 網頁搜尋</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎮 娛樂社交類</h3>
+                        <p><strong>clawra</strong> 龍蝦自拍、<strong>music</strong> 音樂搜尋、<strong>joke</strong> 講笑話、<strong>quote</strong> 每日金句、<strong>trivia</strong> 冷知識</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔧 系統工具類</h3>
+                        <p><strong>disk-audit</strong> 磁碟盤點、<strong>sag</strong> 文字轉語音、<strong>screenshot</strong> 截圖、<strong>file-manager</strong> 檔案管理、<strong>system-monitor</strong> 系統監控</p>
+                    </div>
+                </div>
+                <span class="slide-number">5 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 八大分類（下）-->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.2 官方 60+ Skills 八大分類（下）</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                    <div class="concept-card">
+                        <h3>👨‍💻 開發者工具類</h3>
+                        <p><strong>git</strong> 版本控制、<strong>code-review</strong> 程式碼審查、<strong>docker</strong> 容器管理、<strong>ssh</strong> 遠端伺服器、<strong>database</strong> 資料庫查詢</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>☁️ 雲端儲存與文件類</h3>
+                        <p><strong>google-drive</strong> 雲端硬碟、<strong>onedrive</strong> OneDrive、<strong>doc-converter</strong> 格式轉換、<strong>pdf-tools</strong> PDF 操作、<strong>pptx-generator</strong> 簡報生成、<strong>excel-tools</strong> Excel</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💰 財經資訊類</h3>
+                        <p><strong>stock-tracker</strong> 股票報價、<strong>crypto-tracker</strong> 加密貨幣、<strong>finance-news</strong> 財經新聞、<strong>exchange-rate</strong> 匯率走勢</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🏡 智慧家庭類</h3>
+                        <p><strong>home-assistant</strong> HA 整合、<strong>camera</strong> IP 攝影機、<strong>light</strong> 智慧燈具控制</p>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    ⚡ <strong>不用全部都裝</strong>：技能太多反而會讓龍蝦「不知道該用哪個」。建議先裝最需要的 3-5 個，用熟了再慢慢擴充。
+                </div>
+                <span class="slide-number">6 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 安裝與管理 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.3 Skills 安裝與管理</h2>
+
+                <img src="images/CH15/ch15_03_clawdhub_search.png" alt="ClawdHub 搜尋" class="screenshot">
+
+                <h3>搜尋技能</h3>
+                <pre>clawdhub search weather</pre>
+
+                <h3>安裝技能</h3>
+                <pre>clawdhub install weather
+# 或
+openclaw skills install weather</pre>
+
+                <h3>查看已安裝技能</h3>
+                <pre>openclaw skills list</pre>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🔄 啟用 / 停用</h3>
+                        <pre style="font-size: 14px;">openclaw skills disable weather
+openclaw skills enable weather</pre>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>⬆️ 更新</h3>
+                        <pre style="font-size: 14px;">clawdhub update weather
+clawdhub update --all</pre>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🗑️ 移除</h3>
+                        <pre style="font-size: 14px;">openclaw skills remove weather</pre>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    ⚡ 每次安裝、移除或修改技能後，都要重啟 Gateway：<code>openclaw gateway restart</code>
+                </div>
+                <span class="slide-number">7 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 推薦必裝 Skills -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.4 推薦必裝 Skills</h2>
+
+                <img src="images/CH15/ch15_04_skills_list.png" alt="Skills 列表" class="screenshot">
+
+                <table style="font-size: 16px;">
+                    <tr><th>族群</th><th>推薦技能</th><th>說明</th></tr>
+                    <tr><td rowspan="3"><strong>🆕 新手必裝</strong></td><td>weather</td><td>最實用，每天都用得到</td></tr>
+                    <tr><td>todo</td><td>待辦事項管理，不需要 API Key</td></tr>
+                    <tr><td>translate</td><td>翻譯功能，零設定</td></tr>
+                    <tr><td rowspan="3"><strong>🎮 生活玩家</strong></td><td>news</td><td>每天看新聞摘要</td></tr>
+                    <tr><td>clawra</td><td>龍蝦自拍，好玩</td></tr>
+                    <tr><td>recipe</td><td>不知道吃什麼超好用</td></tr>
+                    <tr><td rowspan="3"><strong>💼 工作族群</strong></td><td>google-calendar</td><td>行程管理，主動提醒</td></tr>
+                    <tr><td>email</td><td>幫你讀信、回信</td></tr>
+                    <tr><td>notion</td><td>用 Notion 管理工作的人必裝</td></tr>
+                    <tr><td rowspan="3"><strong>👨‍💻 開發者</strong></td><td>git</td><td>在聊天室裡操作 Git</td></tr>
+                    <tr><td>web-search</td><td>搜尋技術文件</td></tr>
+                    <tr><td>code-review</td><td>丟程式碼讓龍蝦幫你看</td></tr>
+                </table>
+                <span class="slide-number">8 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 設定與客製化 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.5 Skills 設定與客製化</h2>
+                <p>很多技能需要額外設定才能使用——最常見的就是 <strong>API Key</strong>。</p>
+
+                <h3>方式一：寫在 TOOLS.md 裡</h3>
+                <pre>## Weather（天氣）
+- API Key: 你的OpenWeatherMap_API_Key
+- 預設城市: 台北
+- 溫度單位: 攝氏
+
+## Google Calendar
+- 服務帳號金鑰路徑: ~/.openclaw/workspace/google-credentials.json
+- 主要行事曆: 工作</pre>
+
+                <h3>方式二：用 CLI 設定</h3>
+                <pre>openclaw config set skills.weather.apiKey 你的API_Key
+openclaw config set skills.weather.defaultCity 台北</pre>
+
+                <h3>客製化技能行為</h3>
+                <p>你可以修改技能的 <code>SKILL.md</code> 來客製化行為——例如改成「回覆天氣時用簡短一句話就好」，龍蝦就會照辦。</p>
+
+                <div class="box info">
+                    💡 <strong>技能的檔案結構</strong>：每個技能是 <code>~/.openclaw/workspace/skills/</code> 裡的一個獨立資料夾，包含 <code>SKILL.md</code> 和（可選的）腳本。
+                </div>
+                <span class="slide-number">9 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>15.6 常見問題</h2>
+
+                <table style="font-size: 17px;">
+                    <tr><th style="width: 40%;">問題</th><th>解決方式</th></tr>
+                    <tr><td>安裝了技能但龍蝦不會用</td><td>① 忘記重啟 → <code>openclaw gateway restart</code><br>② API Key 沒設定 → 檢查 TOOLS.md<br>③ 技能被停用 → <code>openclaw skills list</code> 確認<br>④ 說法太含糊 → 明確說「用天氣技能查台北天氣」</td></tr>
+                    <tr><td>技能太多龍蝦搞混</td><td>控制在 10 個以內，功能重複的只留一個</td></tr>
+                    <tr><td>我可以自己寫技能嗎？</td><td>可以！CH17 會專門教你，門檻不高</td></tr>
+                    <tr><td>技能需要花錢嗎？</td><td>技能本身免費，但部分 API 有費用（大部分有免費額度）</td></tr>
+                    <tr><td>技能可以跨通道嗎？</td><td>可以。技能跟龍蝦綁定，不跟通道綁定。LINE / TG / Discord 都用同一個技能</td></tr>
+                    <tr><td>哪裡找更多技能？</td><td><code>clawdhub search 關鍵字</code>、GitHub、OpenClaw Discord 社群</td></tr>
+                </table>
+                <span class="slide-number">10 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">15.7 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>📱 Skills 概念</h3>
+                        <p>就像手機上的 App，給龍蝦擴充新能力——查天氣、管行程、寄 Email</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📦 60+ 官方技能</h3>
+                        <p>涵蓋生活、工作、娛樂、開發、雲端儲存、財經、智慧家庭等<strong>八大分類</strong></p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🛠️ 安裝與管理</h3>
+                        <p>用 <code>clawdhub</code> 或 <code>openclaw skills</code> 指令一鍵搞定搜尋、安裝、更新、移除</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⚙️ 設定與客製化</h3>
+                        <p>API Key 寫在 TOOLS.md、行為調整改 SKILL.md，讓技能完全符合你的需求</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 30px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH16 生活應用實戰</strong><br>
+                    光會「裝技能」還不夠。下一章用六個實際場景教你怎麼把技能<strong>組合運用</strong>到日常生活中——排程提醒、天氣查詢、新聞摘要、Notion 整合、Google Calendar 整合！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch16.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH16 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">11 / 11</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH12 正式域名（Cloudflare Tunnel）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH12 — 正式域名 Cloudflare Tunnel</div>
+        <div class="nav-buttons">
+            <a href="part4-通道篇.html" class="nav-btn">🌐 通道篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch11.html" class="nav-btn">⬅️ CH11</a>
+            <a href="ch13.html" class="nav-btn">CH13 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🦞</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰 — 通道篇</p>
+                <h1>CH12 | 正式域名（Cloudflare Tunnel）</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    一勞永逸解決 ngrok 網址每次都變的問題——用 Cloudflare Tunnel 給你的龍蝦一個永久不變的正式網址
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 650px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>理解 ngrok 的限制和為什麼需要正式域名</li>
+                        <li>認識 Cloudflare Tunnel 的運作原理</li>
+                        <li>申請 Cloudflare 帳號並設定域名</li>
+                        <li>安裝和設定 Cloudflare Tunnel</li>
+                        <li>更新 LINE 和 Telegram 的 Webhook</li>
+                        <li>了解 HTTPS 和安全性的基本概念</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 為什麼要告別 ngrok -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>12.1 為什麼要告別 ngrok？</h2>
+                <p>ngrok 在學習階段非常好用——免費、安裝簡單、一行指令就能用。但長期使用有幾個讓人頭痛的問題：</p>
+
+                <table>
+                    <tr><th>問題</th><th>影響</th></tr>
+                    <tr><td><strong>網址每次重啟都會變</strong></td><td>必須手動更新 LINE / Telegram 的 Webhook URL</td></tr>
+                    <tr><td><strong>免費版有連線數限制</strong></td><td>同時連線太多會被擋</td></tr>
+                    <tr><td><strong>免費版有流量限制</strong></td><td>訊息量大時可能斷線</td></tr>
+                    <tr><td><strong>網址很醜</strong></td><td><code>https://a1b2c3d4.ngrok-free.app</code> 很難記</td></tr>
+                    <tr><td><strong>ngrok 服務掛掉你也掛</strong></td><td>第三方服務出問題你的龍蝦就斷線</td></tr>
+                    <tr><td><strong>免費版會顯示警告頁面</strong></td><td>第一次造訪會看到「Visit Site」中間頁</td></tr>
+                </table>
+
+                <div class="box warning">
+                    ⚠️ 每次電腦重開機、每次 ngrok 重啟，你就得去 LINE Developers Console 更新 Webhook URL。第一次「好吧，學習嘛」，第二次「有點煩」，第三次就想摔滑鼠了！
+                </div>
+                <span class="slide-number">2 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: ngrok vs Cloudflare 比較 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>ngrok vs Cloudflare Tunnel 比較</h2>
+
+                <img src="images/CH12/ch12_01_tunnel_diagram.png" alt="Tunnel 架構圖" class="screenshot">
+
+                <table>
+                    <tr><th>比較項目</th><th>ngrok（免費版）</th><th style="background: linear-gradient(135deg, #28a745, #20c997);">Cloudflare Tunnel</th></tr>
+                    <tr><td><strong>網址</strong></td><td>隨機字串，每次不同</td><td>你自己取的，永遠不變</td></tr>
+                    <tr><td><strong>費用</strong></td><td>免費（有限制）</td><td>免費（Tunnel 本身免費）</td></tr>
+                    <tr><td><strong>穩定度</strong></td><td>一般</td><td>高（Cloudflare 全球 CDN）</td></tr>
+                    <tr><td><strong>HTTPS</strong></td><td>有</td><td>有（自動）</td></tr>
+                    <tr><td><strong>速度</strong></td><td>會多一層延遲</td><td>全球節點加速</td></tr>
+                    <tr><td><strong>好記程度</strong></td><td>❌ 亂碼網址</td><td>✅ lobster.你的域名.com</td></tr>
+                </table>
+
+                <div class="box success">
+                    ✅ 唯一的「代價」是你需要有一個域名。好消息是，域名很便宜——有些 <code>.xyz</code> 域名第一年只要 30-50 元台幣！
+                </div>
+                <span class="slide-number">3 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: Cloudflare Tunnel 原理 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>12.2 Cloudflare Tunnel 原理</h2>
+                <p>Cloudflare Tunnel（以前叫 Argo Tunnel）的概念很簡單——在你的電腦和 Cloudflare 之間「打一條隧道」：</p>
+
+                <pre style="font-size: 18px; text-align: center; line-height: 2;">
+LINE 伺服器
+    ↓ 訊息傳到你的域名
+Cloudflare 全球網路（幫你接收訊息）
+    ↓ 透過「隧道」送到你的電腦
+你的電腦上的龍蝦（port 18789）</pre>
+
+                <p>外面的人只看到你的域名和 Cloudflare，<strong>完全不知道你的電腦 IP 在哪裡</strong>。</p>
+
+                <h3>Cloudflare 的四大關鍵優勢</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="concept-card">
+                        <h3>🏷️ 用自己的域名</h3>
+                        <p>網址永遠不變，Webhook 設定一次搞定</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌍 全球最大 CDN 之一</h3>
+                        <p>穩定度和速度都比 ngrok 更好</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💰 Tunnel 完全免費</h3>
+                        <p>你只需要付域名的錢（最便宜 30 元/年）</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔒 自動 HTTPS</h3>
+                        <p>Cloudflare 自動幫你申請和管理 SSL 憑證</p>
+                    </div>
+                </div>
+                <span class="slide-number">4 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 取得域名 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>12.3 申請 Cloudflare 帳號與取得域名</h2>
+
+                <h3>取得域名的方式</h3>
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3>✅ 方式一：直接在 Cloudflare 買（最簡單）</h3>
+                        <p>價格是「成本價」（沒有加價），直接跟 Cloudflare 整合，省去後面設定 DNS 的步驟</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔄 方式二：在其他域名商買，再轉到 Cloudflare 管理</h3>
+                        <p>常見：Namecheap（便宜）、GoDaddy（老牌）</p>
+                    </div>
+                </div>
+
+                <h3>域名怎麼選？</h3>
+                <table>
+                    <tr><th>域名後綴</th><th>大約價格（年）</th><th>建議</th></tr>
+                    <tr><td><code>.com</code></td><td>300-400 元</td><td>最通用，但好名字都被註冊了</td></tr>
+                    <tr><td><code>.xyz</code></td><td>30-60 元</td><td>便宜，學習用很適合</td></tr>
+                    <tr><td><code>.top</code></td><td>30-50 元</td><td>便宜</td></tr>
+                    <tr><td><code>.tw</code></td><td>600-800 元</td><td>台灣域名，較正式</td></tr>
+                    <tr><td><code>.dev</code></td><td>350-450 元</td><td>開發者感，自帶 HTTPS</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 學習用的話，買一個便宜的 <code>.xyz</code> 就夠了。例如 <code>mylobster.xyz</code>。
+                </div>
+                <span class="slide-number">5 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 把域名加入 Cloudflare -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>把域名加入 Cloudflare</h2>
+
+                <img src="images/CH12/ch12_02_cloudflare_dashboard.png" alt="Cloudflare Dashboard" class="screenshot">
+
+                <h3>申請帳號（3 步驟）</h3>
+                <ol>
+                    <li>到 <code>dash.cloudflare.com/sign-up</code>，用 Email 註冊</li>
+                    <li>驗證 Email</li>
+                    <li>登入 Cloudflare Dashboard</li>
+                </ol>
+
+                <h3>新增域名（如果不是在 Cloudflare 買的）</h3>
+                <ol>
+                    <li>Dashboard 點 <strong>「Add a site」</strong>，輸入域名</li>
+                    <li>選擇 <strong>「Free」</strong> 方案</li>
+                    <li>Cloudflare 會給你兩組 <strong>Nameserver</strong></li>
+                    <li>到域名商把 Nameserver 改成 Cloudflare 給的那兩組</li>
+                    <li>回到 Cloudflare 點 <strong>「Done, check nameservers」</strong></li>
+                    <li>等待 DNS 生效（幾分鐘到幾小時不等）</li>
+                </ol>
+
+                <img src="images/CH12/ch12_03_cloudflare_nameserver.png" alt="Nameserver 設定" class="screenshot">
+
+                <div class="box info">
+                    💡 DNS 切換需要時間「傳播」到全球的 DNS 伺服器。Cloudflare Dashboard 顯示域名狀態為「Active」就表示成功了。
+                </div>
+                <span class="slide-number">6 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 安裝 cloudflared -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>12.4 安裝與設定 Cloudflare Tunnel</h2>
+
+                <h3>步驟一：安裝 cloudflared</h3>
+                <pre># Windows PowerShell
+winget install Cloudflare.cloudflared
+
+# 確認安裝成功
+cloudflared --version</pre>
+
+                <h3>步驟二：登入 Cloudflare</h3>
+                <pre>cloudflared tunnel login</pre>
+                <p>會自動打開瀏覽器，登入帳號後選擇域名。成功後電腦上會存一個認證檔案（<code>cert.pem</code>）。</p>
+
+                <h3>步驟三：建立隧道</h3>
+                <pre># 建立隧道（lobster 是自取的名字）
+cloudflared tunnel create lobster
+
+# 設定 DNS 指向
+cloudflared tunnel route dns lobster bot.mylobster.xyz</pre>
+
+                <div class="box info">
+                    💡 建立隧道後會顯示一串 <strong>UUID</strong>（如 <code>a1b2c3d4-5678-90ab-cdef-1234567890ab</code>），記下來等一下設定檔要用。
+                </div>
+                <span class="slide-number">7 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 建立設定檔與啟動 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>建立設定檔與啟動隧道</h2>
+
+                <h3>步驟四：建立 config.yml</h3>
+                <p>路徑：<code>C:\Users\你的使用者名稱\.cloudflared\config.yml</code></p>
+                <pre>tunnel: 你的隧道UUID
+credentials-file: C:\Users\你的使用者名稱\.cloudflared\你的隧道UUID.json
+
+ingress:
+  - hostname: bot.mylobster.xyz
+    service: http://localhost:18789
+  - service: http_status:404</pre>
+
+                <table>
+                    <tr><th>設定項目</th><th>說明</th></tr>
+                    <tr><td><code>tunnel</code></td><td>你的隧道 UUID</td></tr>
+                    <tr><td><code>credentials-file</code></td><td>認證檔案路徑（建立隧道時自動產生）</td></tr>
+                    <tr><td><code>hostname</code></td><td>你設定的域名</td></tr>
+                    <tr><td><code>service: http://localhost:18789</code></td><td>指向龍蝦 Gateway 的埠</td></tr>
+                    <tr><td><code>http_status:404</code></td><td>其他所有請求回 404（安全考量）</td></tr>
+                </table>
+
+                <h3>步驟五：啟動隧道</h3>
+                <pre>cloudflared tunnel run lobster</pre>
+
+                <div class="box success">
+                    ✅ 看到四條 <strong>「Connection registered」</strong> 就表示隧道通了！
+                </div>
+                <span class="slide-number">8 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 測試與開機自啟 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>測試隧道與開機自動啟動</h2>
+
+                <img src="images/CH12/ch12_04_tunnel_running.png" alt="Tunnel 運行中" class="screenshot">
+
+                <h3>測試隧道是否正常</h3>
+                <pre># 在瀏覽器輸入你的域名
+https://bot.mylobster.xyz
+
+# 或用 curl 測試
+curl https://bot.mylobster.xyz/health</pre>
+
+                <p>如果龍蝦有在運行（<code>openclaw gateway start</code>），你應該會看到龍蝦的回應。</p>
+
+                <h3>安裝為 Windows 服務（開機自動啟動）</h3>
+                <pre># 安裝為服務
+cloudflared service install
+
+# 確認服務狀態
+cloudflared service status
+
+# 修改 config.yml 後需要重啟
+cloudflared service restart</pre>
+
+                <div class="box success">
+                    ✅ 安裝為服務後，每次電腦開機隧道就會自動啟動，不用手動操作！
+                </div>
+                <span class="slide-number">9 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 更新 Webhook -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>12.5 更新 LINE / Telegram Webhook</h2>
+                <p>隧道建好了，現在要告訴 LINE 和 Telegram：龍蝦的新地址在這裡。</p>
+
+                <img src="images/CH12/ch12_05_webhook_verify.png" alt="Webhook 驗證" class="screenshot">
+
+                <h3>更新 LINE Webhook</h3>
+                <ol>
+                    <li>到 LINE 官方帳號管理後台（<code>manager.line.biz</code>）</li>
+                    <li>進入 Channel → <strong>Messaging API</strong> 分頁</li>
+                    <li>把 Webhook URL 改成新域名：</li>
+                </ol>
+                <pre>舊的：https://a1b2c3d4.ngrok-free.app/line/webhook
+新的：https://bot.mylobster.xyz/line/webhook</pre>
+                <ol start="4">
+                    <li>按 <strong>「Verify」</strong> → 看到 <strong>「Success」</strong> 就大功告成</li>
+                    <li>確認 <strong>「Use webhook」</strong> 是開啟的</li>
+                </ol>
+
+                <h3>更新 Telegram Webhook</h3>
+                <pre># 更新 Webhook 網址
+openclaw config set telegram.webhookUrl https://bot.mylobster.xyz
+
+# 重啟 Gateway
+openclaw gateway restart</pre>
+
+                <div class="box success">
+                    ✅ <strong>從此以後你不需要再改 Webhook 了！</strong>不管電腦重開幾次、關機多少天，網址永遠不變。
+                </div>
+                <span class="slide-number">10 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: HTTPS 與安全性 + 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>12.6 HTTPS 與安全性</h2>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>📬 HTTP</h3>
+                        <p>訊息是「明信片」，中間的人都看得到內容</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3>🔒 HTTPS</h3>
+                        <p>訊息是「密封的信」，只有寄件人和收件人看得到</p>
+                    </div>
+                </div>
+
+                <p>LINE 和 Telegram 都<strong>要求</strong> Webhook URL 必須是 HTTPS。<strong>Cloudflare 會自動幫你搞定</strong>——你什麼都不用做！</p>
+
+                <h3>Cloudflare Tunnel 的安全優勢</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="concept-card"><h3>🛡️ IP 隱藏</h3><p>外面的人只看到 Cloudflare 的 IP，不知道你的電腦在哪</p></div>
+                    <div class="concept-card"><h3>🚫 DDoS 防護</h3><p>有人惡意攻擊，Cloudflare 幫你擋</p></div>
+                    <div class="concept-card"><h3>🔐 全程加密</h3><p>LINE→Cloudflare 加密，Cloudflare→你的電腦也加密</p></div>
+                    <div class="concept-card"><h3>🔑 UUID 保護</h3><p>只有知道隧道 UUID 的人才能操控隧道</p></div>
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>安全注意事項</strong>：不要分享 <code>.cloudflared</code> 資料夾的檔案、域名要記得續約、Cloudflare 帳號要設強密碼和兩步驟驗證。
+                </div>
+                <span class="slide-number">11 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 12: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">12.8 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>☁️ Cloudflare 帳號</h3>
+                        <p>全球最大的 CDN 和安全服務，免費方案功能強大</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🏷️ 自己的域名</h3>
+                        <p>好記、好看、永遠不變，最便宜 30 元/年</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🚇 Cloudflare Tunnel</h3>
+                        <p>安全的隧道連接，可設定開機自動啟動</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔒 自動 HTTPS</h3>
+                        <p>加密通訊，LINE 和 Telegram 都認可。一次設定永久有效！</p>
+                    </div>
+                </div>
+
+                <div class="box info" style="text-align: left; margin-top: 20px;">
+                    <strong>常見問題速查</strong>：<br>
+                    <strong>Q：</strong>Tunnel 真的免費嗎？ <strong>A：</strong>是的，只需付域名費用。<br>
+                    <strong>Q：</strong>可以同時保留 ngrok？ <strong>A：</strong>可以，但 Webhook 只能指向一個。<br>
+                    <strong>Q：</strong>雲端安裝需要 Cloudflare 嗎？ <strong>A：</strong>不需要，雲端方案已有固定網址。
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 20px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH13 更多通道</strong><br>
+                    LINE 和 Telegram 只是龍蝦的兩個「家」——OpenClaw 支援超過 22 種通道！下一章帶你認識 WhatsApp、Discord、Slack 等更多通道。</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch13.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH13 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">12 / 12</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

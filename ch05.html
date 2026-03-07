@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH5 安裝 OpenClaw（五種方式）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH5 — 安裝 OpenClaw（五種方式）</div>
+        <div class="nav-buttons">
+            <a href="part2-安裝篇.html" class="nav-btn">📦 安裝篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch04.html" class="nav-btn">⬅️ CH4</a>
+            <a href="ch06.html" class="nav-btn">CH6 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">📦</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH5 | 安裝 OpenClaw（五種方式）</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    就像組裝模型有不同方法——買成品、照說明書、自己拼。安裝龍蝦也有五種路線，不管選哪條路，最後都能讓龍蝦在 LINE 裡活蹦亂跳！
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>了解五種安裝方式的差異，選最適合自己的</li>
+                        <li>完成 OpenClaw 的安裝與初始化設定</li>
+                        <li>啟動 Gateway 並透過 ngrok 讓 LINE 連接龍蝦</li>
+                        <li>在 LINE 上成功與龍蝦對話，驗證安裝成功</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 五種方式總覽 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.1 五種方式，一張表看懂</h2>
+                <p>就像買電腦可以買品牌機、自組、用免費零件、或租雲端主機——選最適合你的就好！</p>
+
+                <table style="font-size: 15px;">
+                    <tr>
+                        <th></th>
+                        <th>方式一：自動安裝</th>
+                        <th>方式二：手動 npm</th>
+                        <th>方式三：Ollama 本地</th>
+                        <th>方式四：Codespaces</th>
+                        <th>方式五：Zeabur 雲端</th>
+                    </tr>
+                    <tr><td><strong>適合誰</strong></td><td>完全零基礎</td><td>有技術底子</td><td>有好顯卡</td><td>電腦太舊</td><td>想一鍵部署</td></tr>
+                    <tr><td><strong>難度</strong></td><td>⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐</td></tr>
+                    <tr><td><strong>費用</strong></td><td>依 AI 模型</td><td>依 AI 模型</td><td>完全免費</td><td>完全免費</td><td>免費方案可用</td></tr>
+                    <tr><td><strong>龍蝦跑在哪</strong></td><td>你的電腦</td><td>你的電腦</td><td>你的電腦</td><td>GitHub 雲端</td><td>Zeabur 雲端</td></tr>
+                    <tr><td><strong>時間</strong></td><td>~15 分鐘</td><td>~30 分鐘</td><td>~40 分鐘</td><td>~20 分鐘</td><td>~10 分鐘</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 <strong>選擇建議</strong>：什麼都不想管 → <strong>方式一</strong>｜有 NVIDIA 顯卡想免費 → <strong>方式三</strong>｜電腦太舊 → <strong>方式四</strong>｜想自己動手 → <strong>方式二</strong>｜想雲端一鍵 → <strong>方式五</strong>
+                </div>
+                <span class="slide-number">2 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: 安裝前共同準備 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.2 安裝前的共同準備</h2>
+                <p>不管選哪一種安裝方式，這些資料都要先準備好。如果你在 CH1 已完成帳號申請，只需要把資料找出來。</p>
+
+                <h3>必要資料清單</h3>
+                <table>
+                    <tr><th>必要資料</th><th>從哪裡取得</th><th>用在哪裡</th></tr>
+                    <tr><td>LINE Channel ID</td><td>LINE Developers Console</td><td>讓龍蝦知道連哪個 LINE 帳號</td></tr>
+                    <tr><td>LINE Channel Secret</td><td>LINE Developers Console</td><td>驗證訊息來源的密鑰</td></tr>
+                    <tr><td>LINE Channel Access Token</td><td>LINE Developers（點 Issue）</td><td>龍蝦發送訊息的授權碼</td></tr>
+                    <tr><td>AI API Key（至少一組）</td><td>Google AI Studio / OpenAI / Anthropic</td><td>龍蝦的大腦</td></tr>
+                    <tr><td>ngrok Authtoken</td><td>ngrok Dashboard</td><td>建立通道讓 LINE 連到你的電腦</td></tr>
+                </table>
+
+                <div class="box warning">
+                    ⚠️ <strong>例外</strong>：方式三（Ollama）不需要 AI API Key。方式四（Codespaces）不需要 ngrok Authtoken。
+                </div>
+
+                <h3>AI 模型選擇</h3>
+                <table>
+                    <tr><th>AI 平台</th><th>推薦模型</th><th>費用</th><th>適合誰</th></tr>
+                    <tr><td><strong>Google Gemini</strong></td><td>Gemini 3 Flash</td><td>有免費額度</td><td>新手首選</td></tr>
+                    <tr><td><strong>OpenAI</strong></td><td>GPT-5.2</td><td>付費</td><td>最強中文</td></tr>
+                    <tr><td><strong>Anthropic</strong></td><td>Claude Sonnet 4.6</td><td>付費</td><td>最佳程式碼品質</td></tr>
+                    <tr><td><strong>Ollama（本地）</strong></td><td>Llama 3.3 70B</td><td>完全免費</td><td>有好顯卡、注重隱私</td></tr>
+                </table>
+                <span class="slide-number">3 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 方式一 — 自動安裝程式 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.3 方式一：Windows 自動安裝程式（推薦新手）</h2>
+                <p>阿亮老師的懶人包！整個過程就像在便利商店買微波食品——拆開、加熱、吃，不需要知道怎麼炒菜。</p>
+
+                <img src="images/CH05/ch05_01_run_gobat.png" alt="啟動 go.bat" class="screenshot">
+
+                <h3>啟動步驟</h3>
+                <ol>
+                    <li><strong>找到 <code>go.bat</code></strong>，按右鍵 →「以系統管理員身分執行」</li>
+                    <li>輸入老師提供的<strong>密碼</strong>，按 Enter</li>
+                    <li>選擇 <strong>[1] 全部安裝（新手推薦）</strong></li>
+                </ol>
+
+                <pre>╔══════════════════════════════════════╗
+║     🦞 龍蝦 AI 自動安裝程式 v3.3    ║
+╠══════════════════════════════════════╣
+║  Node.js:    ✅ v24.2.0             ║
+║  OpenClaw:   ❌ 未安裝              ║
+║  ngrok:      ❌ 未安裝              ║
+║  LINE:       ❌ 未設定              ║
+╚══════════════════════════════════════╝</pre>
+
+                <p>全部安裝會自動完成：安裝 Node.js → Git → OpenClaw → 初始化設定 → LINE 外掛 → LINE 頻道設定 → ngrok 設定。整個過程約 <strong>10-15 分鐘</strong>。</p>
+
+                <div class="box info">
+                    💡 安裝程式有<strong>密碼保護</strong>，密碼會在課堂或教學社群中提供。這是確保安裝程式配合正確的教學版本使用。
+                </div>
+                <span class="slide-number">4 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 方式一 — 初始化設定精靈 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>初始化設定精靈（方式一續）</h2>
+                <p>安裝過程中，OpenClaw 的設定精靈會問你幾個問題。別緊張，就像填問卷一樣！</p>
+
+                <table>
+                    <tr><th>問題</th><th>建議回答</th></tr>
+                    <tr><td>I understand this is powerful...?</td><td>輸入 <code>Yes</code></td></tr>
+                    <tr><td>Onboarding mode?</td><td>選擇 <code>QuickStart</code></td></tr>
+                    <tr><td>Model/auth provider?</td><td>依你的 API Key 選擇（如 <code>Google</code>）</td></tr>
+                    <tr><td>貼上 API Key</td><td>複製貼上你的 API Key（PowerShell 用<strong>右鍵貼上</strong>）</td></tr>
+                    <tr><td>Default model?</td><td>選擇 <code>Keep current</code> 或偏好的模型</td></tr>
+                    <tr><td>Select channel?</td><td>選擇 <code>LINE (Messaging API)</code></td></tr>
+                </table>
+
+                <h3>設定 LINE 頻道資料</h3>
+                <p>安裝程式會依序問你三個 LINE 的資料：</p>
+                <ol>
+                    <li>輸入 <strong>LINE Channel ID</strong>（一串數字）</li>
+                    <li>輸入 <strong>LINE Channel Secret</strong>（英數混合）</li>
+                    <li>輸入 <strong>LINE Channel Access Token</strong>（超長英數字串）</li>
+                </ol>
+
+                <div class="box warning">
+                    ⚠️ Channel Access Token 超過 100 字元，建議先在記事本裡複製好，然後在 PowerShell 按<strong>右鍵貼上</strong>。
+                </div>
+
+                <p>最後設定 <strong>ngrok Authtoken</strong>，然後選擇 <strong>[9] 啟動 OpenClaw + ngrok</strong>，把顯示的 <code>ngrok-free.app</code> 網址複製起來！</p>
+                <span class="slide-number">5 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 方式二 — 手動 npm 安裝 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.4 方式二：手動 npm 安裝（進階用戶）</h2>
+                <p>喜歡自己動手、想理解每個步驟背後的原理？手動安裝就像自己從頭煮一道菜——步驟多但你會清楚知道每樣材料是什麼。</p>
+
+                <h3>完整步驟流程</h3>
+                <pre>
+# 1. 確認 Node.js（需要 v22+）
+node -v
+
+# 2. 確認 Git
+git --version
+
+# 3. 安裝 OpenClaw
+npm install -g openclaw@latest
+
+# 4. 確認安裝成功
+openclaw --version
+
+# 5. 初始化設定
+openclaw onboard --install-daemon
+
+# 6. 安裝 LINE 外掛
+openclaw plugins install @openclaw/line
+
+# 7. 設定 LINE 頻道（三把鑰匙）
+openclaw config set channels.line.channelId "你的Channel ID"
+openclaw config set channels.line.channelSecret "你的Channel Secret"
+openclaw config set channels.line.channelAccessToken "你的Channel Access Token"
+
+# 8. 安裝 ngrok
+winget install ngrok.ngrok
+ngrok config add-authtoken 你的ngrok_authtoken
+
+# 9. 啟動龍蝦（開兩個 PowerShell 視窗）
+openclaw gateway start      # 視窗一
+ngrok http 18789             # 視窗二</pre>
+
+                <div class="box info">
+                    💡 <code>-g</code> 代表 global（全域安裝），<code>@latest</code> 代表最新版本。<code>18789</code> 是 OpenClaw Gateway 的預設連接埠。
+                </div>
+                <span class="slide-number">6 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 方式三 — Ollama 本地免費 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.5 方式三：Ollama 本地免費方案</h2>
+                <p>龍蝦的「大腦」完全在你電腦裡運算——<strong>完全免費</strong>、<strong>完全離線</strong>、<strong>完全隱私</strong>。但需要有不錯的顯卡。</p>
+
+                <h3>顯卡需求對照表</h3>
+                <table>
+                    <tr><th>顯卡等級</th><th>VRAM</th><th>可以跑的模型</th><th>回應速度</th></tr>
+                    <tr><td>GTX 1660 / RTX 2060</td><td>6GB</td><td>Llama 3.2 3B（輕量版）</td><td>普通</td></tr>
+                    <tr><td>RTX 3060 / RTX 4060</td><td>8GB</td><td>Llama 3.1 8B（標準版）</td><td>流暢</td></tr>
+                    <tr><td>RTX 3070 / RTX 4070</td><td>12GB</td><td>Qwen 3 14B</td><td>很流暢</td></tr>
+                    <tr><td>RTX 3090 / RTX 4080+</td><td>16GB+</td><td>Llama 3.3 70B（最強）</td><td>非常流暢</td></tr>
+                </table>
+
+                <h3>安裝步驟</h3>
+                <pre>
+# 1. 安裝 Ollama：https://ollama.com/
+ollama --version
+
+# 2. 下載 AI 模型（根據顯卡選擇）
+ollama pull llama3.1:8b     # 8GB 顯卡推薦
+ollama pull qwen3:14b       # 12GB 顯卡
+ollama pull llama3.3:70b    # 16GB+ 顯卡
+
+# 3. 測試模型
+ollama run llama3.1:8b      # 按 Ctrl+D 或 /bye 離開
+
+# 4. 安裝 OpenClaw + 設定
+npm install -g openclaw@latest
+openclaw onboard --install-daemon
+# → Model provider 選「Ollama」
+# → Default model 填你下載的模型名稱</pre>
+
+                <div class="box warning">
+                    ⚠️ 不確定 VRAM 大小？在 Windows 搜尋列輸入 <code>dxdiag</code>，切到「顯示」分頁查看「顯示記憶體」。Ollama 服務需一直在背景運行！
+                </div>
+                <span class="slide-number">7 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 方式四 — GitHub Codespaces -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.6 方式四：GitHub Codespaces（免費雲端）</h2>
+                <p>電腦比較舊？不想裝一堆東西？Codespaces 提供免費的雲端電腦，打開瀏覽器就能操作！</p>
+
+                <h3>完全免費帳單</h3>
+                <table>
+                    <tr><th>項目</th><th>費用</th><th>說明</th></tr>
+                    <tr><td>GitHub Codespaces</td><td>$0</td><td>每月免費 120 小時 + 15GB</td></tr>
+                    <tr><td>Qwen AI 模型</td><td>$0</td><td>每天 2000 次免費呼叫</td></tr>
+                    <tr><td>LINE Messaging API</td><td>$0</td><td>免費方案</td></tr>
+                    <tr><td><strong>每月總計</strong></td><td><strong>$0</strong></td><td><strong>完全免費</strong></td></tr>
+                </table>
+
+                <img src="images/CH05/ch05_02_create_repo.png" alt="建立 GitHub 倉庫" class="screenshot">
+
+                <h3>操作流程</h3>
+                <ol>
+                    <li>在 GitHub 建立新倉庫（Public，勾選 Add README）</li>
+                    <li>新增 <code>.devcontainer/devcontainer.json</code> 設定檔</li>
+                    <li>新增 <code>package.json</code></li>
+                    <li>點擊 Code → Codespaces → <strong>Create codespace on main</strong></li>
+                    <li>在終端機執行 <code>openclaw onboard --install-daemon</code></li>
+                </ol>
+
+                <img src="images/CH05/ch05_03_create_codespace.png" alt="建立 Codespace" class="screenshot">
+
+                <div class="box info">
+                    💡 Codespaces <strong>不需要 ngrok</strong>！GitHub 會自動幫你公開端口。記得設定端口為 <strong>Make Public</strong>。
+                </div>
+                <span class="slide-number">8 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 方式五 — Zeabur 雲端 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>方式五：Zeabur 一鍵雲端部署</h2>
+                <p>Zeabur 是台灣團隊開發的雲端部署平台，只需要幾個點擊就能把龍蝦部署到雲端。適合想要「設定完就忘」的使用者。</p>
+
+                <img src="images/CH05/ch05_04_zeabur_deploy.png" alt="Zeabur 部署" class="screenshot">
+
+                <h3>操作流程</h3>
+                <ol>
+                    <li>前往 <strong>zeabur.com</strong> 建立帳號</li>
+                    <li>建立新專案，選擇 <strong>Deploy from GitHub</strong></li>
+                    <li>連結你的 GitHub 倉庫（和方式四一樣的倉庫可以直接用）</li>
+                    <li>設定環境變數（LINE Channel ID / Secret / Token、AI API Key）</li>
+                    <li>Zeabur 會自動部署、自動給你一個公開的 HTTPS 網址</li>
+                </ol>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>✅ 優點</h3>
+                        <ul>
+                            <li>設定簡單，點幾下就好</li>
+                            <li>24 小時在線，不用開電腦</li>
+                            <li>自動 HTTPS，不需要 ngrok</li>
+                            <li>台灣團隊，中文支援好</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⚠️ 注意事項</h3>
+                        <ul>
+                            <li>免費方案有資源限制</li>
+                            <li>超過免費額度需要付費</li>
+                            <li>需要 GitHub 帳號</li>
+                        </ul>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 設定 LINE Webhook -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.7 設定 LINE Webhook 與驗證</h2>
+                <p>不管用哪種安裝方式，最後都要做這一步：告訴 LINE「我的龍蝦在這裡，有訊息請送過來」——就像在郵局登記收件地址。</p>
+
+                <img src="images/CH05/ch05_05_line_webhook.png" alt="設定 LINE Webhook" class="screenshot">
+
+                <h3>設定步驟</h3>
+                <ol>
+                    <li>前往 <code>https://manager.line.biz/</code></li>
+                    <li>進入你的 Messaging API Channel</li>
+                    <li>找到 Webhook settings 區域</li>
+                    <li>填入 Webhook URL：
+                        <ul>
+                            <li>方式一/二/三：<code>https://xxxx.ngrok-free.app<strong>/line/webhook</strong></code></li>
+                            <li>方式四：<code>https://你的codespace-8080.app.github.dev<strong>/line/webhook</strong></code></li>
+                            <li>方式五：<code>https://你的zeabur網址<strong>/line/webhook</strong></code></li>
+                        </ul>
+                    </li>
+                    <li>點 <strong>Verify</strong> → 看到 <span class="highlight">Success</span> 就成功了！</li>
+                </ol>
+
+                <div class="box warning">
+                    ⚠️ <strong>別忘了關閉 LINE 自動回覆</strong>：回應模式設成 <strong>Bot</strong>、自動回應訊息設成<strong>停用</strong>、Webhook 設成<strong>啟用</strong>。否則龍蝦會回覆兩則訊息！
+                </div>
+                <span class="slide-number">10 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 配對與首次對話 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.7 配對你的 LINE 帳號</h2>
+                <p>Webhook 設定成功後，接下來要讓龍蝦「認識」你！</p>
+
+                <h3>配對步驟</h3>
+                <ol>
+                    <li>用手機 LINE 掃描 Messaging API Channel 上的 <strong>QR Code</strong>，加 Bot 好友</li>
+                    <li>傳一句話給龍蝦（例如「你好」）</li>
+                    <li>龍蝦會回覆一組<strong>配對碼</strong>（例如 <code>A1B2C3</code>）</li>
+                    <li>回到電腦終端機輸入：
+                        <pre>openclaw pairing approve line 你的配對碼</pre>
+                    </li>
+                    <li>再傳一次「你好」→ 龍蝦用正常語氣回覆 → <strong>成功！</strong></li>
+                </ol>
+
+                <div class="box success">
+                    🎉 <strong>恭喜你！</strong>龍蝦成功回覆代表整個安裝流程已完成。你現在擁有了一隻屬於自己的 AI 助手，透過 LINE 和你對話！
+                </div>
+
+                <div class="box info">
+                    💡 如果你在 CH4 製作了 <code>IDENTITY.md</code>，把它複製到 <code>~/.openclaw/workspace/</code> 目錄，然後執行 <code>openclaw gateway restart</code>，龍蝦就會用你設定的個性來回答！
+                </div>
+                <span class="slide-number">11 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 12: 健康檢查 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.8 安裝後的健康檢查</h2>
+                <p>就像新車買回來要先跑保養廠做檢查，龍蝦裝好後也建議做一次健康檢查。</p>
+
+                <img src="images/CH05/ch05_06_openclaw_doctor.png" alt="openclaw doctor 健康檢查" class="screenshot">
+
+                <h3>使用 doctor 指令</h3>
+                <pre>openclaw doctor</pre>
+
+                <p>它會檢查以下項目，用 ✅ 和 ❌ 告訴你結果：</p>
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <div class="concept-card"><h3>🟢 Node.js 版本</h3><p>是否足夠（v22+）</p></div>
+                    <div class="concept-card"><h3>🟢 OpenClaw 安裝</h3><p>是否正確安裝</p></div>
+                    <div class="concept-card"><h3>🟢 設定檔</h3><p>是否存在且格式正確</p></div>
+                    <div class="concept-card"><h3>🟢 AI API Key</h3><p>是否有效（或 Ollama 服務運行中）</p></div>
+                    <div class="concept-card"><h3>🟢 LINE 外掛</h3><p>是否已安裝</p></div>
+                    <div class="concept-card"><h3>🟢 Gateway 狀態</h3><p>是否正在運行</p></div>
+                </div>
+
+                <h3>其他實用指令</h3>
+                <pre>
+# 確認 Gateway 狀態
+openclaw gateway status
+
+# 換 AI 模型（不用重新安裝！）
+openclaw config set agents.defaults.model.primary "gemini-3-flash"
+openclaw gateway restart</pre>
+                <span class="slide-number">12 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 13: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.9 常見問題 FAQ</h2>
+
+                <table style="font-size: 16px;">
+                    <tr><th style="width: 40%;">問題</th><th>解決方法</th></tr>
+                    <tr>
+                        <td><strong>npm ERR! code ERESOLVE</strong></td>
+                        <td>先安裝 Git（https://git-scm.com/），再重新執行安裝指令</td>
+                    </tr>
+                    <tr>
+                        <td><strong>「不是可辨識的命令」</strong></td>
+                        <td>關閉 PowerShell 重新打開一個新的（PATH 需要更新）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>LINE Webhook 驗證失敗</strong></td>
+                        <td>檢查：ngrok 是否在跑？網址對不對？有沒有加 <code>/line/webhook</code>？</td>
+                    </tr>
+                    <tr>
+                        <td><strong>龍蝦回覆兩則訊息</strong></td>
+                        <td>LINE 自動回覆沒關！把自動回應訊息<strong>停用</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Codespaces 龍蝦不回覆</strong></td>
+                        <td>閒置 30 分鐘自動休眠，回 GitHub 重新啟動 Codespace</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ollama 回覆很慢</strong></td>
+                        <td>換小模型（如 <code>llama3.2:3b</code>）或關掉佔用顯卡的程式</td>
+                    </tr>
+                    <tr>
+                        <td><strong>想換 AI 模型</strong></td>
+                        <td><code>openclaw config set agents.defaults.model.primary "模型名"</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ngrok 重啟換網址</strong></td>
+                        <td>免費版每次重啟都換網址，需要更新 LINE Webhook URL</td>
+                    </tr>
+                </table>
+                <span class="slide-number">13 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 14: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">5.10 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>📦 安裝完成</h3>
+                        <p>不管是自動安裝、手動 npm、Ollama、Codespaces 或 Zeabur，龍蝦已經上線了！</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔗 LINE 連線</h3>
+                        <p>透過 ngrok 或雲端平台建立外部連線，LINE Webhook 設定完成。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🤝 配對成功</h3>
+                        <p>用配對碼讓龍蝦「認識」你，現在龍蝦在 LINE 裡等你聊天。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🩺 健康檢查</h3>
+                        <p><code>openclaw doctor</code> 確認所有零件都正常運作。</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 30px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH6 — LINE 對話教學</strong><br>
+                    目前龍蝦只會用文字回覆——下一章要教龍蝦透過 Telegram 聊天，還能看懂你傳的照片，甚至自拍回傳給你！拍一張冰箱裡的食材照片傳給它，它就能告訴你今天可以煮什麼菜。</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch06.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH6 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">14 / 14</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH18 控制電腦</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH18 — 控制電腦</div>
+        <div class="nav-buttons">
+            <a href="part6-進階篇.html" class="nav-btn">🚀 進階篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch17.html" class="nav-btn">⬅️ CH17</a>
+            <a href="ch19.html" class="nav-btn">CH19 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🖥️</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH18 | 控制電腦</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    讓龍蝦走出聊天室，直接在你的電腦上幫你做事——瀏覽網頁、管理檔案、執行腳本，遠端遙控你的電腦
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>認識 Desktop Agent 的概念和能力範圍</li>
+                        <li>了解瀏覽器操控（Browser Sandbox）的運作方式</li>
+                        <li>學會用龍蝦進行檔案管理自動化</li>
+                        <li>認識應用程式自動化的可能性</li>
+                        <li>理解安全注意事項</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: Desktop Agent 概念 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.1 Desktop Agent 概念</h2>
+                <p>到目前為止，龍蝦一直住在「聊天室」裡——你傳訊息，它回訊息。但如果龍蝦能<strong>走出聊天室</strong>，直接在你的電腦上幫你做事呢？</p>
+
+                <img src="images/CH18/ch18_01_agent_evolution.png" alt="Agent 演進" class="screenshot">
+
+                <table>
+                    <tr><th>世代</th><th>類型</th><th>能力</th></tr>
+                    <tr><td>第一代</td><td>Coding Agent</td><td>寫程式、操作終端機</td></tr>
+                    <tr><td>第二代</td><td>Browser Agent</td><td>瀏覽網頁、填表單</td></tr>
+                    <tr><td>第三代</td><td>Desktop Agent</td><td>操控電腦上的應用程式</td></tr>
+                    <tr><td style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); font-weight: bold;">第四代</td><td style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); font-weight: bold;">Computer Agent</td><td style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); font-weight: bold;">完全自主操控整台電腦</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 龍蝦的 Desktop Agent 能力介於第二代和第三代之間——它可以操控瀏覽器、管理檔案、執行腳本，但還不到「完全自主操控整台電腦」的程度。
+                </div>
+                <span class="slide-number">2 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: Desktop Agent 能做什麼 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>Desktop Agent 能做什麼？</h2>
+                <p>想像這些場景——<strong>全部都能實現</strong>：</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    <div class="concept-card">
+                        <h3>🌐 瀏覽網頁</h3>
+                        <p>打開網站、搜尋資訊、擷取內容</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📁 檔案管理</h3>
+                        <p>建立、複製、移動、重新命名檔案和資料夾</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⚙️ 執行程式</h3>
+                        <p>跑 Python 腳本、PowerShell 指令</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📄 讀寫文件</h3>
+                        <p>讀取 PDF、Word、Excel，產生報告</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📸 螢幕截圖</h3>
+                        <p>截取螢幕畫面分析</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🖥️ 系統操作</h3>
+                        <p>查看系統資源、管理程序</p>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>Desktop Agent 的限制</strong>：不能操作沒有 API 的圖形介面軟體（如直接點 PhotoShop 按鈕）。主要透過命令列和 API 操作，每次操作需要你的授權。
+                </div>
+                <span class="slide-number">3 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: Browser Sandbox -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.2 瀏覽器操控（Browser Sandbox）</h2>
+                <p>Browser Sandbox 讓龍蝦操控一個「沙盒瀏覽器」——在安全環境中運行的瀏覽器。<strong>不會動到你 Chrome 裡的書籤、密碼和瀏覽紀錄</strong>。</p>
+
+                <img src="images/CH18/ch18_02_sandbox_diagram.png" alt="Sandbox 架構圖" class="screenshot">
+
+                <h3>設定瀏覽器操控</h3>
+                <pre># 安裝瀏覽器操控技能
+clawdhub install browser-sandbox
+
+# 安裝 Playwright 瀏覽器
+npx playwright install chromium</pre>
+
+                <p>在 <code>TOOLS.md</code> 裡加上：</p>
+                <pre>## Browser Sandbox
+- 瀏覽器: Chromium
+- 無頭模式: 是（不會彈出瀏覽器視窗）
+- 截圖: 每次操作後自動截圖回報</pre>
+                <span class="slide-number">4 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 瀏覽器操控場景 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>瀏覽器操控——三大場景</h2>
+
+                <img src="images/CH18/ch18_03_browser_query.png" alt="瀏覽器查詢" class="screenshot">
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>🔍 查資料</h3>
+                        <pre style="font-size: 14px; background: #2d2d2d;">你：幫我查台北到花蓮
+   的火車時刻
+龍蝦：🚂 明天早上班次：
+  06:30 太魯閣號 410 次
+  07:00 自強號 208 次
+  08:00 太魯閣號 412 次</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📋 擷取資訊</h3>
+                        <pre style="font-size: 14px; background: #2d2d2d;">你：幫我看 PTT 八卦版
+   今天有什麼熱門
+龍蝦：📋 今日熱門前 5 篇：
+  1. [爆卦] xxx（推:587）
+  2. [問卦] xxx（推:423）
+  3. [新聞] xxx（推:356）</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📝 填表單</h3>
+                        <pre style="font-size: 14px; background: #2d2d2d;">你：幫我填 Google Forms
+   第一題選A 第二題台北市
+龍蝦：✅ 已完成填寫
+  最後需要你確認送出
+  要我幫你送出嗎？</pre>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    💡 龍蝦操控的是<strong>獨立的沙盒瀏覽器</strong>，跟你平常用的瀏覽器完全隔離，安全無虞。
+                </div>
+                <span class="slide-number">5 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 檔案管理自動化 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.3 檔案管理自動化</h2>
+
+                <img src="images/CH18/ch18_04_file_manage.png" alt="檔案管理" class="screenshot">
+
+                <h3>基本檔案操作</h3>
+                <pre>你：桌面上有多少個 PDF 檔？
+龍蝦：📁 桌面上有 12 個 PDF 檔案：
+      - 會議記錄_0301.pdf (2.3MB)
+      - 報價單.pdf (156KB)
+      - 教案_CH5.pdf (890KB)
+      ...（共 12 個）
+
+你：把桌面上所有的 PDF 移到「文件/PDF」資料夾
+龍蝦：即將移動 12 個 PDF 檔案。確認執行嗎？
+你：確認
+龍蝦：✅ 已移動 12 個檔案到 C:\Users\你的名稱\Documents\PDF\</pre>
+
+                <h3>智慧整理</h3>
+                <pre>你：幫我整理下載資料夾，把檔案分類
+龍蝦：📂 掃描完成，共 47 個檔案。建議分類：
+      📁 文件（PDF、Word、Excel）→ 18 個
+      📁 圖片（JPG、PNG）→ 12 個
+      📁 壓縮檔（ZIP、RAR）→ 8 個
+      📁 安裝檔（EXE、MSI）→ 5 個
+      📁 其他 → 4 個
+      要執行嗎？</pre>
+                <span class="slide-number">6 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 磁碟盤點 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>磁碟盤點與批次處理</h2>
+                <p>CH15 提到的 <code>disk-audit</code> 技能就是檔案管理的好例子：</p>
+
+                <pre>你：幫我掃描 D 槽，找出佔最多空間的前 10 個檔案
+龍蝦：🔍 掃描中...
+      📊 D 槽 Top 10 大檔案：
+      1. 遊戲安裝檔.iso (4.7GB)
+      2. 備份_202601.zip (2.1GB)
+      3. 教學影片.mp4 (1.8GB)
+      ...
+      總共佔用 15.3GB。要處理哪一個？</pre>
+
+                <h3>批次重新命名</h3>
+                <pre>你：幫我把「照片」資料夾裡的檔案，
+    全部改名成「旅遊_日期_序號」的格式
+龍蝦：📁 找到 85 張照片。
+      我會根據照片的拍攝日期（EXIF 資訊）重新命名。
+      例如：IMG_0001.jpg → 旅遊_20260215_001.jpg
+      確認執行嗎？</pre>
+
+                <div class="box success">
+                    ✅ 龍蝦不只能做簡單的搬移——它可以用 <strong>AI 理解檔案的內容</strong>來智慧分類！
+                </div>
+                <span class="slide-number">7 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 應用程式自動化 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.4 應用程式自動化</h2>
+                <p>龍蝦可以執行 PowerShell 和 Python 腳本，間接操控其他應用程式。</p>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>📄 自動產生 PDF</h3>
+                        <pre style="font-size: 14px; background: #2d2d2d;">你：幫我把桌面上的
+   report.md 轉成 PDF
+龍蝦：正在轉換...
+  ✅ 已產生 report.pdf
+  放在同一個資料夾裡。</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📊 Excel 資料處理</h3>
+                        <pre style="font-size: 14px; background: #2d2d2d;">你：打開 sales.xlsx
+   算出每月銷售總額
+龍蝦：📊 銷售總額統計：
+  1月：$125,000
+  2月：$142,000
+  3月：$168,000
+  Q1 累計：$435,000</pre>
+                    </div>
+                </div>
+
+                <h3>🖥️ 系統管理</h3>
+
+                <img src="images/CH18/ch18_05_system_monitor.png" alt="系統監控" class="screenshot">
+
+                <pre>你：我的電腦最近很慢，幫我看看什麼佔最多記憶體
+龍蝦：🖥️ 記憶體使用：16GB 中已用 13.2GB（82%）
+      Top 5：
+      1. Chrome（32 個分頁）→ 4.1GB
+      2. VS Code → 1.2GB
+      3. Discord → 800MB
+      4. Teams → 650MB
+      5. Node.js（龍蝦 Gateway）→ 180MB
+      建議：Chrome 分頁太多了！</pre>
+                <span class="slide-number">8 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 安全注意事項 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.5 安全注意事項</h2>
+                <p>Desktop Agent 的能力很強大，但<strong>能力越大責任越大</strong>。讓 AI 操控你的電腦有一些安全風險需要注意。</p>
+
+                <h3>預設的四層安全防護</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                    <div class="concept-card">
+                        <h3>✅ 確認機制</h3>
+                        <p>涉及檔案刪除、移動、修改的操作，龍蝦會先問你確認</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔒 沙盒隔離</h3>
+                        <p>瀏覽器操作在沙盒裡進行，不影響你的正常瀏覽器</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📂 範圍限制</h3>
+                        <p>龍蝦只能存取你授權的資料夾，不是整台電腦</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📋 日誌記錄</h3>
+                        <p>所有操作都有 log，你可以回顧龍蝦做了什麼</p>
+                    </div>
+                </div>
+
+                <h3>設定安全邊界（AGENTS.md / SOUL.md）</h3>
+                <table>
+                    <tr><th>區域</th><th>權限</th><th>範例</th></tr>
+                    <tr><td style="color: #28a745; font-weight: bold;">🟢 自由操作</td><td>不需確認</td><td>桌面、文件資料夾、下載資料夾</td></tr>
+                    <tr><td style="color: #ffc107; font-weight: bold;">🟡 需要確認</td><td>每次確認</td><td>其他磁碟（D:、E:）、應用程式資料夾</td></tr>
+                    <tr><td style="color: #dc3545; font-weight: bold;">🔴 絕對禁止</td><td>禁止存取</td><td>C:\Windows\、Program Files、密碼檔案</td></tr>
+                </table>
+                <span class="slide-number">9 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.6 常見問題</h2>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>Q1：需要額外安裝嗎？</h3>
+                        <p>需要安裝對應的技能。瀏覽器裝 <code>browser-sandbox</code>、檔案裝 <code>file-manager</code>、系統監控裝 <code>system-monitor</code>。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Q2：不在電腦旁能操作嗎？</h3>
+                        <p>可以！只要電腦開著、Gateway 在跑。用手機 LINE 傳指令，龍蝦就會在你的電腦上執行——<strong>遠端遙控</strong>！</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Q3：會誤刪重要檔案嗎？</h3>
+                        <p>預設會先確認才執行，且刪除操作移到<strong>資源回收桶</strong>（trash > rm），不是永久刪除。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Q4：效能會被影響嗎？</h3>
+                        <p>Playwright 約佔 200-500MB 記憶體，但只在執行瀏覽器任務時才啟動。檔案管理基本不影響效能。</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    💡 <strong>Q5：Mac 和 Linux 也支援嗎？</strong><br>
+                    支援！Desktop Agent 透過命令列和 API 操作，跨平台都能用。龍蝦會自動判斷你的作業系統。
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>不建議做的事</strong>：讓龍蝦自動登入銀行帳號、把整台電腦的管理員權限給龍蝦、讓龍蝦操作密碼管理器等含敏感資料的軟體。
+                </div>
+                <span class="slide-number">10 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">18.7 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>🌐 Browser Sandbox</h3>
+                        <p>龍蝦能瀏覽網頁、查資料、填表單，在安全沙盒中操作。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📁 檔案管理</h3>
+                        <p>整理檔案、掃描磁碟、批次處理、智慧分類。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>⚙️ 應用程式自動化</h3>
+                        <p>轉檔、處理資料、管理系統，透過腳本間接操控應用程式。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔒 安全機制</h3>
+                        <p>確認機制 + 沙盒隔離 + 範圍限制 + 日誌記錄，四層防護。</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 30px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH19 多機協作（Nodes）</strong><br>
+                    如果你有好幾台電腦——家裡、辦公室、雲端——想讓龍蝦同時管理所有的機器？多台電腦上的龍蝦串成一個網路，互相合作！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch19.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH19 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">11 / 11</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

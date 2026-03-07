@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第三篇｜操作篇 — AI Agent 自主代理三王實戰</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease;
+        }
+        .header .part-badge {
+            display: inline-block;
+            padding: 10px 28px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(8px);
+        }
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            font-weight: 800;
+        }
+        .header p {
+            font-size: 22px;
+            opacity: 0.9;
+            line-height: 1.6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            backdrop-filter: blur(8px);
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+
+        /* Chapter Cards */
+        .chapters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .chapter-card {
+            background: rgba(255,255,255,0.98);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            text-decoration: none;
+            color: #333;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .chapter-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+        }
+
+        .chapter-thumb {
+            width: 200px;
+            min-width: 200px;
+            height: 130px;
+            border-radius: 14px;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .chapter-info { flex: 1; }
+
+        .chapter-number {
+            display: inline-block;
+            padding: 5px 16px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .chapter-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .chapter-desc {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .chapter-arrow {
+            font-size: 28px;
+            color: #11998e;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        .chapter-card:hover .chapter-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        /* Footer nav */
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .nav-link {
+            padding: 14px 30px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 30px; }
+            .header p { font-size: 17px; }
+            .chapter-card { flex-direction: column; padding: 25px; gap: 15px; }
+            .chapter-thumb { width: 100%; min-width: unset; height: 180px; }
+            .chapter-title { font-size: 20px; }
+            .footer-nav { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">⬅️ 返回總覽</a>
+
+        <div class="header">
+            <div class="part-badge">PART 3 ／ 共 2 章</div>
+            <h1>🎛️ 第三篇｜操作篇</h1>
+            <p>學會 TUI、CLI、Dashboard 三種操作介面，再深入五檔人格設定系統，打造一隻有個性的龍蝦。還有龍蝦人格生成器讓你快速上手。</p>
+        </div>
+
+        <div class="chapters-grid">
+            <!-- CH9 -->
+            <a href="ch09.html" class="chapter-card">
+                <img src="images/CH09/ch09_01_tui_main.png" alt="CH9 縮圖" class="chapter-thumb">
+                <div class="chapter-info">
+                    <span class="chapter-number">CH 9</span>
+                    <div class="chapter-title">TUI/CLI/Dashboard 操作介面</div>
+                    <div class="chapter-desc">三種介面總覽、TUI 終端機互動、CLI 指令列、Dashboard 網頁儀表板</div>
+                </div>
+                <span class="chapter-arrow">→</span>
+            </a>
+
+            <!-- CH10 -->
+            <a href="ch10.html" class="chapter-card">
+                <img src="images/CH10/ch10_01_workspace_folder.png" alt="CH10 縮圖" class="chapter-thumb">
+                <div class="chapter-info">
+                    <span class="chapter-number">CH 10</span>
+                    <div class="chapter-title">龍蝦人格設定</div>
+                    <div class="chapter-desc">IDENTITY/SOUL/USER/AGENTS/TOOLS 五檔設定、龍蝦人格生成器、實戰打造</div>
+                </div>
+                <span class="chapter-arrow">→</span>
+            </a>
+        </div>
+
+        <div class="footer-nav">
+            <a href="part2-安裝篇.html" class="nav-link">⬅️ 上一篇：安裝篇</a>
+            <a href="part4-通道篇.html" class="nav-link">下一篇：通道篇 ➡️</a>
+        </div>
+    </div>
+</body>
+</html>

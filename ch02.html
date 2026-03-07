@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH2 Google Antigravity 快速上手</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH2 — Google Antigravity 快速上手</div>
+        <div class="nav-buttons">
+            <a href="part1-入門篇.html" class="nav-btn">📚 入門篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch01.html" class="nav-btn">⬅️ CH1</a>
+            <a href="ch03.html" class="nav-btn">CH3 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 + 學習目標 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🚀</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH2 | Google Antigravity 快速上手</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    用中文描述你想要什麼，AI 幫你把整件事做完——不需要寫任何一行程式碼
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 650px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>理解 Antigravity 與傳統編輯器的根本差異</li>
+                        <li>成功登入並建立第一個工作區</li>
+                        <li>認識四大操作區域和常用快捷鍵</li>
+                        <li>在 Editor View 中與 AI 對話，完成一個網頁</li>
+                        <li>在 Manager View 中同時派出多個 Agent</li>
+                        <li>了解 Antigravity 如何輔助 OpenClaw 安裝與設定</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 為什麼需要學 Antigravity + Agent-First 架構 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.1 為什麼需要學 Antigravity？</h2>
+                <p>這本書不是教龍蝦 AI 的嗎？為什麼要花一整章學另一個工具？</p>
+                <p>因為 Antigravity 是你安裝 OpenClaw 時的<strong>最佳除錯助手</strong>。遇到錯誤訊息時，只要貼給 AI，不到 30 秒就能找到解答——否則你可能要在 Stack Overflow 裡搜尋一小時。</p>
+
+                <h3>🏗️ Agent-First 架構 — 不只是編輯器</h3>
+                <p>Antigravity 的核心概念叫做 <strong>Agent-First</strong>：AI 代理程式是系統的核心，不是附加功能。你給 AI 一個任務，它會<strong>自己規劃</strong>、<strong>自己寫程式</strong>、<strong>自己執行</strong>、<strong>自己測試</strong>。</p>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>⚡ Agent-First</h3>
+                        <p>AI 自主規劃任務、編輯程式碼、執行指令、操作瀏覽器，你只要「驗收」。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👥 多代理協作</h3>
+                        <p>同時派出多個 Agent 各自處理子任務——前端、後端、測試一起來！</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌐 瀏覽器整合</h3>
+                        <p>Agent 寫完程式碼會自動啟動伺服器、開瀏覽器預覽，發現問題自己修。</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    💡 <strong>一句話總結</strong>：Copilot 是幫你打字的助手，Cursor 是跟你討論的夥伴，<strong>Antigravity 是直接幫你把事情做完的團隊</strong>。而且它完全免費。
+                </div>
+                <span class="slide-number">2 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: 跟其他工具比一比 + Antigravity 能做什麼 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.2 Antigravity vs. 其他工具</h2>
+
+                <table>
+                    <tr><th>項目</th><th>VS Code + Copilot</th><th>Cursor</th><th style="background: linear-gradient(135deg, #28a745, #20c997);">Antigravity</th></tr>
+                    <tr><td><strong>AI 角色</strong></td><td>輔助者（幫你補全）</td><td>協作者（你問它答）</td><td><strong>執行者（自主完成）</strong></td></tr>
+                    <tr><td>程式碼補全</td><td>✅</td><td>✅</td><td>✅</td></tr>
+                    <tr><td>自動執行終端機</td><td>✗</td><td>有限</td><td>✅</td></tr>
+                    <tr><td>瀏覽器整合</td><td>✗</td><td>✗</td><td>✅</td></tr>
+                    <tr><td>多 Agent 同時工作</td><td>✗</td><td>✗</td><td>✅</td></tr>
+                    <tr><td>個人版費用</td><td>US$10/月</td><td>US$20/月</td><td><strong>免費</strong></td></tr>
+                </table>
+
+                <h3>Antigravity 能幫你做什麼？</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>🦞 龍蝦相關</h3>
+                        <p>安裝除錯、修改 JSON 設定檔、開發自訂技能、建立 Dashboard 介面</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🛠️ 日常實用</h3>
+                        <p>個人履歷、作品集、記帳工具、匯率換算、CSV 圖表、教學簡報</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎓 教育領域</h3>
+                        <p>教案、學習單、線上測驗、互動遊戲、行政文書自動化</p>
+                    </div>
+                </div>
+                <span class="slide-number">3 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 登入與建立工作區 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.3 登入與建立工作區</h2>
+
+                <h3>【步驟 1】開啟 Antigravity</h3>
+                <p>從桌面或開始選單開啟 Antigravity 桌面應用程式。如果還沒安裝，前往 <code>https://antigravity.google/</code> 下載安裝。開啟後用你的 Google 帳號登入，第一次需要點「允許」授權。</p>
+
+                <img src="images/CH02/ch02_01_antigravity_home.png" alt="Antigravity 登入後的首頁" class="screenshot">
+
+                <h3>【步驟 2】開啟專案資料夾</h3>
+                <p>介面跟 VS Code 非常像。點選上方選單 <strong>檔案</strong> → <strong>開啟資料夾...</strong>（快捷鍵 <code>Ctrl+K Ctrl+O</code>），選擇你要工作的資料夾即可。</p>
+                <p>如果還沒有專案資料夾，可以先在桌面建一個空資料夾（例如 <code>my-first-project</code>），然後用 Antigravity 開啟它。</p>
+
+                <img src="images/CH02/ch02_02_create_workspace.png" alt="開啟資料夾建立工作區" class="screenshot">
+
+                <div class="box info">
+                    💡 <strong>什麼是工作區？</strong> 你可以把工作區想像成一個「工作桌」。每個專案有自己的工作桌，上面放著屬於這個專案的所有檔案和工具。你可以同時擁有多個工作區，各自獨立、互不影響。
+                </div>
+                <span class="slide-number">4 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: 介面四大區域 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.4 介面四大區域總覽</h2>
+
+                <img src="images/CH02/ch02_03_interface_overview.png" alt="Antigravity 四大區域標示" class="screenshot">
+
+                <pre style="font-size: 15px; line-height: 1.5;">
+┌───────┬────────────────────────┬──────────────┐
+│       │                        │              │
+│ ① 側  │    ② 編輯區             │  ③ AI 面板   │
+│ 邊    │   （寫程式碼的地方）      │ （跟AI對話）  │
+│ 欄    │                        │              │
+│       │                        │              │
+│       ├────────────────────────┤              │
+│       │    ④ 終端機面板          │              │
+│       │   （執行指令的地方）      │              │
+└───────┴────────────────────────┴──────────────┘</pre>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>① 側邊欄 Activity Bar</h3>
+                        <p>最左邊那排圖示。檔案總管（<code>Ctrl+Shift+E</code>）、搜尋（<code>Ctrl+Shift+F</code>）、版本控制（<code>Ctrl+Shift+G</code>）。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>② 編輯區 Editor</h3>
+                        <p>畫面正中央、佔最大面積。看程式碼、寫程式碼的地方，上方有分頁標籤。</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #f093fb;">
+                        <h3>③ AI 面板（最重要！）</h3>
+                        <p>右側面板，跟 AI 對話的地方。按 <code>Ctrl+L</code> 開啟（Code with Agent）。這是 Antigravity 跟傳統編輯器最大的不同。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>④ 終端機 Terminal</h3>
+                        <p>下方黑色區域。AI 會自動在這裡執行指令。按 <code>Ctrl+`</code> 可以開啟/關閉。</p>
+                    </div>
+                </div>
+                <span class="slide-number">5 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 常用快捷鍵 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.4.2 常用快捷鍵速查表</h2>
+                <p>你不需要全部背起來，但以下幾個建議記住，操作會快很多：</p>
+
+                <table>
+                    <tr><th>功能</th><th>快捷鍵</th><th>什麼時候用</th></tr>
+                    <tr><td><strong>Code with Agent</strong></td><td><code>Ctrl+L</code></td><td>開啟 AI 面板跟 AI 對話</td></tr>
+                    <tr><td><strong>Agent Manager</strong></td><td><code>Ctrl+E</code></td><td>切換到多 Agent 管理模式</td></tr>
+                    <tr><td><strong>Edit code inline</strong></td><td><code>Ctrl+I</code></td><td>在編輯區內直接讓 AI 修改程式碼</td></tr>
+                    <tr><td>命令面板</td><td><code>Ctrl+Shift+P</code></td><td>找不到某功能時的萬用搜尋</td></tr>
+                    <tr><td>開啟資料夾</td><td><code>Ctrl+K Ctrl+O</code></td><td>開啟或切換專案資料夾</td></tr>
+                    <tr><td>開啟終端機</td><td><code>Ctrl+`</code></td><td>想看或執行指令時</td></tr>
+                    <tr><td>儲存檔案</td><td><code>Ctrl+S</code></td><td>修改完檔案後</td></tr>
+                </table>
+
+                <div class="box warning">
+                    ⚡ <strong>小技巧</strong>：記不住快捷鍵？按 <code>Ctrl+Shift+P</code> 打開「命令面板」，用中文或英文搜尋想做的事（例如「terminal」或「AI」），就能找到對應功能。命令面板是你的萬用搜尋工具！
+                </div>
+
+                <div class="box info">
+                    💡 <strong>三個最重要的快捷鍵</strong>：<code>Ctrl+L</code>（AI 對話）、<code>Ctrl+E</code>（多 Agent 管理）、<code>Ctrl+I</code>（行內修改）。記住這三個就夠日常使用了。
+                </div>
+                <span class="slide-number">6 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: Editor View 實戰 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.5 Editor View 實戰：做一個網頁</h2>
+                <p>我們要用 AI 製作一個<strong>個人自我介紹網頁</strong>——不需要寫任何一行程式碼，全部用中文交給 AI。</p>
+
+                <h3>【步驟 1】開啟 AI 面板</h3>
+                <p>按 <code>Ctrl+L</code> 開啟右側的 AI 面板，你會看到一個對話輸入框。</p>
+
+                <h3>【步驟 2】用中文描述需求</h3>
+                <pre>
+請幫我建立一個個人自我介紹網頁，包含以下內容：
+- 名字：王小明
+- 職業：國小老師
+- 興趣：攝影、旅行、做菜
+- 一句話座右銘：「用 AI 讓教學更有趣」
+- 設計風格：簡潔現代，藍白配色
+- 要有一張佔位的大頭照區域
+- 底部要有 Email 聯絡方式
+
+請建立 index.html 和 style.css 兩個檔案。</pre>
+
+                <h3>【步驟 3 ~ 4】觀察 AI 工作 → 預覽成果</h3>
+                <p>AI 會自動分析需求、建立檔案、撰寫程式碼、執行測試。整個過程 30 秒到 1 分鐘，你只需要在旁邊看。完成後用內建瀏覽器預覽成果：</p>
+
+                <img src="images/CH02/ch02_04_first_webpage.png" alt="AI 自動生成的個人網頁成果" class="screenshot">
+
+                <div class="box success">
+                    ✅ 恭喜！你剛做的事情，傳統上需要 HTML + CSS 技能花十幾分鐘完成。而你只用了幾句中文和不到兩分鐘。想微調？直接告訴 AI：「請把名字放大到 36px，背景色改淡灰色」即可。
+                </div>
+                <span class="slide-number">7 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: Manager View 多 Agent 協作 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.6 Manager View：多 Agent 同時工作</h2>
+                <p>Editor View 是一對一合作。但如果任務複雜涉及多個部分，一個 Agent 排隊做太慢了——<strong>Manager View</strong> 讓你同時派出多個 Agent，各自處理不同任務！</p>
+
+                <h3>什麼時候需要多個 Agent？</h3>
+                <table>
+                    <tr><th>情境</th><th>一個 Agent</th><th>多個 Agent</th></tr>
+                    <tr><td>做一個簡單的網頁</td><td>✅ 足夠</td><td>不需要</td></tr>
+                    <tr><td>同時做前端和後端</td><td>要排隊做</td><td>✅ Agent A 前端、Agent B 後端</td></tr>
+                    <tr><td>同時建立三個頁面</td><td>要一個一個做</td><td>✅ 三個 Agent 同時做三頁</td></tr>
+                    <tr><td>一邊寫程式一邊寫測試</td><td>做完程式再寫測試</td><td>✅ 一個寫程式、一個寫測試</td></tr>
+                </table>
+
+                <h3>切換到 Manager View</h3>
+                <p>按 <code>Ctrl+E</code> 切換到多 Agent 管理模式。介面會從編輯器變成類似「任務看板」的畫面，每個 Agent 有自己的卡片。</p>
+
+                <img src="images/CH02/ch02_05_manager_view.png" alt="Manager View 多 Agent 管理介面" class="screenshot">
+
+                <div class="box warning">
+                    ⚡ <strong>注意</strong>：多個 Agent 同時工作時，如果它們要修改同一個檔案（如共用的 <code>style.css</code>），偶爾會產生衝突。建議在任務描述中明確指定每個 Agent 負責哪些檔案。
+                </div>
+                <span class="slide-number">8 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: AI 模型選擇 + 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>2.7 AI 模型選擇 & 常見問題</h2>
+
+                <h3>🤖 AI 模型選擇</h3>
+                <table>
+                    <tr><th>模型</th><th>提供商</th><th>特色</th><th>費用</th></tr>
+                    <tr><td><strong>Gemini 3 Pro</strong></td><td>Google</td><td>預設模型，回應快，免費額度大方</td><td>免費</td></tr>
+                    <tr><td>Claude Sonnet 4.5</td><td>Anthropic</td><td>程式碼品質特別好</td><td>需 API Key</td></tr>
+                    <tr><td>Claude Opus 4.5</td><td>Anthropic</td><td>最強推理能力</td><td>需 API Key</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 <strong>建議策略</strong>：平常用 Gemini 3 Pro（免費、快速），遇到特別複雜的任務再切換到 Claude Opus（最強、但較貴）。模型切換在 AI 面板輸入框上方的下拉選單。
+                </div>
+
+                <h3>❓ 新手常見問題速解</h3>
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>AI 面板沒出現？</h3>
+                        <p>按 <code>Ctrl+L</code>。還是沒有？按 <code>Ctrl+Shift+P</code> 搜尋「AI」或「Agent」。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>AI 回應速度很慢？</h3>
+                        <p>Gemini 免費額度有上限，被限速就等隔天，或切換到其他模型。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>網頁跑版了？</h3>
+                        <p>直接告訴 AI 問題所在：「文字跑出邊界」「圖片沒置中」，它會自動修正。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>改壞了想回復？</h3>
+                        <p>按 <code>Ctrl+Z</code> 逐步撤銷。改動太多回不去，用版本控制（Git）恢復。</p>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">2.10 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>🚀 Agent-First</h3>
+                        <p>Antigravity 不是程式碼補全工具，而是能<strong>自主完成整個開發任務</strong>的 AI 團隊。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📐 四大區域</h3>
+                        <p>側邊欄、編輯區、AI 面板、終端機——記住 <code>Ctrl+L</code> 開啟 AI 面板就夠了。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📝 Editor View</h3>
+                        <p>用幾句中文就能讓 AI 做出完整網頁。修改也只要用中文描述即可。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👥 Manager View</h3>
+                        <p>多 Agent 同時工作，各自處理不同子任務，開發速度翻倍。</p>
+                    </div>
+                </div>
+
+                <div class="box warning" style="text-align: left; margin-top: 25px;">
+                    ⚡ <strong>關鍵心態</strong>：使用 Antigravity 的秘訣不是「要會寫程式」，而是「要會描述你想要什麼」。需求越清楚、越具體，AI 產出的結果就越好。
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 15px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH3 Claude Code 終端機特助</strong><br>
+                    如果說 Antigravity 是有圖形介面的 AI 工程師，Claude Code 就是住在終端機裡的 AI 特助——沒有花俏畫面，但做事又快又精準。特別在檔案操作、Git 版本控制方面，Claude Code 甚至更勝一籌！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch03.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH3 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">10 / 10</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>

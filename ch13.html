@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CH13 更多通道（WhatsApp、Discord 等）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .nav-buttons { display: flex; gap: 10px; }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-btn:hover { background: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover { background: rgba(255,255,255,0.5); transform: translateY(-50%) scale(1.1); }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+        .slide.active { display: flex; opacity: 1; z-index: 20; }
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        h1 { color: #667eea; font-size: 52px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 34px; margin-bottom: 25px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 24px; margin: 25px 0 12px 0; }
+        p, li { font-size: 20px; line-height: 1.9; color: #444; margin-bottom: 12px; }
+        ul, ol { margin-left: 30px; margin-bottom: 20px; }
+        strong { color: #333; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #1e1e1e; color: #d4d4d4; padding: 20px; border-radius: 12px; font-size: 16px; overflow-x: auto; margin: 15px 0; line-height: 1.6; }
+        .box { padding: 22px; border-radius: 12px; margin: 20px 0; border-left: 6px solid; font-size: 19px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .highlight { background: linear-gradient(120deg, #667eea 0%, #764ba2 100%); padding: 4px 12px; border-radius: 6px; font-weight: bold; color: white; }
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .concept-card { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px; border-radius: 15px; border: 2px solid rgba(102,126,234,0.3); transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-5px); border-color: #667eea; }
+        .concept-card h3 { margin-top: 0; }
+        .emoji-large { font-size: 60px; display: block; text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 18px; }
+        th, td { border: 2px solid #ddd; padding: 12px 15px; text-align: left; }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 16px; }
+        tr:nth-child(even) { background: #f8f9fa; }
+        img.screenshot { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); margin: 15px 0; }
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 4000; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.3); }
+        .slide-number { position: absolute; bottom: 15px; right: 25px; color: #aaa; font-size: 14px; }
+        @media (max-width: 768px) {
+            .content-card { padding: 25px; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 26px; }
+            p, li { font-size: 17px; }
+            .nav-arrow { width: 45px; height: 45px; font-size: 18px; }
+            .prev-arrow { left: 10px; }
+            .next-arrow { right: 10px; }
+            .nav-title { font-size: 16px; }
+            table { font-size: 14px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div class="nav-title">🦞 CH13 — 更多通道（WhatsApp、Discord 等）</div>
+        <div class="nav-buttons">
+            <a href="part4-通道篇.html" class="nav-btn">🌐 通道篇</a>
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <a href="ch12.html" class="nav-btn">⬅️ CH12</a>
+            <a href="ch14.html" class="nav-btn">CH14 ➡️</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
+        </div>
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">◀</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">▶</button>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span class="emoji-large">🐙</span>
+                <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
+                <h1>CH13 | 更多通道（WhatsApp、Discord 等）</h1>
+                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
+                    你的龍蝦不只是 LINE Bot——它是多通道 AI 助手平台，支援超過 22 種通訊通道，像章魚的觸手伸向各個平台
+                </p>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
+                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
+                    <ul style="margin-bottom: 0;">
+                        <li>認識 OpenClaw 支援的 22+ 種通道</li>
+                        <li>學會串接 WhatsApp</li>
+                        <li>學會串接 Discord</li>
+                        <li>了解其他通道的串接方式</li>
+                    </ul>
+                </div>
+                <span class="slide-number">1 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 2: 什麼是通道 + 架構圖 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.1 什麼是「通道」？</h2>
+                <p>在 OpenClaw 的架構裡，「通道」（Channel）就是龍蝦跟人類溝通的管道。每個通道都是一個「外掛」，你想用哪個就安裝哪個。</p>
+                <p>龍蝦的核心（Gateway + AI 模型）跟通道是分開的，所有通道<strong>共用同一個 AI 大腦和記憶系統</strong>。</p>
+
+                <img src="images/CH13/ch13_01_multichannel_diagram.png" alt="多通道架構圖" class="screenshot">
+
+                <pre>
+                    ┌─── LINE
+                    │
+龍蝦核心（AI 大腦）──┼─── Telegram
+                    │
+                    ├─── WhatsApp
+                    │
+                    ├─── Discord
+                    │
+                    └─── ...更多通道</pre>
+
+                <div class="box info">
+                    💡 你在 LINE 上跟龍蝦說的話，龍蝦在 Discord 上也記得（如果設定了跨通道記憶的話）。
+                </div>
+                <span class="slide-number">2 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 3: 通道分類總覽 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.1 通道分類總覽</h2>
+
+                <h3>💬 即時通訊類</h3>
+                <table>
+                    <tr><th>通道</th><th>說明</th><th>適合場景</th></tr>
+                    <tr><td><strong>LINE</strong></td><td>台灣最多人用的通訊軟體</td><td>日常生活、個人助手</td></tr>
+                    <tr><td><strong>Telegram</strong></td><td>功能強大的通訊軟體</td><td>開發者、進階用戶</td></tr>
+                    <tr><td><strong>WhatsApp</strong></td><td>全球用戶最多（20 億+）</td><td>國際友人、海外客戶</td></tr>
+                    <tr><td><strong>FB Messenger</strong></td><td>Facebook 的聊天功能</td><td>社群經營</td></tr>
+                    <tr><td><strong>WeChat</strong></td><td>中國大陸最主流通訊</td><td>與大陸用戶互動</td></tr>
+                    <tr><td><strong>Signal</strong></td><td>主打隱私的通訊軟體</td><td>重視隱私的用戶</td></tr>
+                </table>
+
+                <h3>👥 社群平台 / 🏢 企業協作</h3>
+                <table>
+                    <tr><th>通道</th><th>說明</th><th>適合場景</th></tr>
+                    <tr><td><strong>Discord</strong></td><td>遊戲和社群平台</td><td>遊戲社群、開發團隊</td></tr>
+                    <tr><td><strong>Slack</strong></td><td>企業協作平台</td><td>公司內部、團隊協作</td></tr>
+                    <tr><td><strong>MS Teams</strong></td><td>微軟企業通訊平台</td><td>企業環境</td></tr>
+                    <tr><td><strong>Matrix</strong></td><td>開源去中心化通訊</td><td>技術社群</td></tr>
+                </table>
+
+                <div class="box warning">
+                    ⚡ <strong>不用全部都裝</strong>：大部分人只需要 1-3 個通道。先把最常用的串好，有需要再擴充。
+                </div>
+                <span class="slide-number">3 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 4: 更多通道類型 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.1 更多通道類型</h2>
+
+                <h3>📧 傳統通訊類</h3>
+                <table>
+                    <tr><th>通道</th><th>說明</th><th>適合場景</th></tr>
+                    <tr><td><strong>Email</strong></td><td>電子郵件</td><td>正式溝通、自動回信</td></tr>
+                    <tr><td><strong>SMS</strong></td><td>簡訊</td><td>通知、驗證</td></tr>
+                    <tr><td><strong>語音通話（Twilio）</strong></td><td>打電話</td><td>CH20 會深入教</td></tr>
+                </table>
+
+                <h3>🌐 網頁與 API 類</h3>
+                <table>
+                    <tr><th>通道</th><th>說明</th><th>適合場景</th></tr>
+                    <tr><td><strong>Web Chat</strong></td><td>嵌入網頁的聊天框</td><td>網站客服</td></tr>
+                    <tr><td><strong>REST API</strong></td><td>程式呼叫的介面</td><td>系統整合</td></tr>
+                    <tr><td><strong>WebSocket</strong></td><td>即時雙向通訊</td><td>自製 App</td></tr>
+                </table>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>💬 即時通訊</h3>
+                        <p>LINE / Telegram / WhatsApp / Messenger / WeChat / Signal</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>👥 社群企業</h3>
+                        <p>Discord / Slack / Teams / Matrix</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🌐 網頁 API</h3>
+                        <p>Web Chat / REST API / WebSocket / Email / SMS</p>
+                    </div>
+                </div>
+                <span class="slide-number">4 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: WhatsApp 事前準備 + Meta Business -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.2 WhatsApp 串接教學</h2>
+                <p>WhatsApp 是全球用戶最多的通訊軟體（超過 20 億用戶）。串接需要透過 <strong>Meta（Facebook）的商業平台</strong>。</p>
+
+                <h3>事前準備</h3>
+                <ul>
+                    <li>✅ 一個 Facebook 帳號</li>
+                    <li>✅ 一個 Meta Business 帳號（免費申請）</li>
+                    <li>✅ 一個電話號碼（用來註冊 WhatsApp Business）</li>
+                    <li>✅ 龍蝦已經在本機運行，且有正式域名（CH12）或 ngrok</li>
+                </ul>
+
+                <img src="images/CH13/ch13_02_meta_business.png" alt="Meta Business 設定" class="screenshot">
+
+                <h3>申請步驟</h3>
+                <ol>
+                    <li>到 <code>business.facebook.com</code> 申請 Meta Business 帳號</li>
+                    <li>到 <code>developers.facebook.com</code> 登入開發者帳號</li>
+                    <li>建立新 App，類型選 <strong>「Business」</strong></li>
+                    <li>在 App 裡找到 <strong>「WhatsApp」</strong> 產品，點 <strong>「Set up」</strong></li>
+                    <li>取得 Phone Number ID、Business Account ID、Access Token</li>
+                </ol>
+
+                <div class="box warning">
+                    ⚠️ WhatsApp Business API 每月有 <strong>1,000 則免費對話</strong>。學習用完全夠，正式商用要注意費用。
+                </div>
+                <span class="slide-number">5 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: WhatsApp 安裝與設定 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.2 WhatsApp 安裝與設定</h2>
+
+                <h3>安裝外掛</h3>
+                <pre>openclaw plugins install @anthropic/whatsapp-channel</pre>
+
+                <h3>設定連線資訊</h3>
+                <pre>openclaw config set whatsapp.phoneNumberId 你的PhoneNumberID
+openclaw config set whatsapp.businessAccountId 你的BusinessAccountID
+openclaw config set whatsapp.accessToken 你的AccessToken
+openclaw config set whatsapp.webhookUrl https://bot.你的域名.xyz</pre>
+
+                <h3>設定 Webhook</h3>
+                <ol>
+                    <li>回到 Meta Developers Console 的 WhatsApp 設定頁面</li>
+                    <li>找到 <strong>「Webhooks」</strong> 區塊</li>
+                    <li>設定 Callback URL：<code>https://bot.你的域名.xyz/whatsapp/webhook</code></li>
+                    <li>設定 Verify Token（龍蝦會自動產生）</li>
+                    <li>訂閱 <strong>「messages」</strong> 事件</li>
+                </ol>
+
+                <h3>重啟並測試</h3>
+                <pre>openclaw gateway restart</pre>
+
+                <div class="box success">
+                    ✅ 用另一支手機的 WhatsApp 傳訊息給設定的號碼，確認龍蝦有回覆即成功！
+                </div>
+                <span class="slide-number">6 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: Discord 串接教學 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.3 Discord 串接教學</h2>
+                <p>Discord 是全球最大的社群平台之一。把龍蝦串上 Discord，它就能在你的 Discord 伺服器裡當助手。</p>
+
+                <div class="box info">
+                    💡 <strong>好消息</strong>：Discord Bot 不需要正式域名！Discord 用 <strong>WebSocket</strong> 連線，龍蝦會主動連到 Discord 的伺服器。
+                </div>
+
+                <img src="images/CH13/ch13_03_discord_devportal.png" alt="Discord Developer Portal" class="screenshot">
+
+                <h3>建立 Discord Bot 步驟</h3>
+                <ol>
+                    <li>到 <code>discord.com/developers/applications</code></li>
+                    <li>點 <strong>「New Application」</strong>，輸入名稱（例如「龍蝦助手」）</li>
+                    <li>在左側選 <strong>「Bot」</strong>，點 <strong>「Add Bot」</strong></li>
+                    <li>點 <strong>「Reset Token」</strong> 產生 Bot Token 並<strong>複製保管</strong></li>
+                    <li>開啟 <strong>Message Content Intent</strong> 權限</li>
+                    <li>在 <strong>OAuth2 → URL Generator</strong> 勾選 bot + 所需權限</li>
+                    <li>複製生成的 URL，在瀏覽器開啟並授權加入伺服器</li>
+                </ol>
+                <span class="slide-number">7 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: Discord 設定與注意事項 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.3 Discord 設定與特有注意事項</h2>
+
+                <h3>安裝與設定</h3>
+                <pre>openclaw plugins install @anthropic/discord-channel
+openclaw config set discord.botToken 你的BotToken
+openclaw gateway restart</pre>
+
+                <img src="images/CH13/ch13_04_discord_bot_chat.png" alt="Discord Bot 聊天" class="screenshot">
+
+                <p>到 Discord 伺服器裡的任何文字頻道，<code>@龍蝦助手 你好！</code> 測試回覆。</p>
+
+                <h3>Discord 特有注意事項</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                    <div class="concept-card">
+                        <h3>@提及才回覆</h3>
+                        <p>預設只回覆被 @mention 的訊息，跟 LINE 群組行為類似</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Markdown 差異</h3>
+                        <p>Discord 的 Markdown 不支援表格，龍蝦會自動用條列式取代</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>多伺服器</h3>
+                        <p>同一個 Bot 可被邀請到多個 Discord 伺服器，分別服務</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>斜線指令</h3>
+                        <p>支援 <code>/</code> 開頭的斜線指令，某些技能可註冊斜線指令</p>
+                    </div>
+                </div>
+                <span class="slide-number">8 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 9: 其他通道簡介 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>13.4 其他通道簡介</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                    <div class="concept-card">
+                        <h3>💼 Slack</h3>
+                        <p>企業最常用的團隊協作平台。到 <code>api.slack.com/apps</code> 建立 App，取得 Bot Token，安裝外掛即可。</p>
+                        <pre style="font-size: 14px;">openclaw plugins install @anthropic/slack-channel</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📧 Email</h3>
+                        <p>龍蝦變成自動回信助手。設定 IMAP/SMTP 伺服器資訊，定期檢查收件匣並自動回覆。</p>
+                        <pre style="font-size: 14px;">openclaw plugins install @anthropic/email-channel</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌐 Web Chat</h3>
+                        <p>在自己的網站嵌入聊天框，讓訪客直接跟龍蝦對話。適合網站客服、線上教學平台。</p>
+                        <pre style="font-size: 14px;">openclaw plugins install @anthropic/webchat-channel</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📘 FB Messenger</h3>
+                        <p>需要 Meta Business 帳號（跟 WhatsApp 類似），適合 Facebook 粉絲專頁的自動客服。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🏢 Microsoft Teams</h3>
+                        <p>需要 Microsoft 365 + Azure AD。設定較複雜，適合有 IT 支援的企業用戶。</p>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 10</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 小結與展望 -->
+        <div class="slide">
+            <div class="content-card" style="text-align: center;">
+                <h2 style="border: none; text-align: center;">13.6 小結與展望</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
+                    <div class="concept-card">
+                        <h3>🐙 多通道能力</h3>
+                        <p>OpenClaw 支援 <strong>22+ 種通訊通道</strong>，你的龍蝦可以同時守在不同平台上。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💬 WhatsApp</h3>
+                        <p>透過 Meta Business 平台串接，需要正式域名。每月 1,000 則免費對話。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎮 Discord</h3>
+                        <p>用 WebSocket 連線，<strong>不需要正式域名</strong>。支援多伺服器、斜線指令。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔌 隨需擴充</h3>
+                        <p>重點不是全裝，而是知道龍蝦<strong>有這個能力</strong>——需要時隨時擴充。</p>
+                    </div>
+                </div>
+
+                <div class="box info" style="text-align: left; margin-top: 20px;">
+                    <p><strong>常見問題</strong></p>
+                    <ul style="margin-bottom: 0;">
+                        <li>裝多通道不會讓龍蝦變慢——真正消耗資源的是 AI 模型回覆</li>
+                        <li>不同通道的短期記憶分開，長期記憶（USER.md）共用</li>
+                        <li>只用 LINE 完全可以，其他通道都是「有需要再裝」</li>
+                    </ul>
+                </div>
+
+                <div class="box success" style="text-align: left; margin-top: 20px;">
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH14 多重分身</strong><br>
+                    不管裝了多少通道，目前背後都是同一隻龍蝦。如果你想要「一隻當秘書、另一隻當學習夥伴」呢？下一章教你龍蝦的<strong>多重分身</strong>——多隻龍蝦各自有不同人設，各司其職！</p>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="ch14.html" class="nav-btn" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px 40px; font-size: 18px; border-radius: 30px; color: white; text-decoration: none;">
+                        前往 CH14 ➡️
+                    </a>
+                </div>
+                <span class="slide-number">10 / 10</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 進度點 -->
+    <div class="indicators" id="indicators"></div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        // 建立進度點
+        const indicators = document.getElementById('indicators');
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(i);
+            indicators.appendChild(dot);
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= totalSlides) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateUI();
+        }
+
+        function changeSlide(dir) {
+            goToSlide(currentSlide + dir);
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        updateUI();
+    </script>
+</body>
+</html>
