@@ -167,7 +167,7 @@
                         <li>實戰打造全自動 AI 助手</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 13</span>
+                <span class="slide-number">1 / 14</span>
             </div>
         </div>
 
@@ -199,7 +199,7 @@
                         <p>做什麼？什麼情況才做？</p>
                     </div>
                 </div>
-                <span class="slide-number">2 / 13</span>
+                <span class="slide-number">2 / 14</span>
             </div>
         </div>
 
@@ -224,7 +224,7 @@
                 <div class="box info">
                     💡 不熟 Cron 語法沒關係——OpenClaw 支援<strong>自然語言</strong>排程，它會自動幫你轉換！
                 </div>
-                <span class="slide-number">3 / 13</span>
+                <span class="slide-number">3 / 14</span>
             </div>
         </div>
 
@@ -260,7 +260,7 @@
                 <div class="box info">
                     💡 龍蝦會先檢查條件是否成立，<strong>條件成立才執行</strong>。不會收到一堆不需要的通知。
                 </div>
-                <span class="slide-number">4 / 13</span>
+                <span class="slide-number">4 / 14</span>
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                 <div class="box success">
                     ✅ 把多個排程組合起來，龍蝦就變成你的<strong>每日 AI 秘書</strong>——從早到晚幫你整理資訊！
                 </div>
-                <span class="slide-number">5 / 13</span>
+                <span class="slide-number">5 / 14</span>
             </div>
         </div>
 
@@ -327,7 +327,7 @@
                     <li><strong>每月最後一天 20:00</strong> — 月度回顧報告</li>
                     <li><strong>每天 08:00（條件）</strong> — 查生日清單，有人生日就提醒</li>
                 </ul>
-                <span class="slide-number">6 / 13</span>
+                <span class="slide-number">6 / 14</span>
             </div>
         </div>
 
@@ -361,7 +361,7 @@
                 <div class="box info">
                     💡 <strong>靜默模式</strong>：背景任務用 <code>靜默: true</code>，正常不打擾你，有異常才通知。
                 </div>
-                <span class="slide-number">7 / 13</span>
+                <span class="slide-number">7 / 14</span>
             </div>
         </div>
 
@@ -389,7 +389,7 @@
                     <tr><td><code>keyword-detected</code></td><td>訊息含特定關鍵字</td><td>特殊指令觸發</td></tr>
                     <tr><td><code>price-alert</code></td><td>股價/匯率觸發條件</td><td>投資警報</td></tr>
                 </table>
-                <span class="slide-number">8 / 13</span>
+                <span class="slide-number">8 / 14</span>
             </div>
         </div>
 
@@ -410,11 +410,36 @@
                     <tr><td><strong>靜默</strong></td><td>選填</td><td><code>true</code> / <code>false</code></td><td>true = 不推播，背景執行</td></tr>
                     <tr><td><strong>動作</strong></td><td>✅</td><td>自然語句（<code>|</code> 可寫多行）</td><td>告訴龍蝦要做什麼</td></tr>
                 </table>
-                <span class="slide-number">9 / 13</span>
+                <span class="slide-number">9 / 14</span>
             </div>
         </div>
 
-        <!-- Slide 10: 事件驅動設定範例 -->
+        <!-- Slide 10: 空白範本（照抄即可） -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>空白範本（照抄修改即可）</h2>
+
+                <div class="box info">
+                    💡 複製下方範本到 HEARTBEAT.md，把 <strong>← 後面的說明</strong> 換成你自己的內容就好。
+                </div>
+
+                <pre style="font-size: 15px; line-height: 1.6;">## 你的任務名稱
+- 事件: email-received          ← 固定關鍵字，從上頁表格選一個
+- 條件: 你的篩選條件              ← 自然語句，省略則全部觸發
+- 通道: line                    ← line / telegram / discord，省略用預設
+- 靜默: false                   ← true 不推播 / false 推播
+- 動作: |                       ← 用口語描述龍蝦要做什麼
+    第一行描述...
+    第二行描述...</pre>
+
+                <div class="box warning">
+                    ⚠️ <strong>欄位名稱</strong>（事件、條件、通道、靜默、動作）是固定關鍵字不能改；<strong>值的內容</strong>用你自己的話寫就好。
+                </div>
+                <span class="slide-number">10 / 14</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 事件驅動設定範例 -->
         <div class="slide">
             <div class="content-card">
                 <h2>事件驅動設定範例</h2>
@@ -449,7 +474,7 @@
 - 事件: webhook-received
 - 條件: 來源是 GitHub，事件類型 issues.opened
 - 動作: 自動判斷 bug/feature，友善初始回覆</pre>
-                <span class="slide-number">10 / 13</span>
+                <span class="slide-number">11 / 14</span>
             </div>
         </div>
 
@@ -485,11 +510,11 @@
                         <p>月度回顧：出缺席總表 + YouTube 數據 + 下月重要日期</p>
                     </div>
                 </div>
-                <span class="slide-number">11 / 13</span>
+                <span class="slide-number">12 / 14</span>
             </div>
         </div>
 
-        <!-- Slide 12: 注意事項與常見問題 -->
+        <!-- Slide 13: 注意事項與常見問題 -->
         <div class="slide">
             <div class="content-card">
                 <h2>21.5 注意事項與常見問題</h2>
@@ -523,11 +548,11 @@
                     <li><strong>關機還會執行嗎？</strong>不會，所以用 Nodes 把主控放雲端</li>
                     <li><strong>可以測試嗎？</strong><code>openclaw heartbeat run "早安報告"</code></li>
                 </ul>
-                <span class="slide-number">12 / 13</span>
+                <span class="slide-number">13 / 14</span>
             </div>
         </div>
 
-        <!-- Slide 13: 全書完結 -->
+        <!-- Slide 14: 全書完結 -->
         <div class="slide">
             <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <span style="font-size: 80px; display: block; margin-bottom: 15px;">🎉🦞🎉</span>
@@ -574,7 +599,7 @@
                         🚀 回到進階篇
                     </a>
                 </div>
-                <span class="slide-number">13 / 13</span>
+                <span class="slide-number">14 / 14</span>
             </div>
         </div>
 
