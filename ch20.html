@@ -167,7 +167,7 @@
                         <li>了解語音通話的實際應用場景</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 11</span>
+                <span class="slide-number">1 / 12</span>
             </div>
         </div>
 
@@ -199,7 +199,7 @@
                 <div class="box info">
                     💡 這就是 OpenClaw 的 <strong>Twilio 語音通話</strong>功能——給龍蝦一個電話號碼，讓它能接打電話。
                 </div>
-                <span class="slide-number">2 / 11</span>
+                <span class="slide-number">2 / 12</span>
             </div>
         </div>
 
@@ -220,7 +220,7 @@
                     <tr><td><strong>語音合成</strong></td><td>龍蝦的文字回覆，用語音唸出來給來電者聽</td></tr>
                     <tr><td><strong>簡訊</strong></td><td>龍蝦也可以收發 SMS 簡訊</td></tr>
                 </table>
-                <span class="slide-number">3 / 11</span>
+                <span class="slide-number">3 / 12</span>
             </div>
         </div>
 
@@ -243,10 +243,14 @@
                     ✅ <strong>免費試用</strong>：Twilio 新帳號有免費額度（約 $15），足夠你測試和學習。你不需要一開始就花錢。
                 </div>
 
+                <div class="box info">
+                    💰 <strong>月費估算範例</strong>：假設每天接 5 通、每通 3 分鐘，月費約 <strong>$8.4 美元（≈ 270 台幣）</strong>。可在 Twilio Console 隨時查看帳單。
+                </div>
+
                 <div class="box warning">
                     ⚠️ 台灣號碼也有，但月租費較高（約 $11/月）。如果只是學習和測試，用美國號碼就夠了。
                 </div>
-                <span class="slide-number">4 / 11</span>
+                <span class="slide-number">4 / 12</span>
             </div>
         </div>
 
@@ -282,7 +286,26 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                     <li>選一個你喜歡的號碼，按 <strong>Buy</strong></li>
                     <li>試用帳號免費買一個號碼</li>
                 </ol>
-                <span class="slide-number">5 / 11</span>
+
+                <div class="box warning">
+                    ⚠️ <strong>試用帳號限制</strong>：<br>
+                    • 只能撥打<strong>已驗證的號碼</strong>（見下方驗證步驟）<br>
+                    • 每通電話接通時會先播放<strong>英文語音浮水印</strong>（升級付費帳號後消失）<br>
+                    • 免費 $15 額度用完後需儲值
+                </div>
+
+                <h3>驗證你的手機號碼（試用帳號必做）</h3>
+                <ol>
+                    <li><strong>Phone Numbers → Manage → Verified Caller IDs</strong></li>
+                    <li>按 <strong>Add a new Caller ID</strong></li>
+                    <li>輸入手機號碼（台灣格式：<code>+886912345678</code>，去掉開頭 0）</li>
+                    <li>選 <strong>Call me</strong> 或 <strong>Text me</strong> 驗證</li>
+                    <li>輸入驗證碼，完成！</li>
+                </ol>
+                <div class="box info">
+                    💡 註冊時用的手機號碼會自動驗證，用同一支手機測試通常不需額外操作。
+                </div>
+                <span class="slide-number">5 / 12</span>
             </div>
         </div>
 
@@ -293,8 +316,11 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
 
                 <h3>安裝 Twilio 外掛</h3>
                 <pre>openclaw plugins install twilio-voice</pre>
+                <div class="box info">
+                    💡 <code>openclaw plugins install</code> 是安裝系統外掛（plugin），跟 CH15 的 <code>clawdhub install</code> 安裝社群技能（skill）是不同層級的東西。
+                </div>
 
-                <h3>設定認證資訊（TOOLS.md）</h3>
+                <h3>設定認證資訊（擇一即可）</h3>
                 <pre>## Twilio（語音通話）
 - Account SID: 你的_Account_SID
 - Auth Token: 你的_Auth_Token
@@ -304,24 +330,56 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
 
                 <h3>設定 Webhook</h3>
                 <img src="images/CH20/ch20_03_twilio_webhook.png" alt="Twilio Webhook 設定" class="screenshot">
+
+                <p><strong>Webhook URL 取得方式（擇一）：</strong></p>
+                <ul>
+                    <li><strong>Cloudflare Tunnel（CH12）</strong>：<code>https://lobster.你的域名.com/twilio/voice</code></li>
+                    <li><strong>ngrok（還沒做 CH12 的人）</strong>：執行 <code>ngrok http 18789</code>，URL 為 <code>https://xxxx.ngrok.io/twilio/voice</code></li>
+                </ul>
+
+                <p>到 Twilio Console 設定：</p>
                 <ol>
                     <li>進入 <strong>Phone Numbers → Manage → Active numbers</strong></li>
                     <li>點擊你的號碼</li>
                     <li>在 <strong>Voice Configuration</strong> 區塊：</li>
                     <ul>
                         <li><strong>A call comes in</strong> → Webhook</li>
-                        <li>URL 填入：<code>https://lobster.你的域名.com/twilio/voice</code></li>
+                        <li>URL 填入你的 Webhook URL</li>
                         <li>方法選 <strong>POST</strong></li>
                     </ul>
                     <li>按 <strong>Save configuration</strong></li>
                 </ol>
 
                 <pre>openclaw gateway restart    # 重啟 Gateway</pre>
-                <span class="slide-number">6 / 11</span>
+                <span class="slide-number">6 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 7: 語音通話運作原理 -->
+        <!-- Slide 7: 除錯清單 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>打不通？除錯清單</h2>
+                <p>如果測試通話失敗，請依序檢查：</p>
+
+                <table style="font-size: 17px;">
+                    <tr><th style="width: 5%;">#</th><th style="width: 35%;">檢查項目</th><th>操作方式</th></tr>
+                    <tr><td>1</td><td>Gateway 有在跑嗎？</td><td><code>openclaw gateway status</code> 應顯示 Running</td></tr>
+                    <tr><td>2</td><td>Webhook URL 正確嗎？</td><td>在 Twilio Console 檢查，結尾要是 <code>/twilio/voice</code></td></tr>
+                    <tr><td>3</td><td>ngrok / Tunnel 有在跑嗎？</td><td>確認終端機還開著、URL 還有效</td></tr>
+                    <tr><td>4</td><td>Twilio 有錯誤紀錄嗎？</td><td><strong>Monitor → Logs → Errors</strong> 查看</td></tr>
+                    <tr><td>5</td><td>手機號碼已驗證嗎？</td><td>試用帳號需先在 <strong>Verified Caller IDs</strong> 驗證</td></tr>
+                    <tr><td>6</td><td>聽到英文語音提示？</td><td>這是試用帳號正常現象，不是錯誤</td></tr>
+                    <tr><td>7</td><td>接通但沒聲音？</td><td>檢查 TOOLS.md 的 TTS 引擎設定和 API Key</td></tr>
+                </table>
+
+                <div class="box success">
+                    ✅ 大部分問題都是 Webhook URL 填錯或 Gateway 沒啟動造成的，修正後重試即可。
+                </div>
+                <span class="slide-number">7 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 語音通話運作原理 -->
         <div class="slide">
             <div class="content-card">
                 <h2>20.4 語音通話的運作原理</h2>
@@ -343,7 +401,7 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                 <div class="box info">
                     💡 整個過程的延遲大約 <strong>1-3 秒</strong>——你說完話後，龍蝦需要一兩秒才會回答。比打字聊天稍微慢一點，但完全可以接受。
                 </div>
-                <span class="slide-number">7 / 11</span>
+                <span class="slide-number">8 / 12</span>
             </div>
         </div>
 
@@ -372,7 +430,13 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                 <div class="box info">
                     💡 建議先用 Twilio 內建的 STT/TTS，夠用了。如果覺得音質不夠好再升級到 ElevenLabs 或 OpenAI TTS。
                 </div>
-                <span class="slide-number">8 / 11</span>
+                <div class="box warning">
+                    🔑 <strong>ElevenLabs API Key</strong>：到 <code>elevenlabs.io</code> 免費註冊，每月 10,000 字元免費額度。詳見<strong>附錄 E</strong>。
+                </div>
+                <div class="box success">
+                    🎤 <strong>不只是通話！</strong> OpenClaw 還有獨立的 <code>tts</code> 技能（SAG），不需要 Twilio 也能在 LINE/Telegram 聊天中回覆語音訊息。安裝：<code>clawdhub install tts</code>，詳見 CH15 §15.2.4。
+                </div>
+                <span class="slide-number">9 / 12</span>
             </div>
         </div>
 
@@ -401,7 +465,7 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                         <p>搭配 HEARTBEAT.md，龍蝦每天早上八點打電話報行程和天氣：「早安！今天有一個行程：下午 2 點看牙醫。」</p>
                     </div>
                 </div>
-                <span class="slide-number">9 / 11</span>
+                <span class="slide-number">10 / 12</span>
             </div>
         </div>
 
@@ -415,6 +479,7 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                     <div class="concept-card">
                         <h3>🎙️ 通話錄音</h3>
                         <p>自動錄音方便回顧，設定保留天數，儲存到 workspace/data/recordings/</p>
+                        <p style="color: #e74c3c; font-size: 14px; margin-top: 8px;">⚠️ 台灣《通訊保障及監察法》：錄音需事前告知對方，建議在歡迎語加入提示</p>
                     </div>
                     <div class="concept-card">
                         <h3>🚫 來電黑名單</h3>
@@ -435,7 +500,7 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                     <tr><td>可以多人同時打嗎？</td><td>可以，每通電話獨立對話、獨立計費</td></tr>
                     <tr><td>有其他選擇嗎？</td><td>目前官方支援 Twilio，社群開發中 SIP/WebRTC 方案</td></tr>
                 </table>
-                <span class="slide-number">10 / 11</span>
+                <span class="slide-number">11 / 12</span>
             </div>
         </div>
 
@@ -476,7 +541,7 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                         前往 CH21 ➡️
                     </a>
                 </div>
-                <span class="slide-number">11 / 11</span>
+                <span class="slide-number">12 / 12</span>
             </div>
         </div>
 

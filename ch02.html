@@ -395,18 +395,33 @@
         <!-- Slide 9: AI 模型選擇 + 常見問題 -->
         <div class="slide">
             <div class="content-card">
-                <h2>2.7 AI 模型選擇 & 常見問題</h2>
+                <h2>2.7 對話模式與 AI 模型選擇</h2>
+
+                <p>AI 面板輸入框下方有兩個重要的下拉選單：</p>
+
+                <h3>🔄 對話模式：Planning vs. Fast</h3>
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card" style="border-color: #667eea;">
+                        <h3>Planning 模式</h3>
+                        <p>AI <strong>先規劃步驟，再逐步執行</strong>。適合複雜任務、深度研究、多步驟協作。</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3>Fast 模式（預設）</h3>
+                        <p>AI <strong>直接執行任務</strong>，不做事前規劃。適合簡單修改、一句話能說清的需求。</p>
+                    </div>
+                </div>
 
                 <h3>🤖 AI 模型選擇</h3>
                 <table>
                     <tr><th>模型</th><th>提供商</th><th>特色</th><th>費用</th></tr>
-                    <tr><td><strong>Gemini 3 Pro</strong></td><td>Google</td><td>預設模型，回應快，免費額度大方</td><td>免費</td></tr>
-                    <tr><td>Claude Sonnet 4.5</td><td>Anthropic</td><td>程式碼品質特別好</td><td>需 API Key</td></tr>
-                    <tr><td>Claude Opus 4.5</td><td>Anthropic</td><td>最強推理能力</td><td>需 API Key</td></tr>
+                    <tr><td><strong>Gemini 3 Flash</strong></td><td>Google</td><td>預設模型，回應最快</td><td>免費</td></tr>
+                    <tr><td>Gemini 3.1 Pro (High/Low)</td><td>Google</td><td>最新旗艦，推理更強</td><td>免費（有額度）</td></tr>
+                    <tr><td>Claude Sonnet / Opus 4.6</td><td>Anthropic</td><td>Thinking 思考鏈，程式碼品質最好</td><td>需 API Key</td></tr>
+                    <tr><td>GPT-OSS 120B</td><td>OpenAI</td><td>開源大模型，均衡表現</td><td>需 API Key</td></tr>
                 </table>
 
                 <div class="box info">
-                    💡 <strong>建議策略</strong>：平常用 Gemini 3 Pro（免費、快速），遇到特別複雜的任務再切換到 Claude Opus（最強、但較貴）。模型切換在 AI 面板輸入框上方的下拉選單。
+                    💡 <strong>建議策略</strong>：平常用 <strong>Gemini 3 Flash</strong>（免費、最快），複雜任務切 <strong>Gemini 3.1 Pro (High)</strong> 或 <strong>Claude Opus 4.6</strong>。模型和對話模式都在 AI 面板輸入框下方的下拉選單切換。
                 </div>
 
                 <h3>❓ 新手常見問題速解</h3>

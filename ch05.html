@@ -167,7 +167,7 @@
                         <li>在 LINE 上成功與龍蝦對話，驗證安裝成功</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 14</span>
+                <span class="slide-number">1 / 16</span>
             </div>
         </div>
 
@@ -196,7 +196,7 @@
                 <div class="box info">
                     💡 <strong>選擇建議</strong>：什麼都不想管 → <strong>方式一</strong>｜有 NVIDIA 顯卡想免費 → <strong>方式三</strong>｜電腦太舊 → <strong>方式四</strong>｜想自己動手 → <strong>方式二</strong>｜想雲端一鍵 → <strong>方式五</strong>
                 </div>
-                <span class="slide-number">2 / 14</span>
+                <span class="slide-number">2 / 16</span>
             </div>
         </div>
 
@@ -228,7 +228,7 @@
                     <tr><td><strong>Anthropic</strong></td><td>Claude Sonnet 4.6</td><td>付費</td><td>最佳程式碼品質</td></tr>
                     <tr><td><strong>Ollama（本地）</strong></td><td>Llama 3.3 70B</td><td>完全免費</td><td>有好顯卡、注重隱私</td></tr>
                 </table>
-                <span class="slide-number">3 / 14</span>
+                <span class="slide-number">3 / 16</span>
             </div>
         </div>
 
@@ -261,7 +261,7 @@
                 <div class="box info">
                     💡 安裝程式有<strong>密碼保護</strong>，密碼會在課堂或教學社群中提供。這是確保安裝程式配合正確的教學版本使用。
                 </div>
-                <span class="slide-number">4 / 14</span>
+                <span class="slide-number">4 / 16</span>
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                 </div>
 
                 <p>最後設定 <strong>ngrok Authtoken</strong>，然後選擇 <strong>[9] 啟動 OpenClaw + ngrok</strong>，把顯示的 <code>ngrok-free.app</code> 網址複製起來！</p>
-                <span class="slide-number">5 / 14</span>
+                <span class="slide-number">5 / 16</span>
             </div>
         </div>
 
@@ -340,7 +340,7 @@ ngrok http 18789             # 視窗二</pre>
                 <div class="box info">
                     💡 <code>-g</code> 代表 global（全域安裝），<code>@latest</code> 代表最新版本。<code>18789</code> 是 OpenClaw Gateway 的預設連接埠。
                 </div>
-                <span class="slide-number">6 / 14</span>
+                <span class="slide-number">6 / 16</span>
             </div>
         </div>
 
@@ -381,7 +381,7 @@ openclaw onboard --install-daemon
                 <div class="box warning">
                     ⚠️ 不確定 VRAM 大小？在 Windows 搜尋列輸入 <code>dxdiag</code>，切到「顯示」分頁查看「顯示記憶體」。Ollama 服務需一直在背景運行！
                 </div>
-                <span class="slide-number">7 / 14</span>
+                <span class="slide-number">7 / 16</span>
             </div>
         </div>
 
@@ -416,7 +416,7 @@ openclaw onboard --install-daemon
                 <div class="box info">
                     💡 Codespaces <strong>不需要 ngrok</strong>！GitHub 會自動幫你公開端口。記得設定端口為 <strong>Make Public</strong>。
                 </div>
-                <span class="slide-number">8 / 14</span>
+                <span class="slide-number">8 / 16</span>
             </div>
         </div>
 
@@ -456,7 +456,7 @@ openclaw onboard --install-daemon
                         </ul>
                     </div>
                 </div>
-                <span class="slide-number">9 / 14</span>
+                <span class="slide-number">9 / 16</span>
             </div>
         </div>
 
@@ -486,7 +486,7 @@ openclaw onboard --install-daemon
                 <div class="box warning">
                     ⚠️ <strong>別忘了關閉 LINE 自動回覆</strong>：回應模式設成 <strong>Bot</strong>、自動回應訊息設成<strong>停用</strong>、Webhook 設成<strong>啟用</strong>。否則龍蝦會回覆兩則訊息！
                 </div>
-                <span class="slide-number">10 / 14</span>
+                <span class="slide-number">10 / 16</span>
             </div>
         </div>
 
@@ -514,7 +514,7 @@ openclaw onboard --install-daemon
                 <div class="box info">
                     💡 如果你在 CH4 製作了 <code>IDENTITY.md</code>，把它複製到 <code>~/.openclaw/workspace/</code> 目錄，然後執行 <code>openclaw gateway restart</code>，龍蝦就會用你設定的個性來回答！
                 </div>
-                <span class="slide-number">11 / 14</span>
+                <span class="slide-number">11 / 16</span>
             </div>
         </div>
 
@@ -547,14 +547,79 @@ openclaw gateway status
 # 換 AI 模型（不用重新安裝！）
 openclaw config set agents.defaults.model.primary "gemini-3-flash"
 openclaw gateway restart</pre>
-                <span class="slide-number">12 / 14</span>
+                <span class="slide-number">12 / 16</span>
             </div>
         </div>
 
-        <!-- Slide 13: 常見問題 -->
+        <!-- Slide 13: Mac 使用者安裝指南 -->
         <div class="slide">
             <div class="content-card">
-                <h2>5.9 常見問題 FAQ</h2>
+                <h2>🍎 Mac 使用者安裝指南</h2>
+
+                <p>方式一（go.bat 自動安裝）是 <strong>Windows 專用</strong>。Mac 使用者請選擇以下路線：</p>
+
+                <table style="font-size: 16px;">
+                    <tr><th style="width: 30%;">推薦方式</th><th>說明</th></tr>
+                    <tr><td><strong>方式二（手動 npm）</strong></td><td>操作幾乎一樣，PowerShell → Terminal，winget → brew</td></tr>
+                    <tr><td><strong>方式三（Ollama）</strong></td><td>Apple Silicon（M1-M4）跑 AI 效果很好，不需要獨立顯卡</td></tr>
+                    <tr><td><strong>方式四（Codespaces）</strong></td><td>瀏覽器操作，不分系統</td></tr>
+                </table>
+
+                <h3 style="margin-top: 15px;">Mac 專用指令對照</h3>
+                <table style="font-size: 15px;">
+                    <tr><th style="width: 35%;">Windows</th><th>Mac</th></tr>
+                    <tr><td>打開 PowerShell</td><td>打開 Terminal（<code>Cmd + 空白鍵</code> 搜尋）</td></tr>
+                    <tr><td><code>winget install ngrok.ngrok</code></td><td><code>brew install ngrok/ngrok/ngrok</code></td></tr>
+                    <tr><td><code>winget upgrade OpenJS.NodeJS.LTS</code></td><td><code>brew upgrade node</code></td></tr>
+                    <tr><td>Git 需另外安裝</td><td>內建或自動提示安裝 Xcode CLI Tools</td></tr>
+                    <tr><td><code>C:\Users\你\.openclaw\</code></td><td><code>/Users/你/.openclaw/</code></td></tr>
+                </table>
+
+                <div class="box success" style="margin-top: 15px;">
+                    ✅ 除了上面這些差異，<code>npm install</code>、<code>openclaw</code>、<code>ngrok</code> 等核心指令在 Mac 和 Windows 上<strong>完全一樣</strong>！
+                </div>
+                <span class="slide-number">13 / 16</span>
+            </div>
+        </div>
+
+        <!-- Slide 14: 版本更新與升級 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.9 版本更新與升級</h2>
+
+                <p>龍蝦裝好不是結束，而是開始。定期更新可以獲得新功能、修復問題、支援更多 AI 模型。</p>
+
+                <h3>升級指令（所有安裝方式通用）</h3>
+                <pre>
+# 升級 OpenClaw 本體
+npm install -g openclaw@latest
+
+# 升級 LINE 外掛
+openclaw plugins update @openclaw/line
+
+# 重啟 Gateway 讓新版本生效
+openclaw gateway restart</pre>
+
+                <h3 style="margin-top: 15px;">建議更新頻率</h3>
+                <table style="font-size: 16px;">
+                    <tr><th>項目</th><th>頻率</th><th>理由</th></tr>
+                    <tr><td>OpenClaw 本體</td><td>每 1-2 週</td><td>新功能 + bug 修復</td></tr>
+                    <tr><td>LINE 外掛</td><td>跟著一起更新</td><td>確保相容性</td></tr>
+                    <tr><td>Node.js</td><td>每 2-3 個月</td><td>安全性修復</td></tr>
+                    <tr><td>ngrok</td><td>很少需要</td><td>功能穩定</td></tr>
+                </table>
+
+                <div class="box warning" style="margin-top: 15px;">
+                    💡 <strong>放心更新！</strong>更新 OpenClaw 不會影響你現有的設定和技能。<code>IDENTITY.md</code>、<code>SOUL.md</code>、已安裝的技能、LINE 頻道設定等等都會原封不動地保留。
+                </div>
+                <span class="slide-number">14 / 16</span>
+            </div>
+        </div>
+
+        <!-- Slide 15: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.10 常見問題 FAQ</h2>
 
                 <table style="font-size: 16px;">
                     <tr><th style="width: 40%;">問題</th><th>解決方法</th></tr>
@@ -591,11 +656,11 @@ openclaw gateway restart</pre>
                         <td>免費版每次重啟都換網址，需要更新 LINE Webhook URL</td>
                     </tr>
                 </table>
-                <span class="slide-number">13 / 14</span>
+                <span class="slide-number">15 / 16</span>
             </div>
         </div>
 
-        <!-- Slide 14: 小結與展望 -->
+        <!-- Slide 16: 小結與展望 -->
         <div class="slide">
             <div class="content-card" style="text-align: center;">
                 <h2 style="border: none; text-align: center;">5.10 小結與展望</h2>
@@ -629,7 +694,7 @@ openclaw gateway restart</pre>
                         前往 CH6 ➡️
                     </a>
                 </div>
-                <span class="slide-number">14 / 14</span>
+                <span class="slide-number">16 / 16</span>
             </div>
         </div>
 

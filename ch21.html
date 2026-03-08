@@ -167,7 +167,7 @@
                         <li>實戰打造全自動 AI 助手</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 12</span>
+                <span class="slide-number">1 / 13</span>
             </div>
         </div>
 
@@ -199,7 +199,7 @@
                         <p>做什麼？什麼情況才做？</p>
                     </div>
                 </div>
-                <span class="slide-number">2 / 12</span>
+                <span class="slide-number">2 / 13</span>
             </div>
         </div>
 
@@ -224,7 +224,7 @@
                 <div class="box info">
                     💡 不熟 Cron 語法沒關係——OpenClaw 支援<strong>自然語言</strong>排程，它會自動幫你轉換！
                 </div>
-                <span class="slide-number">3 / 12</span>
+                <span class="slide-number">3 / 13</span>
             </div>
         </div>
 
@@ -260,7 +260,7 @@
                 <div class="box info">
                     💡 龍蝦會先檢查條件是否成立，<strong>條件成立才執行</strong>。不會收到一堆不需要的通知。
                 </div>
-                <span class="slide-number">4 / 12</span>
+                <span class="slide-number">4 / 13</span>
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                 <div class="box success">
                     ✅ 把多個排程組合起來，龍蝦就變成你的<strong>每日 AI 秘書</strong>——從早到晚幫你整理資訊！
                 </div>
-                <span class="slide-number">5 / 12</span>
+                <span class="slide-number">5 / 13</span>
             </div>
         </div>
 
@@ -327,7 +327,7 @@
                     <li><strong>每月最後一天 20:00</strong> — 月度回顧報告</li>
                     <li><strong>每天 08:00（條件）</strong> — 查生日清單，有人生日就提醒</li>
                 </ul>
-                <span class="slide-number">6 / 12</span>
+                <span class="slide-number">6 / 13</span>
             </div>
         </div>
 
@@ -361,7 +361,7 @@
                 <div class="box info">
                     💡 <strong>靜默模式</strong>：背景任務用 <code>靜默: true</code>，正常不打擾你，有異常才通知。
                 </div>
-                <span class="slide-number">7 / 12</span>
+                <span class="slide-number">7 / 13</span>
             </div>
         </div>
 
@@ -389,11 +389,32 @@
                     <tr><td><code>keyword-detected</code></td><td>訊息含特定關鍵字</td><td>特殊指令觸發</td></tr>
                     <tr><td><code>price-alert</code></td><td>股價/匯率觸發條件</td><td>投資警報</td></tr>
                 </table>
-                <span class="slide-number">8 / 12</span>
+                <span class="slide-number">8 / 13</span>
             </div>
         </div>
 
-        <!-- Slide 9: 事件驅動設定範例 -->
+        <!-- Slide 9: 事件驅動欄位規格 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>事件驅動欄位規格</h2>
+
+                <div class="box info">
+                    💡 欄位名稱（事件、條件、動作…）是<strong>固定關鍵字</strong>，不能改名。「條件」和「動作」的內容則用<strong>自然語句</strong>描述即可。
+                </div>
+
+                <table style="font-size: 16px;">
+                    <tr><th>欄位</th><th>必填</th><th>值的類型</th><th>說明</th></tr>
+                    <tr><td><strong>事件</strong></td><td>✅</td><td>固定關鍵字（見上頁）</td><td>要監聽的事件名稱</td></tr>
+                    <tr><td><strong>條件</strong></td><td>選填</td><td>自然語句</td><td>額外篩選條件，龍蝦自行判讀</td></tr>
+                    <tr><td><strong>通道</strong></td><td>選填</td><td>固定：<code>line</code>、<code>telegram</code>、<code>discord</code></td><td>推播到哪個通道</td></tr>
+                    <tr><td><strong>靜默</strong></td><td>選填</td><td><code>true</code> / <code>false</code></td><td>true = 不推播，背景執行</td></tr>
+                    <tr><td><strong>動作</strong></td><td>✅</td><td>自然語句（<code>|</code> 可寫多行）</td><td>告訴龍蝦要做什麼</td></tr>
+                </table>
+                <span class="slide-number">9 / 13</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 事件驅動設定範例 -->
         <div class="slide">
             <div class="content-card">
                 <h2>事件驅動設定範例</h2>
@@ -416,7 +437,7 @@
 
 ## 下載資料夾自動整理
 - 事件: file-changed
-- 條件: ~/Downloads/ 有新檔案
+- 條件: 下載資料夾有新檔案（Win: C:\Users\你\Downloads\、Mac/Linux: ~/Downloads/）
 - 靜默: true
 - 動作: |
     檢查新下載的檔案類型：
@@ -428,11 +449,11 @@
 - 事件: webhook-received
 - 條件: 來源是 GitHub，事件類型 issues.opened
 - 動作: 自動判斷 bug/feature，友善初始回覆</pre>
-                <span class="slide-number">9 / 12</span>
+                <span class="slide-number">10 / 13</span>
             </div>
         </div>
 
-        <!-- Slide 10: 全自動 AI 助手實戰 -->
+        <!-- Slide 11: 全自動 AI 助手實戰 -->
         <div class="slide">
             <div class="content-card">
                 <h2>21.4 實戰：全自動 AI 助手</h2>
@@ -464,11 +485,11 @@
                         <p>月度回顧：出缺席總表 + YouTube 數據 + 下月重要日期</p>
                     </div>
                 </div>
-                <span class="slide-number">10 / 12</span>
+                <span class="slide-number">11 / 13</span>
             </div>
         </div>
 
-        <!-- Slide 11: 注意事項與常見問題 -->
+        <!-- Slide 12: 注意事項與常見問題 -->
         <div class="slide">
             <div class="content-card">
                 <h2>21.5 注意事項與常見問題</h2>
@@ -502,11 +523,11 @@
                     <li><strong>關機還會執行嗎？</strong>不會，所以用 Nodes 把主控放雲端</li>
                     <li><strong>可以測試嗎？</strong><code>openclaw heartbeat run "早安報告"</code></li>
                 </ul>
-                <span class="slide-number">11 / 12</span>
+                <span class="slide-number">12 / 13</span>
             </div>
         </div>
 
-        <!-- Slide 12: 全書完結 -->
+        <!-- Slide 13: 全書完結 -->
         <div class="slide">
             <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <span style="font-size: 80px; display: block; margin-bottom: 15px;">🎉🦞🎉</span>
@@ -553,7 +574,7 @@
                         🚀 回到進階篇
                     </a>
                 </div>
-                <span class="slide-number">12 / 12</span>
+                <span class="slide-number">13 / 13</span>
             </div>
         </div>
 

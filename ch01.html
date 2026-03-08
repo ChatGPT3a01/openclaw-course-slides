@@ -178,10 +178,11 @@
                         <li>在 Telegram 建立 Bot，取得 Bot Token</li>
                         <li>至少取得一個 AI 模型 API Key（推薦 Gemini 免費方案）</li>
                         <li>註冊 ngrok 帳號與 GitHub 帳號</li>
+                        <li>安裝 Google Antigravity 並完成初始設定</li>
                         <li>了解 API Key 的安全觀念</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 13</span>
+                <span class="slide-number">1 / 14</span>
             </div>
         </div>
 
@@ -214,9 +215,9 @@
                     <tr><td><strong>Node.js</strong> v22+</td><td>OpenClaw 的運行環境</td><td>CH5 安裝龍蝦時</td></tr>
                     <tr><td><strong>ngrok</strong></td><td>讓 LINE 能連到你的電腦</td><td>CH5 安裝龍蝦時</td></tr>
                     <tr><td><strong>Git</strong></td><td>程式碼版本控制</td><td>CH3 Claude Code 時</td></tr>
-                    <tr><td><strong>Google Antigravity</strong></td><td>AI 開發環境</td><td>CH2 Antigravity 時</td></tr>
+                    <tr><td><strong>Google Antigravity</strong></td><td>AI 開發環境</td><td>CH1 本章安裝 + CH2 詳細教學</td></tr>
                 </table>
-                <span class="slide-number">2 / 13</span>
+                <span class="slide-number">2 / 14</span>
             </div>
         </div>
 
@@ -253,7 +254,7 @@
                 <pre>📝 記下來！
 Gmail 帳號：_______________@gmail.com
 Gmail 密碼：_______________</pre>
-                <span class="slide-number">3 / 13</span>
+                <span class="slide-number">3 / 14</span>
             </div>
         </div>
 
@@ -288,7 +289,7 @@ Gmail 密碼：_______________</pre>
                 <div class="box info">
                     💡 Provider 名稱隨便取就好，之後可以改。
                 </div>
-                <span class="slide-number">4 / 13</span>
+                <span class="slide-number">4 / 14</span>
             </div>
         </div>
 
@@ -318,7 +319,7 @@ Gmail 密碼：_______________</pre>
                 <pre>📝 記下來！
 Channel ID：_______________
 Channel Secret：_______________</pre>
-                <span class="slide-number">5 / 13</span>
+                <span class="slide-number">5 / 14</span>
             </div>
         </div>
 
@@ -355,7 +356,7 @@ Channel Secret：_______________</pre>
 
                 <pre>📝 記下來！
 Channel Access Token：_______________</pre>
-                <span class="slide-number">6 / 13</span>
+                <span class="slide-number">6 / 14</span>
             </div>
         </div>
 
@@ -389,7 +390,7 @@ Channel Access Token：_______________</pre>
 
                 <pre>📝 記下來！
 Telegram Bot Token：_______________</pre>
-                <span class="slide-number">7 / 13</span>
+                <span class="slide-number">7 / 14</span>
             </div>
         </div>
 
@@ -425,7 +426,7 @@ Telegram Bot Token：_______________</pre>
 
                 <pre>📝 記下來！
 Google AI API Key：_______________（以 AIza 開頭）</pre>
-                <span class="slide-number">8 / 13</span>
+                <span class="slide-number">8 / 14</span>
             </div>
         </div>
 
@@ -464,7 +465,7 @@ Google AI API Key：_______________（以 AIza 開頭）</pre>
                 <img src="images/CH01/ch01_11_openai_api_key.png" alt="OpenAI API Key 建立成功" class="screenshot" style="max-width: 48%; display: inline-block;">
                 <img src="images/CH01/ch01_12_anthropic_api_key.png" alt="Anthropic Console API Key" class="screenshot" style="max-width: 48%; display: inline-block; float: right;">
 
-                <span class="slide-number">9 / 13</span>
+                <span class="slide-number">9 / 14</span>
             </div>
         </div>
 
@@ -491,7 +492,7 @@ LINE 伺服器（日本） 🇯🇵
 
                 <pre>📝 記下來！
 ngrok Authtoken：_______________</pre>
-                <span class="slide-number">10 / 13</span>
+                <span class="slide-number">10 / 14</span>
             </div>
         </div>
 
@@ -523,11 +524,51 @@ ngrok Authtoken：_______________</pre>
                 <pre>📝 記下來！
 GitHub 帳號：_______________
 GitHub 密碼：_______________</pre>
-                <span class="slide-number">11 / 13</span>
+                <span class="slide-number">11 / 14</span>
             </div>
         </div>
 
-        <!-- ========== Slide 12: 安全須知 + 帳號準備清單 ========== -->
+        <!-- ========== Slide 12: Antigravity 安裝 ========== -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>1.8 Antigravity 安裝與設定</h2>
+                <p>Antigravity 是 Google 推出的 AI 開發環境，完全免費、內建 Gemini 模型，不需要另外申請 API Key。安裝過程跟裝 VS Code 一樣簡單！</p>
+
+                <h3>下載與安裝</h3>
+                <p><span class="step-badge">步驟 1</span> 前往 <code>https://antigravity.google/</code>，點 <strong>Download</strong> 下載安裝檔。</p>
+                <p><span class="step-badge">步驟 2</span> 執行下載的 <code>.exe</code> 安裝檔，照著提示完成安裝。</p>
+                <p><span class="step-badge">步驟 3</span> 開啟 Antigravity，用你的 <strong>Google 帳號</strong>登入（第一次會要求授權，點「允許」）。</p>
+                <img src="images/CH01/ch01_15_antigravity_download.png" alt="Antigravity 官網下載頁面" class="screenshot" style="max-width: 70%;">
+
+                <h3>選擇開發模式（重要！）</h3>
+                <p><span class="step-badge">步驟 4</span> 首次啟動出現開發模式選擇，請選 <strong>Agent-driven development</strong>。</p>
+                <div class="box warning">
+                    ⚠️ <strong>不要選預設的其他選項</strong>！選「Agent-driven development」才能發揮 Antigravity 的完整 AI 代理能力。
+                </div>
+                <img src="images/CH01/ch01_16_antigravity_agent_mode.png" alt="選擇 Agent-driven development 模式" class="screenshot" style="max-width: 60%;">
+
+                <h3>安裝繁體中文介面</h3>
+                <p><span class="step-badge">步驟 5</span> 點左側的<strong>延伸模組</strong>圖示（四方塊圖案），或按 <code>Ctrl+Shift+X</code>。</p>
+                <p><span class="step-badge">步驟 6</span> 在搜尋框輸入 <code>Chinese</code>，找到 <strong>Chinese (Traditional) Language Pack</strong>，點 <strong>Install</strong>。</p>
+                <p><span class="step-badge">步驟 7</span> 安裝完成後點 <strong>Restart</strong> 重啟，介面即變為繁體中文。</p>
+                <img src="images/CH01/ch01_17_antigravity_chinese_ext.png" alt="在延伸模組搜尋 Chinese 安裝繁體中文語言套件" class="screenshot" style="max-width: 80%;">
+
+                <h3>使用小提醒</h3>
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3>📂 先建資料夾再開專案</h3>
+                        <p>開始新專案前，先在桌面建一個<strong>獨立的空資料夾</strong>，避免 AI 意外修改到其他檔案。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📊 查看帳號額度</h3>
+                        <p>按 <code>Ctrl+Shift+Q</code> 查看帳號概況和 AI 額度使用情形。完全免費，不用擔心！</p>
+                    </div>
+                </div>
+                <span class="slide-number">12 / 14</span>
+            </div>
+        </div>
+
+        <!-- ========== Slide 13: 安全須知 + 帳號準備清單 ========== -->
         <div class="slide">
             <div class="content-card">
                 <h2>1.9 安全須知 + 帳號準備清單</h2>
@@ -568,12 +609,13 @@ GitHub 密碼：_______________</pre>
                     <tr><td>Anthropic（選用）</td><td>API Key（sk-ant- 開頭）</td><td>☐</td></tr>
                     <tr><td>ngrok</td><td>Authtoken</td><td>☐</td></tr>
                     <tr><td>GitHub</td><td>帳號 + 密碼</td><td>☐</td></tr>
+                    <tr><td>Google Antigravity</td><td>下載安裝 + Google 登入</td><td>☐</td></tr>
                 </table>
 
                 <div class="box info">
                     💡 <strong>最重要的四項</strong>：Gmail、LINE 三組資料、Gemini API Key、ngrok Authtoken。其他可以等用到再申請。
                 </div>
-                <span class="slide-number">12 / 13</span>
+                <span class="slide-number">13 / 14</span>
             </div>
         </div>
 
@@ -609,6 +651,10 @@ GitHub 密碼：_______________</pre>
                         <h3>✅ ngrok + GitHub</h3>
                         <p>隧道工具與雲端平台帳號</p>
                     </div>
+                    <div class="concept-card">
+                        <h3>✅ Antigravity</h3>
+                        <p>安裝 AI 開發環境，選 Agent-driven 模式</p>
+                    </div>
                 </div>
 
                 <div class="box success" style="text-align: left; margin-top: 30px;">
@@ -622,7 +668,7 @@ GitHub 密碼：_______________</pre>
                         前往 CH2 ➡️
                     </a>
                 </div>
-                <span class="slide-number">13 / 13</span>
+                <span class="slide-number">14 / 14</span>
             </div>
         </div>
 

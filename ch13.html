@@ -324,6 +324,15 @@ openclaw config set whatsapp.webhookUrl https://bot.你的域名.xyz</pre>
                     <li>訂閱 <strong>「messages」</strong> 事件</li>
                 </ol>
 
+                <div class="box warning" style="font-size: 15px;">
+                    ⚠️ <strong>驗證失敗？排查順序：</strong>
+                    ① Gateway 在運行嗎？<code>openclaw gateway status</code> →
+                    ② URL 結尾是 <code>/whatsapp/webhook</code>？ →
+                    ③ Verify Token 完全一致？<code>openclaw config get whatsapp.verifyToken</code> →
+                    ④ Tunnel 正常？ →
+                    ⑤ 都對了仍失敗 → <code>openclaw gateway restart</code> 再試
+                </div>
+
                 <h3>重啟並測試</h3>
                 <pre>openclaw gateway restart</pre>
 

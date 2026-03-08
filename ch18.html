@@ -168,7 +168,7 @@
                         <li>理解安全注意事項</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 11</span>
+                <span class="slide-number">1 / 12</span>
             </div>
         </div>
 
@@ -191,7 +191,7 @@
                 <div class="box info">
                     💡 龍蝦的 Desktop Agent 能力介於第二代和第三代之間——它可以操控瀏覽器、管理檔案、執行腳本，但還不到「完全自主操控整台電腦」的程度。
                 </div>
-                <span class="slide-number">2 / 11</span>
+                <span class="slide-number">2 / 12</span>
             </div>
         </div>
 
@@ -231,11 +231,37 @@
                 <div class="box warning">
                     ⚠️ <strong>Desktop Agent 的限制</strong>：不能操作沒有 API 的圖形介面軟體（如直接點 PhotoShop 按鈕）。主要透過命令列和 API 操作，每次操作需要你的授權。
                 </div>
-                <span class="slide-number">3 / 11</span>
+                <span class="slide-number">3 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 4: Browser Sandbox -->
+        <!-- Slide 4: 本章需要的技能 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>18.1.4 本章需要的技能</h2>
+                <p>本章各項功能需要安裝對應的技能。安裝完記得 <code>openclaw gateway restart</code>！</p>
+
+                <table style="font-size: 17px;">
+                    <tr><th>功能</th><th>技能名稱</th><th>安裝指令</th><th>備註</th></tr>
+                    <tr><td>瀏覽網頁</td><td><strong>browser-sandbox</strong></td><td><code>clawdhub install browser-sandbox</code></td><td>需另裝 Playwright</td></tr>
+                    <tr><td>檔案管理</td><td><strong>file-manager</strong></td><td><code>clawdhub install file-manager</code></td><td>建議設定操作範圍</td></tr>
+                    <tr><td>磁碟盤點</td><td><strong>disk-audit</strong></td><td><code>clawdhub install disk-audit</code></td><td>掃描大檔案</td></tr>
+                    <tr><td>系統監控</td><td><strong>system-monitor</strong></td><td><code>clawdhub install system-monitor</code></td><td>CPU / 記憶體 / 磁碟</td></tr>
+                    <tr><td>螢幕截圖</td><td><strong>screenshot</strong></td><td><code>clawdhub install screenshot</code></td><td>截圖分析畫面</td></tr>
+                </table>
+
+                <div class="box info">
+                    💡 以上技能都<strong>不需要 API Key</strong>，安裝後即可使用。各技能的詳細設定方式請參考<strong>附錄 E：Skills 設定速查表</strong>。
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>Playwright 首次下載</strong>：<code>npx playwright install chromium</code> 會下載約 200MB 的瀏覽器引擎，依網路速度需要幾分鐘。看到進度條在跑就是正常的，請耐心等候。
+                </div>
+                <span class="slide-number">4 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 5: Browser Sandbox -->
         <div class="slide">
             <div class="content-card">
                 <h2>18.2 瀏覽器操控（Browser Sandbox）</h2>
@@ -255,7 +281,7 @@ npx playwright install chromium</pre>
 - 瀏覽器: Chromium
 - 無頭模式: 是（不會彈出瀏覽器視窗）
 - 截圖: 每次操作後自動截圖回報</pre>
-                <span class="slide-number">4 / 11</span>
+                <span class="slide-number">5 / 12</span>
             </div>
         </div>
 
@@ -298,7 +324,7 @@ npx playwright install chromium</pre>
                 <div class="box info">
                     💡 龍蝦操控的是<strong>獨立的沙盒瀏覽器</strong>，跟你平常用的瀏覽器完全隔離，安全無虞。
                 </div>
-                <span class="slide-number">5 / 11</span>
+                <span class="slide-number">6 / 12</span>
             </div>
         </div>
 
@@ -331,11 +357,11 @@ npx playwright install chromium</pre>
       📁 安裝檔（EXE、MSI）→ 5 個
       📁 其他 → 4 個
       要執行嗎？</pre>
-                <span class="slide-number">6 / 11</span>
+                <span class="slide-number">7 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 7: 磁碟盤點 -->
+        <!-- Slide 8: 磁碟盤點 -->
         <div class="slide">
             <div class="content-card">
                 <h2>磁碟盤點與批次處理</h2>
@@ -361,11 +387,11 @@ npx playwright install chromium</pre>
                 <div class="box success">
                     ✅ 龍蝦不只能做簡單的搬移——它可以用 <strong>AI 理解檔案的內容</strong>來智慧分類！
                 </div>
-                <span class="slide-number">7 / 11</span>
+                <span class="slide-number">8 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 8: 應用程式自動化 -->
+        <!-- Slide 9: 應用程式自動化 -->
         <div class="slide">
             <div class="content-card">
                 <h2>18.4 應用程式自動化</h2>
@@ -405,7 +431,7 @@ npx playwright install chromium</pre>
       4. Teams → 650MB
       5. Node.js（龍蝦 Gateway）→ 180MB
       建議：Chrome 分頁太多了！</pre>
-                <span class="slide-number">8 / 11</span>
+                <span class="slide-number">9 / 12</span>
             </div>
         </div>
 
@@ -442,7 +468,7 @@ npx playwright install chromium</pre>
                     <tr><td style="color: #ffc107; font-weight: bold;">🟡 需要確認</td><td>每次確認</td><td>其他磁碟（D:、E:）、應用程式資料夾</td></tr>
                     <tr><td style="color: #dc3545; font-weight: bold;">🔴 絕對禁止</td><td>禁止存取</td><td>C:\Windows\、Program Files、密碼檔案</td></tr>
                 </table>
-                <span class="slide-number">9 / 11</span>
+                <span class="slide-number">10 / 12</span>
             </div>
         </div>
 
@@ -478,7 +504,7 @@ npx playwright install chromium</pre>
                 <div class="box warning">
                     ⚠️ <strong>不建議做的事</strong>：讓龍蝦自動登入銀行帳號、把整台電腦的管理員權限給龍蝦、讓龍蝦操作密碼管理器等含敏感資料的軟體。
                 </div>
-                <span class="slide-number">10 / 11</span>
+                <span class="slide-number">11 / 12</span>
             </div>
         </div>
 
@@ -516,7 +542,7 @@ npx playwright install chromium</pre>
                         前往 CH19 ➡️
                     </a>
                 </div>
-                <span class="slide-number">11 / 11</span>
+                <span class="slide-number">12 / 12</span>
             </div>
         </div>
 
