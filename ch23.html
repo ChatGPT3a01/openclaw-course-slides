@@ -175,10 +175,17 @@
                         <span class="highlight">整合龍蝦（15 分鐘）</span>
                     </p>
                 </div>
+                <div class="box info" style="max-width: 840px; margin: 20px auto 0; text-align: left;">
+                    <strong>這章先記兩件事：</strong><br>
+                    1. <strong>Demo 體驗</strong>是在<strong>瀏覽器</strong>打開 <code>demo-page-agent.html</code>，直接用頁面右下角的 Page Agent 面板操作。<br>
+                    2. <strong>正式整合</strong>是在<strong>PowerShell / 終端機</strong>安裝 <code>playwright</code>、<code>page-agent</code>，再把 <code>web-control.js</code> 放進 <code>C:\Users\你的名稱\.openclaw\workspace\skills\web-control\</code>。
+                </div>
                 <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 840px;">
                     <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
                     <p style="font-size: 17px; margin-bottom: 8px;"><a href="demo-page-agent.html" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">Page Agent 互動 Demo 頁面</a></p>
-                    <p style="font-size: 17px; margin-bottom: 0;"><a href="resources/page-agent-skill/SKILL.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">web-control SKILL.md</a></p>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="resources/page-agent-skill/SKILL.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">web-control SKILL.md</a></p>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="resources/page-agent-skill/web-control.js" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">web-control.js 範例腳本</a></p>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="https://github.com/alibaba/page-agent" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">Page Agent 官方 GitHub</a></p>
                 </div>
                 <span class="slide-number">1 / 20</span>
             </div>
@@ -258,6 +265,11 @@ agent.execute(
 
                 <div class="box success">
                     ✅ Page Agent 的 GitHub 星星數：<strong>8,000+</strong>，MIT 開源授權，阿里巴巴出品。
+                </div>
+                <div class="box info">
+                    💡 <strong>先分清楚兩件事：</strong><br>
+                    <strong>Page Agent 原生定位</strong>是放在網頁裡，用自然語言操控當前頁面。<br>
+                    <strong>本課做法</strong>則是再加一層 <code>Playwright + web-control.js</code>，把它接進 OpenClaw，讓龍蝦能從 LINE / Telegram 遠端叫瀏覽器做事。
                 </div>
                 <span class="slide-number">3 / 20</span>
             </div>
@@ -348,6 +360,10 @@ agent.execute(
                 <div class="box info">
                     💡 <strong>Playwright</strong> 是微軟出品的瀏覽器自動化工具，可以用程式開啟 Chrome / Firefox / Edge。龍蝦透過 Playwright 開瀏覽器，再注入 Page Agent 讓 AI 操控頁面。
                 </div>
+                <div class="box warning">
+                    ⚠️ <strong>官方 Page Agent</strong> 本身不一定需要 Playwright；它原生就能直接嵌在網頁裡。<br>
+                    但因為我們現在要讓 <strong>龍蝦從聊天通道遠端叫瀏覽器操作</strong>，所以這章才額外用 Playwright 當橋接層。
+                </div>
                 <span class="slide-number">5 / 20</span>
             </div>
         </div>
@@ -384,6 +400,12 @@ await agent.execute('在搜尋框輸入龍蝦食譜，然後按搜尋')</pre>
                 <div class="box success">
                     ✅ 支援的 LLM：Qwen、GPT、Claude、Ollama（本地）——和龍蝦用的是同一批 AI 模型！
                 </div>
+                <div class="box info">
+                    💡 <strong>這一頁的兩種做法分開看：</strong><br>
+                    <strong>方法一</strong>是前端網頁開發時，把這行 <code>&lt;script&gt;</code> 放進 HTML 檔，然後用<strong>瀏覽器</strong>打開那個頁面。<br>
+                    <strong>方法二</strong>是你在<strong>PowerShell / 終端機</strong>先跑 <code>npm install page-agent</code>，再讓 Node.js 腳本或 OpenClaw 技能去呼叫它。<br>
+                    這章上課時，建議先玩 <strong>Demo 頁面</strong>，不要一開始就自己手打這段程式。
+                </div>
                 <span class="slide-number">6 / 20</span>
             </div>
         </div>
@@ -410,6 +432,14 @@ await agent.execute('在搜尋框輸入龍蝦食譜，然後按搜尋')</pre>
                     <tr><td>5</td><td>「按下送出按鈕」</td><td>找到 button → 點擊</td></tr>
                     <tr><td>6</td><td>「幫我填完整張表單然後送出」</td><td>一口氣完成所有欄位！</td></tr>
                 </table>
+
+                <div class="box info">
+                    💡 <strong>這一頁怎麼操作：</strong><br>
+                    1. 在<strong>瀏覽器</strong>打開 <code>demo-page-agent.html</code>。<br>
+                    2. 如果你是直接開本機檔案，網址列通常會看到 <code>file:///D:/Moltbot/龍蝦課程/課程簡報/demo-page-agent.html</code>。<br>
+                    3. 右下角看到 <strong>AI 助手圖示</strong> 後，先點一下，再把上表的句子一條一條貼進去測。<br>
+                    4. 第一次請先測第 1 到第 5 條，不要一開始就直接叫它填完整張表單。
+                </div>
 
                 <div class="box warning">
                     ⚠️ 打開 Demo 頁面後，右下角會出現一個 <strong>AI 助手圖標</strong>（Page Agent 自帶 UI）。點它就能開始輸入指令。
@@ -457,6 +487,11 @@ await agent.execute('在搜尋框輸入龍蝦食譜，然後按搜尋')</pre>
                 <h2>23.4 安裝 Playwright</h2>
                 <p>要讓龍蝦用 Page Agent 操控網頁，先裝好 <strong>Playwright</strong>——它負責開瀏覽器。</p>
 
+                <div class="box info">
+                    💡 <strong>這一頁全部都在 PowerShell / 終端機做</strong>，不是在瀏覽器，也不是在 LINE 對龍蝦說。<br>
+                    建議先 <code>cd D:\Moltbot\龍蝦課程\課程簡報\resources\page-agent-skill</code>，再執行下面三個安裝指令，這樣 <code>web-control.js</code> 會直接在同一個資料夾可測。
+                </div>
+
                 <h3>步驟 1：安裝 Playwright</h3>
                 <pre>npm install playwright</pre>
 
@@ -476,6 +511,9 @@ node -e "const pa = require('page-agent'); console.log('PageAgent OK:', !!pa.Pag
 
                 <div class="box success">
                     ✅ 看到兩行都顯示 <code>true</code> 就表示安裝成功！
+                </div>
+                <div class="box warning">
+                    ⚠️ 如果 <code>npx playwright install chromium</code> 沒跑完，就先不要進下一頁。因為後面的 <code>web-control.js</code> 一定會用到 Chromium。
                 </div>
                 <span class="slide-number">9 / 20</span>
             </div>
@@ -521,6 +559,12 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
                 <div class="box info">
                     💡 <code>headless: false</code> 表示打開可見的瀏覽器視窗，學生能看到 AI 操作過程。正式使用可改為 <code>true</code>（背景執行）。
                 </div>
+                <div class="box info">
+                    💡 <strong>這份程式不是貼到 LINE，也不是貼到 TOOLS.md。</strong><br>
+                    它是一個真正的 Node.js 檔案，檔名叫 <code>web-control.js</code>。<br>
+                    你可以直接用本章附的 <a href="resources/page-agent-skill/web-control.js" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">web-control.js 範例腳本</a>，不用自己重打。<br>
+                    如果要手動存檔，Windows 路徑建議放在：<code>C:\Users\你的名稱\.openclaw\workspace\skills\web-control\web-control.js</code>
+                </div>
                 <span class="slide-number">10 / 20</span>
             </div>
         </div>
@@ -532,7 +576,7 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
                 <p>把 web-control 做成 OpenClaw 技能，讓龍蝦從 LINE 就能操控網頁。</p>
 
                 <h3>步驟 1：建立技能資料夾</h3>
-                <pre>mkdir -p ~/.openclaw/workspace/skills/web-control</pre>
+                <pre>mkdir $env:USERPROFILE\.openclaw\workspace\skills\web-control</pre>
 
                 <h3>步驟 2：放入 SKILL.md</h3>
                 <pre># web-control
@@ -554,12 +598,27 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
 - 名稱: web-control
 - 執行: node web-control.js "{url}" "{task}"</pre>
 
+                <div class="box info">
+                    💡 <strong>Windows 正確位置：</strong><br>
+                    <code>C:\Users\你的名稱\.openclaw\workspace\skills\web-control\SKILL.md</code><br>
+                    最快建立方式：<code>notepad $env:USERPROFILE\.openclaw\workspace\skills\web-control\SKILL.md</code>
+                </div>
+
                 <h3>步驟 3：放入 web-control.js（上一頁的程式碼）</h3>
+                <div class="box info">
+                    這個檔案也放在同一個資料夾：<br>
+                    <code>C:\Users\你的名稱\.openclaw\workspace\skills\web-control\web-control.js</code><br>
+                    最快做法：直接把本章附的 <a href="resources/page-agent-skill/web-control.js" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">web-control.js</a> 複製進去。
+                </div>
                 <h3>步驟 4：重啟龍蝦</h3>
                 <pre>openclaw gateway restart</pre>
 
                 <div class="box success">
                     ✅ 完成！現在在 LINE 跟龍蝦說「幫我到 Google 搜尋龍蝦食譜」，它就會打開瀏覽器自動操作。
+                </div>
+                <div class="box warning">
+                    ⚠️ <strong>順序不要亂：</strong><br>
+                    先在 PowerShell 建資料夾 → 建好 <code>SKILL.md</code> → 放好 <code>web-control.js</code> → <code>openclaw gateway restart</code> → 最後才回 LINE / Telegram 測。
                 </div>
                 <span class="slide-number">11 / 20</span>
             </div>
@@ -594,6 +653,11 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
 
                 <div class="box warning">
                     ⚠️ <strong>Ollama 本地模式</strong>：不花錢、不需網路，但需要較好的硬體（建議至少 16GB RAM）。適合進階使用者。
+                </div>
+                <div class="box info">
+                    💡 <strong>第一次上課建議先不要改這頁。</strong><br>
+                    先用 <code>web-control.js</code> 內建的 <code>MODE = 'demo'</code> 跑通流程。<br>
+                    等 Demo、Google 搜尋、表單三個都成功後，再來換自己的 API Key。
                 </div>
                 <span class="slide-number">12 / 20</span>
             </div>
@@ -632,6 +696,13 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
                 <div class="box info">
                     💡 <strong>為什麼 Google 搜尋這麼簡單？</strong>因為 Google 的介面很乾淨——只有一個搜尋框和一個按鈕。Page Agent 的 AI 一眼就看懂了。
                 </div>
+                <div class="box info">
+                    💡 <strong>這行指令是在 PowerShell / 終端機打</strong>，不是貼給龍蝦看。<br>
+                    先 <code>cd</code> 到放有 <code>web-control.js</code> 的資料夾，再執行：<br>
+                    <code>cd D:\Moltbot\龍蝦課程\課程簡報\resources\page-agent-skill</code><br>
+                    <code>node web-control.js "https://google.com" "搜尋 AI 自主代理 教學"</code><br>
+                    成功時會看到瀏覽器自動開起來、輸入關鍵字、按搜尋，終端機也會印出 <code>🎉 任務完成！</code>
+                </div>
                 <span class="slide-number">13 / 20</span>
             </div>
         </div>
@@ -667,6 +738,13 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
 
                 <div class="box success">
                     ✅ <strong>一句話搞定 7 個欄位</strong>——Page Agent 自動拆解任務，依序填入每個欄位。如果遇到確認對話框，它也會自動處理。
+                </div>
+                <div class="box info">
+                    💡 <strong>先這樣做最穩：</strong><br>
+                    1. 先在<strong>瀏覽器</strong>打開 <code>demo-page-agent.html</code>，確認頁面本身能開。<br>
+                    2. 再用右下角的 Page Agent 面板測一次「填姓名」「填學號」。<br>
+                    3. 如果你要用 Node.js 腳本測，請把網址換成實際頁面網址，例如本機已啟動伺服器時可用 <code>http://localhost:5500/demo-page-agent.html</code>。<br>
+                    4. 第一次先測「只填不送出」，確認欄位都找得到，再做送出。
                 </div>
                 <span class="slide-number">14 / 20</span>
             </div>
@@ -724,10 +802,11 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
 
                 <h3>安裝方式</h3>
                 <ol>
-                    <li>打開 Chrome 線上應用程式商店</li>
+                    <li>在<strong>Chrome 瀏覽器</strong>打開 Chrome 線上應用程式商店</li>
                     <li>搜尋 <code>Page Agent Ext</code></li>
                     <li>點擊「加到 Chrome」</li>
-                    <li>右上角出現 Page Agent 圖示，點擊就能用</li>
+                    <li>安裝後到右上角拼圖圖示，把 Page Agent 釘選出來</li>
+                    <li>打開任意網站，再點一下右上角的 Page Agent 圖示開始操作</li>
                 </ol>
 
                 <h3>擴充功能的超能力</h3>
@@ -748,6 +827,10 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
 
                 <div class="box info">
                     💡 <strong>教學建議</strong>：先讓學生裝 Chrome 擴充功能體驗，感受「AI 操控任意網頁」的威力，再教程式整合。
+                </div>
+                <div class="box warning">
+                    ⚠️ 這一頁是<strong>在 Chrome 裡操作</strong>，不是在 PowerShell 打安裝指令。<br>
+                    如果右上角沒看到圖示，先點 Chrome 的拼圖圖示，找到擴充功能後按<strong>釘選</strong>。
                 </div>
                 <span class="slide-number">16 / 20</span>
             </div>
@@ -805,6 +888,14 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
                         A：Page Agent 本身是 <strong>MIT 開源免費</strong>。免費測試 LLM 有使用限制，正式使用需要自己的 LLM API（可以用龍蝦已有的）。
                     </li>
                 </ul>
+                <div class="box info">
+                    💡 <strong>這章最穩的排查順序：</strong><br>
+                    1. 先確認 <code>demo-page-agent.html</code> 能在瀏覽器打開。<br>
+                    2. 再確認 PowerShell 裡的 <code>npm install playwright</code>、<code>npm install page-agent</code>、<code>npx playwright install chromium</code> 都跑完。<br>
+                    3. 接著在放有 <code>web-control.js</code> 的資料夾手動跑一次：<code>node web-control.js "https://google.com" "搜尋 AI 自主代理 教學"</code>。<br>
+                    4. 手動跑通後，再把 <code>SKILL.md</code> 與 <code>web-control.js</code> 放進 <code>C:\Users\你的名稱\.openclaw\workspace\skills\web-control\</code>。<br>
+                    5. 最後才 <code>openclaw gateway restart</code>，回 LINE / Telegram 測龍蝦。
+                </div>
                 <span class="slide-number">18 / 20</span>
             </div>
         </div>
@@ -931,6 +1022,8 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
             slides[currentSlide].classList.remove('active');
             currentSlide = index;
             slides[currentSlide].classList.add('active');
+            const activeCard = slides[currentSlide].querySelector('.content-card');
+            if (activeCard) activeCard.scrollTop = 0;
             updateUI();
         }
 
@@ -955,6 +1048,12 @@ controlWebPage('https://google.com', '搜尋龍蝦食譜');</pre>
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
             if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.content-card').forEach(card => {
+                card.scrollTop = 0;
+            });
         });
 
         updateUI();
