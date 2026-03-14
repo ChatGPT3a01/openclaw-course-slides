@@ -139,7 +139,6 @@
             <a href="part6-進階篇.html" class="nav-btn">🚀 進階篇</a>
             <a href="index.html" class="nav-btn">🏠 首頁</a>
             <a href="ch21.html" class="nav-btn">⬅️ CH21</a>
-            <a href="index.html" class="nav-btn">🏠 總覽</a>
             <button class="nav-btn" onclick="toggleFullscreen()">🖥️</button>
         </div>
     </div>
@@ -155,96 +154,107 @@
                 <span class="emoji-large">👁️🦞</span>
                 <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
                 <h1>CH22 | YOLO6 智慧視覺——讓龍蝦長出真正的眼睛</h1>
-                <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
-                    不只看得懂照片，更能精準框出每一個物件——即時偵測、計數、辨識，一次搞定
-                </p>
-                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
-                    <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
-                    <ul style="margin-bottom: 0;">
-                        <li>理解 YOLO6 即時物件偵測的原理</li>
-                        <li>安裝 YOLO6 並完成第一次偵測</li>
-                        <li>製作 yolo-vision 龍蝦技能</li>
-                        <li>實戰三大場景：智慧點名、安全監控、物品盤點</li>
-                    </ul>
+                <div style="background: #f8f9fa; border-radius: 16px; padding: 25px 35px; text-align: left; max-width: 750px; margin: 15px auto 20px; border: 2px solid #e0e0e0;">
+                    <p style="font-size: 21px; color: #555; margin-bottom: 10px;">
+                        老師每天花 3 分鐘點名，35 個人一個一個唸。傳照片給龍蝦，龍蝦只會說<strong>「教室裡有很多學生」</strong>——到底幾個人啊！
+                    </p>
+                    <p style="font-size: 21px; color: #444; margin-bottom: 0;">
+                        如果拍一張照，龍蝦就回答<strong style="color: #28a745;">「28 個人，7 個空位」</strong>呢？這章教你怎麼做。
+                    </p>
+                </div>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 20px 35px; border-radius: 15px; max-width: 700px; margin: 0 auto;">
+                    <p style="font-size: 20px; color: #555; margin-bottom: 0; text-align: center;">
+                        <strong>三步驟預告：</strong>安裝 YOLO6（5 分鐘）→ 試拍偵測（2 分鐘）→ 做成技能（10 分鐘）
+                    </p>
                 </div>
                 <span class="slide-number">1 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 2: 22.1 從「看懂」到「看清楚」 -->
+        <!-- Slide 2: 22.1 為什麼龍蝦「看不清楚」？ -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.1 從「看懂」到「看清楚」</h2>
-                <p>CH8 教過用 AI 視覺模型看圖，但那只是「描述照片」。YOLO6 則是<strong>精準框出每一個物件</strong>，告訴你「那是什麼」和「有幾個」。</p>
-
-                <table>
-                    <tr><th>比較項目</th><th>CH8 AI 視覺</th><th>YOLO6 物件偵測</th></tr>
-                    <tr><td><strong>做的事</strong></td><td>描述照片內容</td><td>框出每個物件 + 分類 + 計數</td></tr>
-                    <tr><td><strong>回答方式</strong></td><td>「照片裡有幾個人在聊天」</td><td>「偵測到 3 人、2 張椅子、1 張桌子」</td></tr>
-                    <tr><td><strong>速度</strong></td><td>需要呼叫雲端 API（1-3 秒）</td><td>本地即時偵測（毫秒級）</td></tr>
-                    <tr><td><strong>精準度</strong></td><td>模糊描述</td><td>座標 + 信心分數</td></tr>
-                    <tr><td><strong>離線使用</strong></td><td>需要網路</td><td>完全離線</td></tr>
-                </table>
+                <h2>22.1 先來解決點名問題</h2>
+                <p>CH8 教過用 AI 視覺模型看圖——但傳教室照片過去，龍蝦只會說「裡面有很多學生」。問題出在哪？因為 AI 視覺模型是<strong>「腦」</strong>，負責理解；但它沒有<strong>「眼」</strong>，看不清楚細節。</p>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
                     <div class="concept-card" style="text-align: center;">
-                        <h3>🗣️ CH8：AI 看圖說話</h3>
-                        <p>「這是一張教室的照片，裡面有一些學生在上課。」</p>
+                        <h3>🧠 CH8 Vision（AI 的「腦」）</h3>
+                        <p style="font-size: 22px; color: #e91e63;">「教室裡有很多學生」</p>
+                        <p>能描述畫面，但數不出人數</p>
                     </div>
                     <div class="concept-card" style="text-align: center; border-color: #28a745;">
-                        <h3>👁️ YOLO6：精準偵測</h3>
-                        <p>「person: 28 個、chair: 30 張、laptop: 5 台、book: 12 本」</p>
+                        <h3>👁️ YOLO6（AI 的「眼」）</h3>
+                        <p style="font-size: 22px; color: #28a745;">「person: 28, chair: 35」</p>
+                        <p>精準框出物件，報出數量</p>
                     </div>
                 </div>
 
+                <table>
+                    <tr><th>比較項目</th><th>CH8 AI 視覺（腦）</th><th>YOLO6 物件偵測（眼）</th></tr>
+                    <tr><td><strong>擅長</strong></td><td>描述、理解、對話</td><td>框出、計數、定位</td></tr>
+                    <tr><td><strong>點名回答</strong></td><td>「有一些學生在上課」</td><td>「person: 28 個」</td></tr>
+                    <tr><td><strong>速度</strong></td><td>雲端 API（1-3 秒）</td><td>本地即時（毫秒級）</td></tr>
+                </table>
+
                 <div class="box info">
-                    💡 最佳搭配：YOLO6 負責「偵測 + 計數」，再把結果丟給 AI 模型「解讀 + 回應」——兩者結合才是完整的智慧視覺！
+                    💡 Vision 負責「理解」，YOLO6 負責「看清楚」——兩者搭配才最強！先用 YOLO6 數人頭，再讓 AI 用自然語言回覆。
                 </div>
                 <span class="slide-number">2 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 3: 22.2 安裝 YOLO6 -->
+        <!-- Slide 3: 22.2 步驟一——安裝 YOLO6 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.2 安裝 YOLO6</h2>
+                <h2>22.2 步驟一：安裝 YOLO6</h2>
 
-                <h3>步驟 1：確認 Python 環境</h3>
+                <h3>1. 確認 Python 環境</h3>
                 <pre>python --version
 # 需要 Python 3.10 以上</pre>
 
-                <div class="box info">
-                    💡 <strong>沒有 Python？</strong>去 <code>python.org</code> 下載安裝，或直接用 GitHub Codespaces（CH5 教過）就已經內建了！
+                <div class="box warning">
+                    ⚠️ <strong>沒裝 Python？</strong>去 <a href="https://python.org" style="color: #856404;">python.org</a> 下載，安裝時<strong>記得勾「Add to PATH」</strong>！或用 GitHub Codespaces（CH5 教過）就已經內建了。
                 </div>
 
-                <h3>步驟 2：安裝 ultralytics</h3>
+                <h3>2. 安裝 ultralytics</h3>
                 <pre>pip install ultralytics</pre>
 
-                <h3>步驟 3：驗證安裝</h3>
+                <h3>3. 驗證安裝</h3>
                 <pre>python -c "from ultralytics import YOLO; print('YOLO6 安裝成功！')"</pre>
 
                 <div class="box success">
-                    ✅ 看到「YOLO6 安裝成功！」就代表一切就緒。第一次執行偵測時會自動下載模型檔（約 6-130 MB）。
+                    ✅ <strong>檢查點</strong>：看到「YOLO6 安裝成功！」就對了。第一次執行偵測時會自動下載模型檔（約 6-130 MB）。
                 </div>
-
-                <h3>模型大小選擇</h3>
-                <table>
-                    <tr><th>模型</th><th>大小</th><th>速度</th><th>精準度</th><th>適用場景</th></tr>
-                    <tr><td><code>yolo11n</code></td><td>~6 MB</td><td>最快</td><td>普通</td><td>樹莓派、手機</td></tr>
-                    <tr><td><code>yolo11s</code></td><td>~22 MB</td><td>快</td><td>不錯</td><td>一般筆電（推薦）</td></tr>
-                    <tr><td><code>yolo11m</code></td><td>~50 MB</td><td>中等</td><td>好</td><td>桌機</td></tr>
-                    <tr><td><code>yolo11l</code></td><td>~130 MB</td><td>較慢</td><td>最佳</td><td>有 GPU 的電腦</td></tr>
-                </table>
                 <span class="slide-number">3 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 4: 22.3 第一次偵測 -->
+        <!-- Slide 4: 22.3 步驟二——拍照試試 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.3 第一次偵測</h2>
+                <h2>22.3 步驟二：拍張照片試試</h2>
 
-                <h3>完整 Python 程式碼（只要 10 行）</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📷 拍照存檔</h3>
+                        <p>存成 classroom.jpg</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📝 寫 10 行程式</h3>
+                        <p>建立 detect.py</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>▶️ 執行</h3>
+                        <p>python detect.py</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
+                        <h3>🎉 看到框框！</h3>
+                        <p>物件被彩色框標出</p>
+                    </div>
+                </div>
+
+                <h3>完整程式碼（只要 10 行）</h3>
                 <pre>from ultralytics import YOLO
 
 # 1. 載入模型（第一次會自動下載）
@@ -258,219 +268,230 @@ results[0].show()       # 彈出標註過的圖片
 results[0].save()       # 儲存標註圖片
 print(results[0].boxes) # 印出偵測框座標</pre>
 
-                <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>📷 拍照</h3>
-                        <p>準備一張照片</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>🧠 載入模型</h3>
-                        <p>YOLO("yolo11s.pt")</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>🔍 偵測</h3>
-                        <p>model("照片.jpg")</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
-                        <h3>✅ 看結果</h3>
-                        <p>框出物件 + 標籤 + 信心值</p>
-                    </div>
-                </div>
-
                 <h3>偵測結果長這樣</h3>
                 <pre>person: 0.95 (280, 120, 380, 450)
 chair:  0.88 (100, 300, 200, 500)
 laptop: 0.91 (400, 200, 520, 320)
 # 類別: 信心分數 (x1, y1, x2, y2) 座標框</pre>
 
-                <div class="box info">
-                    💡 YOLO 預設能偵測 <strong>80 種</strong>常見物件：人、車、動物、家具、3C 用品等——不用訓練就能直接用！
+                <div class="box success">
+                    ✅ <strong>檢查點</strong>：看到彩色框框和物件列表就成功了！每個物件都有名稱、信心值和座標。
                 </div>
                 <span class="slide-number">4 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 5: 22.4 做成龍蝦 Skill -->
+        <!-- Slide 5: 22.4 步驟三——做成龍蝦技能 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.4 做成龍蝦 Skill</h2>
-                <p>把 YOLO6 包裝成龍蝦技能，用聊天就能觸發偵測！</p>
+                <h2>22.4 步驟三：做成龍蝦技能</h2>
+                <p>每次打開 Python 太麻煩了——讓龍蝦幫你做！傳照片到 LINE，龍蝦自動偵測回報。</p>
 
-                <h3>SKILL.md 核心內容</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📁 建資料夾</h3>
+                        <p>skills/yolo-vision/</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📄 寫 SKILL.md</h3>
+                        <p>告訴龍蝦怎麼用</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🐍 寫 detect.py</h3>
+                        <p>偵測邏輯腳本</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
+                        <h3>🔄 重啟龍蝦</h3>
+                        <p>gateway restart</p>
+                    </div>
+                </div>
+
+                <h3>SKILL.md 精簡版（核心 10 行）</h3>
                 <pre style="font-size: 15px;"># yolo-vision
 
 ## 工具名稱
 yolo-vision
 
 ## 描述
-使用 YOLO6 進行即時物件偵測，能精準框出照片中的每個物件並計數。
+使用 YOLO6 偵測照片中的物件，精準計數並回報結果。
 
 ## 功能
-- 接收使用者傳送的照片
-- 使用 YOLO6 模型偵測物件
-- 回傳偵測結果（物件類別 + 數量 + 位置）
-- 支援 80 種常見物件
+- 接收照片 → 呼叫 detect.py → 回傳物件清單
+- 支援 80 種常見物件（人、椅子、筆電、書本等）
 
 ## 使用方式
-傳送照片並說「幫我分析」或「偵測這張照片」即可觸發。</pre>
+傳送照片並說「幫我數」「偵測」「盤點」即可觸發。</pre>
 
-                <h3>安裝三步驟</h3>
-                <ol>
-                    <li><strong>建立資料夾</strong>：<code>mkdir ~/.openclaw/workspace/skills/yolo-vision</code></li>
-                    <li><strong>寫入檔案</strong>：把 <code>SKILL.md</code> 和 <code>detect.py</code> 放進去</li>
-                    <li><strong>重啟龍蝦</strong>：<code>openclaw gateway restart</code></li>
-                </ol>
+                <h3>安裝指令</h3>
+                <pre>mkdir ~/.openclaw/workspace/skills/yolo-vision
+# 把 SKILL.md 和 detect.py 放進去
+openclaw gateway restart</pre>
 
                 <div class="box success">
-                    ✅ 安裝完成後，傳張照片給龍蝦，說「幫我分析這張照片有什麼東西」——它會呼叫 YOLO6 偵測後，用自然語言告訴你結果！
+                    ✅ <strong>檢查點</strong>：重啟後傳張照片到 LINE 試試——龍蝦會自動偵測並回報結果！
                 </div>
                 <span class="slide-number">5 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 6: 22.5 場景一——智慧點名 -->
+        <!-- Slide 6: 22.5 實測！LINE 傳照片點名 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.5 場景一——智慧點名</h2>
-                <p>老師拍一張教室全景照，龍蝦立刻數出有多少人在場。</p>
+                <h2>22.5 實測：傳照片到 LINE 點名</h2>
+                <p>這就是整章的高潮——拍一張教室照片，龍蝦幫你搞定點名。</p>
 
-                <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>📷 拍教室</h3>
-                        <p>用手機拍一張全景照片</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>📤 傳給龍蝦</h3>
-                        <p>LINE / Telegram 傳送照片</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>🔍 YOLO6 數人</h3>
-                        <p>偵測所有 person 物件</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
-                        <h3>📊 回報結果</h3>
-                        <p>到場人數 + 標註圖片</p>
-                    </div>
-                </div>
-
-                <h3>LINE 對話示範</h3>
                 <div style="background: #f0f8ff; border: 2px solid #667eea; border-radius: 16px; padding: 25px; margin: 20px 0;">
-                    <p style="font-size: 17px; margin: 0;">
-                        <strong>你</strong>：[傳教室照片] 幫我數一下教室有多少人<br><br>
-                        <strong>龍蝦</strong>：<br>
-                        📊 偵測完成！<br><br>
-                        👤 偵測到 <strong>28 個人</strong>（信心值 > 0.7）<br>
-                        ⚠️ 另有 2 個人被部分遮擋（信心值 0.4-0.7），可能被前排同學擋住<br><br>
-                        🪑 順便看到 30 張椅子、5 台筆電、12 本書<br><br>
-                        💡 如果班上應到 32 人，可能有 2-4 人缺席喔！
-                    </p>
+                    <table style="border: none; margin: 0;">
+                        <tr style="background: none;">
+                            <td style="border: none; width: 60px; vertical-align: top; padding: 10px 15px 10px 0;"><strong>你</strong></td>
+                            <td style="border: none; padding: 10px 0; font-size: 19px;">[拍教室照片] 幫我數有幾個人</td>
+                        </tr>
+                        <tr style="background: none;">
+                            <td style="border: none; vertical-align: top; padding: 10px 15px 10px 0;"><strong>🦞</strong></td>
+                            <td style="border: none; padding: 10px 0; font-size: 19px;">
+                                📊 偵測完成！<br>
+                                👤 偵測到 <strong>28 個人</strong>，🪑 35 張椅子<br>
+                                → 空位 <strong>7 個</strong>
+                            </td>
+                        </tr>
+                        <tr style="background: none;">
+                            <td style="border: none; vertical-align: top; padding: 10px 15px 10px 0;"><strong>你</strong></td>
+                            <td style="border: none; padding: 10px 0; font-size: 19px;">應到 32 人，那 4 個沒來</td>
+                        </tr>
+                        <tr style="background: none;">
+                            <td style="border: none; vertical-align: top; padding: 10px 15px 10px 0;"><strong>🦞</strong></td>
+                            <td style="border: none; padding: 10px 0; font-size: 19px;">
+                                出席率 <strong>87.5%</strong>（28/32），缺席 4 人。<br>
+                                要記錄到今天的出席表嗎？
+                            </td>
+                        </tr>
+                    </table>
                 </div>
 
-                <div class="box warning">
-                    ⚠️ <strong>隱私提醒</strong>：YOLO 數人頭只是偵測「有人形」，不會辨識臉部或身份——不涉及個人隱私。和人臉辨識是完全不同的技術！
+                <div class="box success">
+                    🎉 <strong>恭喜！你的龍蝦現在會「數人頭」了！</strong>從每天 3 分鐘唸名字，變成拍照 3 秒搞定。
+                </div>
+
+                <div class="box info">
+                    💡 YOLO6 數的是「人形輪廓」，不是辨識臉部——所以<strong>不涉及個人隱私</strong>，和人臉辨識是完全不同的技術。
                 </div>
                 <span class="slide-number">6 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 7: 22.6 場景二——安全監控 -->
+        <!-- Slide 7: 22.5 搭配排程，自動點名 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.6 場景二——安全監控</h2>
-                <p>讓龍蝦搭配 Webcam 持續監看，偵測到人就透過 LINE 發警報。</p>
+                <h2>22.5 搭配排程，自動點名</h2>
+                <p>更懶的做法——讓龍蝦每節課自動拍照點名，你連手都不用動。</p>
 
-                <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>📹 Webcam</h3>
-                        <p>攝影機持續擷取畫面</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center;">
-                        <h3>🔍 YOLO6 偵測</h3>
-                        <p>每 5 秒分析一張</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center; border-color: #ffc107;">
-                        <h3>⚠️ 偵測到人</h3>
-                        <p>觸發條件成立</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center; border-color: #e91e63;">
-                        <h3>🚨 LINE 警報</h3>
-                        <p>推播通知 + 截圖</p>
-                    </div>
-                </div>
-
-                <h3>搭配 CH21 排程：只在特定時段啟動</h3>
-                <pre>## 放學後安全監控
-- 排程: 平日 17:00-22:00
+                <h3>HEARTBEAT.md 設定範例</h3>
+                <pre>## 每節課自動點名
+- 排程: 平日 08:10, 09:10, 10:10, 11:10, 13:10, 14:10, 15:10
 - 動作: |
-    啟動 yolo-vision 的 Webcam 監控模式。
-    如果偵測到 person，立刻推播截圖到 LINE，
-    並標註「偵測到 X 人，時間：HH:MM」。
-    每次觸發後冷卻 5 分鐘避免重複通知。
+    使用 Webcam 拍攝教室照片，
+    呼叫 yolo-vision 偵測 person 數量，
+    推播到 LINE：「第 X 節：到場 N 人 / 應到 32 人」。
+    如果人數低於 25 人，額外提醒老師注意。</pre>
 
-## 假日全天監控
-- 排程: 週六、週日 全天
-- 靜默: true
-- 動作: |
-    啟動 yolo-vision 監控教室。
-    偵測到人才通知，否則不打擾。</pre>
+                <h3>效果</h3>
+                <p>每節上課鐘響後 10 分鐘，龍蝦自動拍照、偵測、推播結果到你的 LINE。你只需要<strong>看通知</strong>就好。</p>
 
                 <div class="box info">
-                    💡 可搭配 <strong>CH19 Nodes</strong>——把監控攝影機接在學校電腦，警報推播到你的手機，遠端掌控！
+                    💡 <strong>隱私安全</strong>——YOLO6 數人頭 ≠ 臉部辨識。它只偵測「這裡有個人形」，不知道是誰，不儲存臉部特徵，不涉及個資法。
+                </div>
+
+                <div class="box warning">
+                    ⚠️ 需要電腦接 Webcam 並保持開機。搭配 <strong>CH21 排程</strong>可設定只在上課時間啟動。
                 </div>
                 <span class="slide-number">7 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 8: 22.7 場景三——物品盤點 -->
+        <!-- Slide 8: 22.6 延伸一——安全監控 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.7 場景三——物品盤點</h2>
-                <p>拍一張書架或器材室的照片，龍蝦自動幫你盤點清單。</p>
+                <h2>22.6 同樣的技術，更多玩法</h2>
+                <h3>延伸一：放學後有人闖進教室？</h3>
+                <p>同一套 YOLO6 技能，換個排程就變成安全監控系統。</p>
 
-                <h3>對話示範</h3>
-                <div style="background: #f0f8ff; border: 2px solid #667eea; border-radius: 16px; padding: 25px; margin: 20px 0;">
-                    <p style="font-size: 17px; margin: 0;">
-                        <strong>你</strong>：[傳器材室照片] 幫我盤點一下器材室<br><br>
-                        <strong>龍蝦</strong>：<br>
-                        📋 器材室盤點結果：<br><br>
-                        • chair（椅子）：15 張<br>
-                        • laptop（筆電）：8 台<br>
-                        • keyboard（鍵盤）：10 個<br>
-                        • mouse（滑鼠）：9 個<br>
-                        • backpack（書包）：3 個<br>
-                        • bottle（水瓶）：4 瓶<br><br>
-                        📝 已整理成清單，需要我存成 Excel 嗎？
+                <h3>HEARTBEAT.md 監控設定</h3>
+                <pre>## 放學後安全監控
+- 排程: 平日 17:00-22:00, 每 5 分鐘
+- 動作: |
+    使用 Webcam 拍攝教室，
+    呼叫 yolo-vision 偵測 person。
+    如果 person > 0：
+      推播截圖到 LINE：「⚠️ 教室偵測到 X 人，時間 HH:MM」。
+    每次觸發後冷卻 10 分鐘避免重複通知。</pre>
+
+                <h3>LINE 警報示範</h3>
+                <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 16px; padding: 20px; margin: 15px 0;">
+                    <p style="font-size: 19px; margin: 0;">
+                        <strong>🦞 龍蝦警報</strong>：⚠️ 教室偵測到 <strong>2 人</strong>，時間 18:47。[附截圖]<br>
+                        需要我通知保全嗎？
                     </p>
                 </div>
 
-                <h3>進階：定期拍照比對差異</h3>
-                <table>
-                    <tr><th>物品</th><th>上次盤點（3/1）</th><th>本次盤點（3/14）</th><th>差異</th></tr>
-                    <tr><td>筆電</td><td>10 台</td><td>8 台</td><td style="color: #e91e63;">⬇ 少 2 台</td></tr>
-                    <tr><td>椅子</td><td>15 張</td><td>15 張</td><td style="color: #28a745;">✅ 一致</td></tr>
-                    <tr><td>鍵盤</td><td>10 個</td><td>12 個</td><td style="color: #2196f3;">⬆ 多 2 個</td></tr>
-                    <tr><td>滑鼠</td><td>10 個</td><td>9 個</td><td style="color: #e91e63;">⬇ 少 1 個</td></tr>
-                </table>
-
-                <div class="box info">
-                    💡 搭配 CH21 排程——每週一自動拍照比對，異常就通知你，器材管理不費力！
+                <h3>跨章節串接</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🌐 CH19 Nodes</h3>
+                        <p>攝影機在學校，警報推到你手機</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>📞 CH20 Twilio</h3>
+                        <p>偵測到人直接打電話通知</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>⏰ CH21 排程</h3>
+                        <p>只在放學後啟動，上課不干擾</p>
+                    </div>
                 </div>
                 <span class="slide-number">8 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 9: 22.8 進階——Webcam 即時串流 -->
+        <!-- Slide 9: 延伸二——物品盤點 + 自訂目標 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.8 進階——Webcam 即時串流</h2>
+                <h2 style="border-bottom: none; margin-bottom: 15px;">延伸二：書架上有多少本書？</h2>
+                <p>YOLO6 不只能數人——80 種物件都能偵測，隨拍隨數。</p>
 
-                <h3>搭配其他章節的威力加乘</h3>
+                <h3>LINE 對話示範</h3>
+                <div style="background: #f0f8ff; border: 2px solid #667eea; border-radius: 16px; padding: 20px; margin: 15px 0;">
+                    <p style="font-size: 18px; margin: 0;">
+                        <strong>你</strong>：[傳器材室照片] 幫我盤點一下<br><br>
+                        <strong>🦞</strong>：📋 盤點結果：chair 15 張 / laptop 8 台 / keyboard 10 個 / mouse 9 個 / backpack 3 個 / bottle 4 瓶<br>
+                        需要存成清單嗎？
+                    </p>
+                </div>
+
+                <h3>常用偵測物件（80 種中最實用的）</h3>
                 <table>
-                    <tr><th>搭配章節</th><th>組合效果</th></tr>
-                    <tr><td><strong>+ CH18</strong> 控制電腦</td><td>桌面代理 + 視覺偵測 = 看得見的 AI 助手</td></tr>
-                    <tr><td><strong>+ CH19</strong> Nodes</td><td>多台攝影機 + 中央控制 = 遠端監控網</td></tr>
-                    <tr><td><strong>+ CH21</strong> 自動化</td><td>定時 + 偵測 = 全自動值班系統</td></tr>
+                    <tr><th>類別</th><th>英文名</th><th>應用場景</th></tr>
+                    <tr><td>👤 人</td><td>person</td><td>點名、人流統計</td></tr>
+                    <tr><td>🪑 椅子</td><td>chair</td><td>空位計算</td></tr>
+                    <tr><td>💻 筆電</td><td>laptop</td><td>設備盤點</td></tr>
+                    <tr><td>📱 手機</td><td>cell phone</td><td>上課管理</td></tr>
+                    <tr><td>📖 書</td><td>book</td><td>圖書盤點</td></tr>
+                    <tr><td>🎒 背包</td><td>backpack</td><td>遺留物偵測</td></tr>
+                    <tr><td>🚗 汽車</td><td>car</td><td>停車場管理</td></tr>
+                    <tr><td>🐕 狗</td><td>dog</td><td>校園動物偵測</td></tr>
                 </table>
+
+                <div class="box info">
+                    💡 不只 person！用 <code>model.names</code> 可查看全部 80 種物件清單。
+                </div>
+                <span class="slide-number">9 / 12</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 22.7 進階——Webcam 即時串流 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>22.7 進階：即時偵測</h2>
+                <p>不只分析照片——接上 Webcam，讓龍蝦持續「盯著看」。</p>
 
                 <h3>即時偵測 Python 程式碼（精簡版）</h3>
                 <pre style="font-size: 15px;">from ultralytics import YOLO
@@ -490,7 +511,7 @@ while True:
 cap.release()
 cv2.destroyAllWindows()</pre>
 
-                <h3>效能建議</h3>
+                <h3>效能參考</h3>
                 <table>
                     <tr><th>硬體</th><th>建議模型</th><th>預估 FPS</th><th>適用場景</th></tr>
                     <tr><td>一般筆電（無 GPU）</td><td><code>yolo11n</code></td><td>5-15</td><td>定時截圖分析</td></tr>
@@ -498,95 +519,82 @@ cv2.destroyAllWindows()</pre>
                     <tr><td>桌機 + 獨顯</td><td><code>yolo11m</code></td><td>60+</td><td>多路即時串流</td></tr>
                     <tr><td>樹莓派</td><td><code>yolo11n</code></td><td>2-5</td><td>低功耗長期監控</td></tr>
                 </table>
-                <span class="slide-number">9 / 12</span>
-            </div>
-        </div>
 
-        <!-- Slide 10: 22.9 常見問題 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>22.9 常見問題</h2>
-
-                <ul>
-                    <li>
-                        <strong>Q：需要 GPU 嗎？</strong><br>
-                        A：不需要！<code>yolo11n</code> 和 <code>yolo11s</code> 在 CPU 上就能跑。有 GPU 會更快，但不是必要條件。即使是 5 年前的筆電也能做定時截圖偵測。
-                    </li>
-                    <li>
-                        <strong>Q：YOLO6 能偵測什麼？</strong><br>
-                        A：預設支援 <strong>80 種</strong>常見物件，包括：人、車、自行車、貓、狗、椅子、桌子、筆電、手機、書本、瓶子、杯子、背包等。完整清單可用 <code>model.names</code> 查看。
-                    </li>
-                    <li>
-                        <strong>Q：能和 CH8 的 AI 視覺同時使用嗎？</strong><br>
-                        A：當然可以！最佳搭配就是 YOLO6 先「偵測 + 計數」，再把結果和照片一起丟給 AI 模型做「語意理解 + 自然語言回應」。兩者互補，不衝突。
-                    </li>
-                    <li>
-                        <strong>Q：偵測不準怎麼辦？</strong><br>
-                        A：三個方向調整——換大一號的模型（n → s → m）、調整信心閾值（預設 0.25，改高一點過濾雜訊）、確保照片光線充足且角度正面。
-                    </li>
-                    <li>
-                        <strong>Q：手機上能跑嗎？</strong><br>
-                        A：YOLO 模型可以匯出成手機格式（CoreML / TFLite），但龍蝦技能目前是跑在電腦上。最簡單的做法是：手機拍照 → 傳給龍蝦（LINE） → 電腦端用 YOLO 偵測 → 結果回傳手機。
-                    </li>
-                </ul>
+                <h3>組合技</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🖥️ + CH18</h3>
+                        <p>桌面代理 + 視覺偵測 = 看得見的 AI 助手</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>🌐 + CH19</h3>
+                        <p>多台攝影機 + 中央控制 = 遠端監控網</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3>⏰ + CH21</h3>
+                        <p>定時偵測 + 自動通知 = 全自動值班</p>
+                    </div>
+                </div>
                 <span class="slide-number">10 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 11: 22.10 小結 -->
+        <!-- Slide 11: 常見問題 + 小結 -->
         <div class="slide">
             <div class="content-card">
-                <h2>22.10 小結</h2>
-                <p>這一章我們讓龍蝦從「看得懂」進化到「看得清楚」，掌握了三大實戰場景：</p>
+                <h2>常見問題 + 小結</h2>
 
-                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
-                    <div class="concept-card" style="text-align: center; border-color: #2196f3;">
-                        <h3>📸 智慧點名</h3>
-                        <p>拍一張照片，立刻知道教室有多少人在場。快速、不侵犯隱私。</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center; border-color: #e91e63;">
-                        <h3>🚨 安全監控</h3>
-                        <p>搭配排程在放學後自動看守，偵測到人就 LINE 警報。</p>
-                    </div>
-                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
-                        <h3>📋 物品盤點</h3>
-                        <p>拍器材室照片自動產生清單，定期比對找出差異。</p>
-                    </div>
-                </div>
+                <ul>
+                    <li>
+                        <strong>Q：需要 GPU 嗎？</strong><br>
+                        A：不需要！<code>yolo11n</code> 在 CPU 上就能跑，5 年前的筆電也行。GPU 只是跑更快。
+                    </li>
+                    <li>
+                        <strong>Q：能偵測什麼東西？</strong><br>
+                        A：預設 <strong>80 種</strong>常見物件（人、車、動物、家具、3C 等）。用 <code>model.names</code> 查看完整清單。
+                    </li>
+                    <li>
+                        <strong>Q：能和 CH8 Vision 同時用嗎？</strong><br>
+                        A：最佳搭配！YOLO6 先「偵測 + 計數」，AI 模型再「理解 + 回應」。
+                    </li>
+                    <li>
+                        <strong>Q：偵測不準怎麼辦？</strong><br>
+                        A：換大一號模型（n → s → m）、調高信心閾值、確保光線充足。
+                    </li>
+                    <li>
+                        <strong>Q：會侵犯隱私嗎？</strong><br>
+                        A：YOLO 只偵測「人形輪廓」，不辨識身份、不儲存臉部特徵，和人臉辨識完全不同。
+                    </li>
+                </ul>
 
-                <h3>核心技術棧</h3>
-                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.08)); border-radius: 15px; padding: 25px; margin: 20px 0; text-align: center;">
-                    <p style="font-size: 22px; margin-bottom: 0;">
-                        <span class="highlight">YOLO6</span> +
-                        <span class="highlight">Skill</span> +
-                        <span class="highlight">LINE / Telegram</span> +
-                        <span class="highlight">排程 / Nodes</span>
+                <div style="background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.08)); border-radius: 15px; padding: 25px; margin: 20px 0;">
+                    <h3 style="text-align: center; margin-top: 0;">回顧：從「每天 3 分鐘點名」到「拍照 3 秒搞定」</h3>
+                    <p style="text-align: center; font-size: 20px; margin-bottom: 5px;">
+                        <span class="highlight">安裝 YOLO6</span> →
+                        <span class="highlight">拍照偵測</span> →
+                        <span class="highlight">做成技能</span>
+                    </p>
+                    <p style="text-align: center; font-size: 18px; color: #666; margin-bottom: 0;">
+                        再延伸：安全監控 + 物品盤點 + 即時串流
                     </p>
                 </div>
-
-                <h3>展望更多可能</h3>
-                <ul>
-                    <li><strong>自訂模型</strong>：用自己的照片訓練，辨識特定物品（如校園植物、實驗器材）</li>
-                    <li><strong>多攝影機</strong>：搭配 CH19 Nodes，一台龍蝦管理多路攝影畫面</li>
-                    <li><strong>結合語音</strong>：搭配 CH20 Twilio，偵測到異常自動打電話通知</li>
-                </ul>
                 <span class="slide-number">11 / 12</span>
             </div>
         </div>
 
-        <!-- Slide 12: 本章結束 + 全書完結 -->
+        <!-- Slide 12: 全書完結 -->
         <div class="slide">
             <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <span style="font-size: 80px; display: block; margin-bottom: 15px;">🎉🦞👁️</span>
                 <h1 style="font-size: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px;">恭喜完成全書旅程！</h1>
                 <p style="font-size: 20px; color: #666; max-width: 700px; margin: 0 auto 25px;">從 CH0 到 CH22，你的龍蝦已經進化成全方位的 AI 自主代理——</p>
 
-                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); text-align: left; max-width: 900px;">
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); text-align: left; max-width: 950px;">
                     <div class="concept-card" style="text-align: center;">
                         <h3>💬 會聊天</h3>
-                        <p>LINE / TG / Discord 多通道聊天</p>
+                        <p>LINE / TG / Discord 多通道</p>
                     </div>
-                    <div class="concept-card" style="text-align: center;">
+                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
                         <h3>👁️ 智慧視覺</h3>
                         <p>AI 看圖 + YOLO6 精準偵測</p>
                     </div>
@@ -605,6 +613,10 @@ cv2.destroyAllWindows()</pre>
                     <div class="concept-card" style="text-align: center;">
                         <h3>🌐 跨機協作</h3>
                         <p>Nodes 多機分散式</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center; border-color: #e91e63;">
+                        <h3>🧠 持續進化</h3>
+                        <p>Skills 生態系無限擴充</p>
                     </div>
                 </div>
 
