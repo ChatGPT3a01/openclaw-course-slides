@@ -162,7 +162,7 @@
                     <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
                     <ul style="margin-bottom: 0;">
                         <li>認識 Desktop Agent 的概念和能力範圍</li>
-                        <li>了解瀏覽器操控（Browser Sandbox）的運作方式</li>
+                        <li>了解瀏覽器操控（Agent Browser）的運作方式</li>
                         <li>學會用龍蝦進行檔案管理自動化</li>
                         <li>認識應用程式自動化的可能性</li>
                         <li>理解安全注意事項</li>
@@ -243,11 +243,11 @@
 
                 <table style="font-size: 17px;">
                     <tr><th>功能</th><th>技能名稱</th><th>安裝指令</th><th>備註</th></tr>
-                    <tr><td>瀏覽網頁</td><td><strong>browser-sandbox</strong></td><td><code>clawdhub install browser-sandbox</code></td><td>需另裝 Playwright</td></tr>
-                    <tr><td>檔案管理</td><td><strong>file-manager</strong></td><td><code>clawdhub install file-manager</code></td><td>建議設定操作範圍</td></tr>
-                    <tr><td>磁碟盤點</td><td><strong>disk-audit</strong></td><td><code>clawdhub install disk-audit</code></td><td>掃描大檔案</td></tr>
-                    <tr><td>系統監控</td><td><strong>system-monitor</strong></td><td><code>clawdhub install system-monitor</code></td><td>CPU / 記憶體 / 磁碟</td></tr>
-                    <tr><td>螢幕截圖</td><td><strong>screenshot</strong></td><td><code>clawdhub install screenshot</code></td><td>截圖分析畫面</td></tr>
+                    <tr><td>瀏覽網頁</td><td><strong>agent-browser</strong></td><td><code>npx clawhub@latest install agent-browser</code></td><td>需另裝 Playwright</td></tr>
+                    <tr><td>檔案管理</td><td><strong>file-manager</strong></td><td><code>npx clawhub@latest install file-manager</code></td><td>建議設定操作範圍</td></tr>
+                    <tr><td>磁碟盤點</td><td><strong>disk-audit</strong></td><td><code>npx clawhub@latest install disk-audit</code></td><td>掃描大檔案</td></tr>
+                    <tr><td>系統監控</td><td><strong>system-monitor</strong></td><td><code>npx clawhub@latest install system-monitor</code></td><td>CPU / 記憶體 / 磁碟</td></tr>
+                    <tr><td>螢幕截圖</td><td><strong>screenshot</strong></td><td><code>npx clawhub@latest install screenshot</code></td><td>截圖分析畫面</td></tr>
                 </table>
 
                 <div class="box info">
@@ -261,23 +261,23 @@
             </div>
         </div>
 
-        <!-- Slide 5: Browser Sandbox -->
+        <!-- Slide 5: Agent Browser -->
         <div class="slide">
             <div class="content-card">
-                <h2>18.2 瀏覽器操控（Browser Sandbox）</h2>
-                <p>Browser Sandbox 讓龍蝦操控一個「沙盒瀏覽器」——在安全環境中運行的瀏覽器。<strong>不會動到你 Chrome 裡的書籤、密碼和瀏覽紀錄</strong>。</p>
+                <h2>18.2 瀏覽器操控（Agent Browser）</h2>
+                <p>Agent Browser 讓龍蝦操控一個「沙盒瀏覽器」——在安全環境中運行的瀏覽器。<strong>不會動到你 Chrome 裡的書籤、密碼和瀏覽紀錄</strong>。</p>
 
                 <img src="images/CH18/ch18_02_sandbox_diagram.png" alt="Sandbox 架構圖" class="screenshot">
 
                 <h3>設定瀏覽器操控</h3>
                 <pre># 安裝瀏覽器操控技能
-clawdhub install browser-sandbox
+npx clawhub@latest install agent-browser
 
 # 安裝 Playwright 瀏覽器
 npx playwright install chromium</pre>
 
                 <p>在 <code>TOOLS.md</code> 裡加上：</p>
-                <pre>## Browser Sandbox
+                <pre>## Agent Browser
 - 瀏覽器: Chromium
 - 無頭模式: 是（不會彈出瀏覽器視窗）
 - 截圖: 每次操作後自動截圖回報</pre>
@@ -480,7 +480,7 @@ npx playwright install chromium</pre>
                 <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
                     <div class="concept-card">
                         <h3>Q1：需要額外安裝嗎？</h3>
-                        <p>需要安裝對應的技能。瀏覽器裝 <code>browser-sandbox</code>、檔案裝 <code>file-manager</code>、系統監控裝 <code>system-monitor</code>。</p>
+                        <p>需要安裝對應的技能。瀏覽器裝 <code>agent-browser</code>、檔案裝 <code>file-manager</code>、系統監控裝 <code>system-monitor</code>。</p>
                     </div>
                     <div class="concept-card">
                         <h3>Q2：不在電腦旁能操作嗎？</h3>
@@ -515,7 +515,7 @@ npx playwright install chromium</pre>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
                     <div class="concept-card">
-                        <h3>🌐 Browser Sandbox</h3>
+                        <h3>🌐 Agent Browser</h3>
                         <p>龍蝦能瀏覽網頁、查資料、填表單，在安全沙盒中操作。</p>
                     </div>
                     <div class="concept-card">

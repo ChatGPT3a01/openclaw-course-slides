@@ -156,325 +156,359 @@
                 <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
                 <h1>CH6 | 跟龍蝦聊天的正確姿勢</h1>
                 <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
-                    龍蝦不只在 LINE 聊天——還能同時住在 Telegram、看懂你傳的照片、甚至自拍回傳給你！
+                    龍蝦不只是會回話的機器人——它能閒聊、回答問題、翻譯、寫文章、角色扮演，甚至記住你說過的話。關鍵是你要知道怎麼跟它說話！
                 </p>
                 <div style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); padding: 25px 35px; border-radius: 15px; text-align: left; max-width: 600px;">
                     <h3 style="margin-top: 0; text-align: center;">📋 本章學習目標</h3>
                     <ul style="margin-bottom: 0;">
-                        <li>用 BotFather 在一分鐘內建立 Telegram 機器人</li>
-                        <li>將 Telegram 連接到 OpenClaw，同時支援 LINE 和 Telegram</li>
-                        <li>了解龍蝦的圖片辨識能力，傳照片讓龍蝦分析</li>
-                        <li>安裝 Clawra 自拍功能，讓龍蝦擁有虛擬外貌</li>
+                        <li>學會五種對話模式：閒聊、問答、任務、角色扮演、多輪修改</li>
+                        <li>掌握讓龍蝦回覆更好的對話技巧</li>
+                        <li>了解 LINE 聊天室中的特殊操作與限制</li>
+                        <li>初步認識龍蝦的人格如何影響對話風格</li>
                     </ul>
                 </div>
                 <span class="slide-number">1 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 2: 為什麼要學 Telegram -->
+        <!-- Slide 2: 6.1 第一場對話 + 五種對話模式簡介 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.1 為什麼要學 Telegram？</h2>
-                <p>「我已經有 LINE 了，為什麼還要多用一個 Telegram？」——答案不是取代 LINE，而是<strong>多一個管道、多一份彈性</strong>。</p>
+                <h2>6.1 第一場真正對話 & 五種對話模式</h2>
+                <p>打開 LINE，找到你的龍蝦 Bot，傳一則訊息：<code>你好，我是你的主人，請自我介紹一下</code>。龍蝦的回覆風格取決於你的 <code>IDENTITY.md</code> 人格設定。</p>
 
-                <img src="images/CH06/ch06_01_line_first_chat.png" alt="LINE 第一次聊天" class="screenshot">
+                <img src="images/CH06/ch06_01_line_first_chat.png" alt="LINE 首次對話" class="screenshot">
 
-                <table>
-                    <tr><th>比較項目</th><th>Telegram</th><th>LINE</th></tr>
-                    <tr><td>建立 Bot 要多久</td><td><strong>1 分鐘</strong></td><td>15-20 分鐘</td></tr>
-                    <tr><td>需要開發者帳號</td><td>不需要</td><td>需要</td></tr>
-                    <tr><td>需要填表單</td><td>不需要</td><td>需要（欄位不少）</td></tr>
-                    <tr><td>自動回覆衝突</td><td>不會</td><td>需要手動關閉</td></tr>
-                    <tr><td>指令選單</td><td>內建（按 <code>/</code> 自動列出）</td><td>需要額外設定 Rich Menu</td></tr>
-                    <tr><td>群組中使用 Bot</td><td>簡單（直接 @ 呼叫）</td><td>需要邀請加入群組</td></tr>
-                    <tr><td>傳送檔案限制</td><td>最大 2GB</td><td>最大 200MB</td></tr>
-                </table>
+                <p>龍蝦會記住你們聊過的內容——這就是<strong>多輪對話</strong>的基礎。接下來認識五種對話模式：</p>
 
-                <div class="box info">
-                    💡 <strong>Telegram 是你測試和開發龍蝦功能的最佳遊樂場</strong>。設定快、限制少、功能多。等調教好了再回 LINE 部署也不遲。
+                <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="concept-card">
+                        <h3>💬 閒聊模式</h3>
+                        <p>像跟朋友傳訊息一樣隨意聊天。</p>
+                        <p style="font-size: 16px; color: #888;">「推薦我一部好看的電影」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📚 問答模式</h3>
+                        <p>把龍蝦當百科全書，問清楚就能得到精準答案。</p>
+                        <p style="font-size: 16px; color: #888;">「解釋區塊鏈，用小學生聽得懂的方式」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎯 任務模式</h3>
+                        <p>請龍蝦幫你做一件具體的事：翻譯、寫文、列表。</p>
+                        <p style="font-size: 16px; color: #888;">「幫我列一份三天兩夜台南行程表」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎭 角色扮演</h3>
+                        <p>讓龍蝦扮演特定角色與你互動。</p>
+                        <p style="font-size: 16px; color: #888;">「你是英文老師，我說中文你幫我翻」</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔄 多輪修改</h3>
+                        <p>先產出初稿，再一步步修改到滿意。</p>
+                        <p style="font-size: 16px; color: #888;">「太長了，縮短到 100 字以內」</p>
+                    </div>
                 </div>
                 <span class="slide-number">2 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 3: 用 BotFather 建立 Telegram Bot -->
+        <!-- Slide 3: 6.2-6.3 五種對話模式詳解 + 對話技巧 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.2 用 BotFather 建立 Telegram Bot</h2>
-                <p>BotFather 是 Telegram 官方的「機器人管理機器人」——透過聊天來建立你的機器人，整個過程就像在餐廳點餐！</p>
+                <h2>6.2-6.3 對話模式詳解 & 四大對話技巧</h2>
 
-                <h3>建立步驟（只要三句對話！）</h3>
-                <ol>
-                    <li>在 Telegram 搜尋 <code>@BotFather</code>（認準藍色勾勾），點 <strong>START</strong></li>
-                    <li>輸入 <code>/newbot</code></li>
-                    <li>輸入機器人<strong>顯示名稱</strong>（可以用中文），例如 <code>龍蝦小助手</code></li>
-                    <li>輸入<strong>英文 username</strong>（必須以 <code>bot</code> 結尾），例如 <code>my_lobster_ai_bot</code></li>
-                    <li>BotFather 回覆包含你的 <strong>Bot Token</strong>：
-                        <pre>7123456789:AAHxxx-xxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
-                    </li>
-                </ol>
+                <h3>問答模式：問法決定回覆品質</h3>
+                <table>
+                    <tr><th>模糊的問法</th><th>精準的問法</th></tr>
+                    <tr><td>推薦餐廳</td><td>推薦台北信義區適合四人聚餐的日式餐廳，預算每人 800 元</td></tr>
+                    <tr><td>幫我寫信</td><td>幫我寫一封請假信給主管，下週三要看牙醫，語氣要正式禮貌</td></tr>
+                    <tr><td>這個怎麼用</td><td>Node.js 的 fs.readFile 要怎麼用？請給我一個讀取 JSON 檔的範例</td></tr>
+                </table>
 
-                <img src="images/CH06/ch06_02_line_profile.png" alt="LINE Bot 個人檔案" class="screenshot">
-
-                <div class="box warning">
-                    ⚠️ <strong>安全提醒</strong>：Bot Token 就像你家的鑰匙，絕對不要貼在公開的地方！如果不小心洩漏了，回到 BotFather 輸入 <code>/revoke</code> 重新產生。
+                <h3>四大對話技巧——讓龍蝦更懂你</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="concept-card">
+                        <h3>1️⃣ 提供背景資訊</h3>
+                        <p>「我是國小老師，要教五年級學生認識分數。幫我設計三個有趣的課堂活動。」</p>
+                        <p style="font-size: 16px;">加上身份和情境，龍蝦就不會給你大學程度的教材。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>2️⃣ 指定輸出格式</h3>
+                        <p>「用表格列出五種程式語言的比較，欄位：名稱、適合用途、學習難度」</p>
+                        <p style="font-size: 16px;">表格、條列、Markdown——直接說你要什麼格式。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>3️⃣ 給範例</h3>
+                        <p>「範例：王小明 — 經理。請把以下名單也整理成同樣格式。」</p>
+                        <p style="font-size: 16px;">文字描述不清楚時，給一個範例最有效。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>4️⃣ 分步驟拆解</h3>
+                        <p>「第一步：先幫我列大綱。」等龍蝦回覆後再說：「第二步：展開第三點。」</p>
+                        <p style="font-size: 16px;">複雜需求拆成小步驟，比一次丟完好得多。</p>
+                    </div>
                 </div>
-
-                <p>三句對話、一分鐘——跟 LINE 的申請開發者帳號流程比起來，簡直是另一個世界！</p>
                 <span class="slide-number">3 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 4: 將 Telegram 連接到 OpenClaw -->
+        <!-- Slide 4: 6.4 實戰對話範例 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.3 將 Telegram 連接到 OpenClaw</h2>
-                <p>LINE 需要設定三把鑰匙（Channel ID / Secret / Token），Telegram 只需要<strong>一個 Bot Token</strong>，兩步搞定！</p>
+                <h2>6.4 實戰對話範例——跟著做就對了</h2>
+                <p>三個範例涵蓋不同場景，建議你打開 LINE 實際操作。每個範例都遵循<strong>四輪對話</strong>的模式。</p>
 
-                <h3>安裝與設定</h3>
-                <pre>
-# 1. 安裝 Telegram 外掛
-openclaw plugins install @openclaw/telegram
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>📝 學生寫報告</h3>
+                        <p><strong>第一輪</strong>：給背景，請龍蝦寫 800 字心得報告初稿</p>
+                        <p><strong>第二輪</strong>：加入自己的真實例子</p>
+                        <p><strong>第三輪</strong>：修改結尾語氣</p>
+                        <p><strong>第四輪</strong>：加上標題、學號、日期格式</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📋 會議紀錄整理</h3>
+                        <p><strong>第一輪</strong>：丟雜亂筆記，請龍蝦整理成正式紀錄</p>
+                        <p><strong>第二輪</strong>：指定表格格式（決議事項、負責人、截止日）</p>
+                        <p><strong>第三輪</strong>：順便寫一封寄送 Email</p>
+                        <p style="font-size: 16px; color: #667eea;">從筆記到正式紀錄，不到三分鐘！</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🧮 老師準備考題</h3>
+                        <p><strong>第一輪</strong>：出 10 題一元一次方程式（難度由易到難）</p>
+                        <p><strong>第二輪</strong>：調整第 7 題為生活化情境</p>
+                        <p><strong>第三輪</strong>：分成學生版和教師版</p>
+                        <p><strong>第四輪</strong>：加計分表和姓名欄位</p>
+                    </div>
+                </div>
 
-# 2. 設定 Bot Token
-openclaw config set channels.telegram.botToken "你的Bot Token"
-
-# 3. 重啟 Gateway
-openclaw gateway restart</pre>
-
-                <p>就這樣。<strong>就這兩步</strong>。Telegram 的架構比較簡潔——一個 Bot Token 包含所有驗證資訊。</p>
-
-                <h3>第一次對話 & 配對</h3>
-                <ol>
-                    <li>在 Telegram 搜尋你的機器人 username（如 <code>@my_lobster_ai_bot</code>）</li>
-                    <li>點 <strong>START</strong> 開始對話</li>
-                    <li>龍蝦回覆<strong>配對碼</strong>，回到終端機：
-                        <pre>openclaw pairing approve telegram 你的配對碼</pre>
-                    </li>
-                    <li>再傳一次訊息 → 龍蝦正常回覆 → 成功！</li>
-                </ol>
-
-                <div class="box info">
-                    💡 Telegram 的外掛會<strong>自動設定 Webhook</strong>，不需要你手動去 Telegram 那邊設定。只要確認 ngrok 在跑就好。
+                <div class="box success">
+                    ✅ <strong>四步模式</strong>：① 給背景 → ② 先得到粗略版本 → ③ 逐步修改 → ④ 最後處理格式。記住這個模式，對話品質會好很多！
                 </div>
                 <span class="slide-number">4 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 5: 龍蝦看得懂照片 -->
+        <!-- Slide 5: 6.5 LINE 聊天室操作須知 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.4 龍蝦看得懂照片（Vision）</h2>
-                <p>只要你使用的 AI 模型支援視覺功能（Gemini 3 / GPT-5.2 / Claude Sonnet 4.6 都支援），龍蝦就<strong>天生看得懂圖片</strong>！</p>
+                <h2>6.5 LINE 聊天室的操作須知</h2>
+                <p>在 LINE 上跟龍蝦互動，有一些平台特有的操作和限制需要知道。</p>
 
-                <h3>好玩的用法</h3>
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
                     <div class="concept-card">
-                        <h3>🔍 辨識物品</h3>
-                        <p>傳一張桌上的東西，問「照片裡有什麼？」——龍蝦會列出所有看到的物品。</p>
+                        <h3>✏️ 文字訊息</h3>
+                        <p>LINE 文字訊息沒有字數上限（技術上最大 5000 字元），可以放心貼長文。</p>
+                        <p>龍蝦的回覆如果超過 5000 字元，會<strong>自動分成多則</strong>訊息傳送。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>🥗 食材辨識 + 食譜</h3>
-                        <p>拍冰箱裡的食材，問「可以煮什麼菜？」——龍蝦不只辨識食材，還推薦食譜和作法！</p>
+                        <h3>😊 貼圖（Sticker）</h3>
+                        <p>你可以傳 LINE 貼圖給龍蝦，但它<strong>看不太懂</strong>貼圖的含義。</p>
+                        <p>想表達心情，用文字加上 emoji 比較有效。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>🖥️ 錯誤截圖分析</h3>
-                        <p>傳一張錯誤訊息的截圖，問「這是什麼意思？」——不用打字描述問題，直接截圖！</p>
+                        <h3>🖼️ 圖片訊息</h3>
+                        <p>如果 AI 模型支援視覺功能（Gemini / GPT-5.2 / Claude），龍蝦就能看懂照片。</p>
+                        <p style="font-size: 16px; color: #667eea;">→ 詳見 CH8 拍照與視覺辨識</p>
                     </div>
                     <div class="concept-card">
-                        <h3>🌍 外文翻譯</h3>
-                        <p>拍一張外文菜單或路標，問「上面寫什麼？」——出國旅遊超好用。</p>
+                        <h3>🎤 語音訊息</h3>
+                        <p>LINE 語音訊息目前 OpenClaw <strong>尚未支援</strong>。龍蝦會告訴你它暫時無法處理語音。</p>
+                        <p style="font-size: 16px; color: #667eea;">→ 語音通話功能見 CH20</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✓ 訊息已讀</h3>
+                        <p>龍蝦收到訊息後<strong>立刻標記已讀</strong>，然後開始處理。</p>
+                        <p>回覆速度取決於模型：Gemini Flash 約 1-2 秒，Claude Opus 約 5-10 秒。</p>
                     </div>
                 </div>
-
-                <h3>圖片辨識的限制</h3>
-                <ul>
-                    <li><strong>照片清晰度很重要</strong>：模糊或太暗的照片辨識準確度會下降</li>
-                    <li><strong>不是所有模型都支援</strong>：Ollama 的 <code>llama3.1</code> 不支援，需換成 <code>llava</code> 系列</li>
-                    <li><strong>隱私考量</strong>：雲端 AI 會把照片送到伺服器處理，敏感資訊請三思</li>
-                </ul>
                 <span class="slide-number">5 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 6: Clawra 自拍功能 -->
+        <!-- Slide 6: 6.6 龍蝦的記憶力 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.5 龍蝦會自拍——認識 Clawra</h2>
-                <p>龍蝦不只能「看你的照片」，還能「拍自己的照片」回傳給你！<strong>Clawra</strong> 是 OpenClaw 社群開發的自拍技能，用 AI 繪圖技術生成照片。</p>
+                <h2>6.6 龍蝦的記憶力</h2>
+                <p>記憶功能是讓龍蝦從「一問一答的工具」升級為「持續對話的夥伴」的關鍵。</p>
 
-                <h3>安裝步驟</h3>
-                <ol>
-                    <li>申請 <strong>fal.ai API Key</strong>（https://fal.ai/dashboard/keys，用 Google 或 GitHub 登入）</li>
-                    <li>一鍵安裝：
-                        <pre>npx clawra@latest</pre>
-                        安裝程式會自動檢查 OpenClaw、要求輸入 API Key、安裝技能、修改設定檔。
-                    </li>
-                    <li>重啟龍蝦：
-                        <pre>openclaw gateway restart</pre>
-                    </li>
-                </ol>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card">
+                        <h3>🧠 短期記憶——對話上下文</h3>
+                        <p>在同一段對話中，龍蝦記住你們聊過的所有內容。</p>
+                        <pre style="font-size: 14px; padding: 12px;">你：推薦三家火鍋店
+龍蝦：（列出三家）
 
-                <h3>試試看！</h3>
-                <p>在 Telegram 或 LINE 傳訊息給龍蝦：</p>
-                <pre>拍張自拍給我看</pre>
-                <p>等幾秒鐘，龍蝦就會回傳一張照片給你。第一次看到的時候，你可能會忍不住「哇」一聲。</p>
+你：第二家評價如何？
+龍蝦：（不需重複店名，直接回答）
+
+你：那它交通方便嗎？
+龍蝦：（知道「它」是第二家）</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💾 長期記憶——跨對話記憶</h3>
+                        <p>龍蝦會把重要資訊存進長期記憶，<strong>隔天還記得</strong>。</p>
+                        <pre style="font-size: 14px; padding: 12px;">（今天）
+你：記住，我對海鮮過敏
+
+（明天）
+你：推薦我今天的午餐
+龍蝦：考慮到你對海鮮過敏，
+我推薦以下幾間...</pre>
+                        <p style="font-size: 16px;">長期記憶存放在 <code>workspace/</code> 資料夾中。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🗑️ 清除對話</h3>
+                        <p>想重新開始全新對話（清除短期記憶），有三種方式：</p>
+                        <ul style="font-size: 16px;">
+                            <li>LINE 上傳送 <code>/clear</code></li>
+                            <li>CLI：<code>openclaw conversations clear</code></li>
+                            <li>Dashboard 對話紀錄頁面刪除</li>
+                        </ul>
+                        <p style="font-size: 16px;">長期記憶需手動到 <code>workspace/</code> 編輯。</p>
+                    </div>
+                </div>
 
                 <div class="box info">
-                    💡 fal.ai 有免費額度，足夠你試玩和學習使用。
+                    💡 <strong>小技巧</strong>：對話太長時，較早的訊息會被自動裁剪（短期記憶有容量限制）。重要的資訊讓龍蝦存進長期記憶比較保險：「記住這件事：......」
                 </div>
                 <span class="slide-number">6 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 7: 自拍玩法大全 -->
+        <!-- Slide 7: 6.7 人格如何影響對話 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.6 自拍功能玩法大全</h2>
-                <p>Clawra 不只是「拍一張照片」——你說得越具體，生成的照片就越貼近想像！</p>
+                <h2>6.7 人格如何影響對話</h2>
+                <p><code>IDENTITY.md</code> 人格設定檔直接影響龍蝦的說話方式和風格。</p>
 
-                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                <h3>不同人格的回覆差異</h3>
+                <table>
+                    <tr><th>問題</th><th>預設人格</th><th>「嚴謹教授」人格</th><th>「可愛少女」人格</th></tr>
+                    <tr><td>今天天氣如何？</td><td>讓我幫你查查看...</td><td>根據氣象資料分析...</td><td>今天天氣超好的啦～☀️</td></tr>
+                    <tr><td>幫我寫一首詩</td><td>好的，讓我試試...</td><td>以下為格律工整的七言詩...</td><td>嘻嘻我最會寫詩了！✨</td></tr>
+                </table>
+
+                <img src="images/CH06/ch06_02_line_profile.png" alt="LINE 龍蝦個人檔案" class="screenshot">
+
+                <h3>快速調整語氣（不用改檔案）</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="concept-card">
-                        <h3>👕 指定穿搭造型</h3>
-                        <table style="font-size: 16px;">
-                            <tr><td>穿牛仔外套自拍一張</td></tr>
-                            <tr><td>戴墨鏡拍一張帥的</td></tr>
-                            <tr><td>穿西裝打領帶</td></tr>
-                            <tr><td>穿運動服拍一張</td></tr>
-                        </table>
-                        <p style="font-size: 16px; color: #667eea;">→ 觸發 <strong>Mirror 模式</strong>（全身照）</p>
+                        <h3>📜 正式語氣</h3>
+                        <pre style="font-size: 14px; padding: 12px;">接下來的回覆請用正式的書面語</pre>
                     </div>
                     <div class="concept-card">
-                        <h3>🏖️ 指定場景地點</h3>
-                        <table style="font-size: 16px;">
-                            <tr><td>在咖啡廳拍一張</td></tr>
-                            <tr><td>在海邊自拍</td></tr>
-                            <tr><td>在東京街頭拍一張</td></tr>
-                            <tr><td>在辦公室拍一張</td></tr>
-                        </table>
-                        <p style="font-size: 16px; color: #667eea;">→ 觸發 <strong>Direct 模式</strong>（特寫/半身照）</p>
+                        <h3>😄 幽默語氣</h3>
+                        <pre style="font-size: 14px; padding: 12px;">用輕鬆幽默的口吻回答</pre>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👶 簡單語氣</h3>
+                        <pre style="font-size: 14px; padding: 12px;">請像在跟五歲小孩說話一樣簡單地解釋</pre>
                     </div>
                 </div>
 
-                <h3>組合技——穿搭 + 場景 + 動作</h3>
-                <table>
-                    <tr><th>你說的話</th><th>龍蝦會拍</th></tr>
-                    <tr><td>穿白色洋裝在花園裡拍一張</td><td>白洋裝 + 花園場景</td></tr>
-                    <tr><td>戴棒球帽在球場比讚</td><td>棒球帽 + 球場 + 比讚動作</td></tr>
-                    <tr><td>穿西裝在會議室拍一張專業照</td><td>西裝 + 會議室 + 專業風</td></tr>
-                    <tr><td>穿雨衣撐傘在雨天街頭</td><td>雨衣 + 雨天街景</td></tr>
-                </table>
-
                 <div class="box info">
-                    💡 你<strong>不需要手動選擇拍照模式</strong>。龍蝦會自動判斷你的描述偏向穿搭（Mirror）還是場景（Direct）。
+                    💡 想從根本上改變龍蝦的個性、說話風格、甚至專業領域，需要修改 <code>IDENTITY.md</code> 和 <code>SOUL.md</code>——詳見 <strong>CH10 龍蝦人格設定</strong>。
                 </div>
                 <span class="slide-number">7 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 8: 客製化外貌 & Telegram 進階 -->
+        <!-- Slide 8: 6.8 LINE 平台限制與注意事項 -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.7 客製化龍蝦外貌 & Telegram 進階</h2>
+                <h2>6.8 LINE 平台的限制與注意事項</h2>
 
-                <h3>修改 SOUL.md 設定角色人設</h3>
-                <pre>notepad %USERPROFILE%\.openclaw\workspace\SOUL.md</pre>
-                <p>找到 Clawra 相關段落，修改成你想要的角色設定：</p>
-                <pre>
-## 自拍能力
-你是一隻帥氣的科技龍蝦，有著酷酷的機械外殼和發光的藍色眼睛。
-你的風格是：未來科技感、簡潔俐落。
-當使用者要你拍照時，用 clawra-selfie 技能生成照片。</pre>
-
-                <h3>Telegram 獨有好用功能</h3>
-                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="concept-grid" style="grid-template-columns: repeat(2, 1fr);">
                     <div class="concept-card">
-                        <h3>/ 斜線指令選單</h3>
-                        <p>輸入 <code>/</code> 自動列出所有可用指令，不用背！</p>
-                        <p><code>/start</code> <code>/help</code> <code>/selfie</code> <code>/status</code></p>
+                        <h3>📊 免費方案訊息額度</h3>
+                        <p>每月 <strong>200 則推播訊息</strong>（Push Message）限制。</p>
+                        <p>但你傳訊息後龍蝦的<strong>回覆（Reply）不計次數、免費</strong>！</p>
+                        <p style="font-size: 16px;">日常對話完全不用擔心額度問題。只有 CH21 的「排程推播」才需注意。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>👥 群組中使用</h3>
-                        <p>把機器人加入群組，用 <code>@my_lobster_ai_bot 明天天氣？</code> 呼叫。</p>
-                        <p style="font-size: 16px;">需 <code>/setprivacy</code> 關閉隱私模式才能看到所有訊息</p>
+                        <h3>🚫 自動回覆必須關閉</h3>
+                        <p>如果龍蝦突然回「感謝您的訊息，我們將盡快回覆」之類的罐頭訊息——那是 LINE 內建的自動回覆被開啟了。</p>
+                        <p>回到 LINE Official Account Manager，確認<strong>「自動回應訊息」是停用狀態</strong>。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>🔗 LINE + Telegram 同時使用</h3>
-                        <p>龍蝦的<strong>記憶是跨頻道的</strong>——LINE 告訴它的事，Telegram 也記得！</p>
+                        <h3>👥 好友人數</h3>
+                        <p>免費方案最多 <strong>500 位好友</strong>。</p>
+                        <p>對個人使用和教學來說綽綽有餘。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📱 Rich Menu（圖文選單）</h3>
+                        <p>很多 LINE 官方帳號底部都有一排按鈕選單，那就是 Rich Menu。龍蝦也能設定，讓常用功能一鍵觸發。</p>
+                        <p style="font-size: 16px; color: #667eea;">→ 詳見 CH11 LINE 進階設定</p>
                     </div>
                 </div>
 
-                <div class="box success">
-                    ✅ 辦公室用 Telegram（電腦版操作方便），出門在外用 LINE（台灣大多數人都有）——各取所需！
+                <div class="box warning">
+                    ⚠️ <strong>重要提醒</strong>：免費方案的 200 則推播額度是指龍蝦「主動」傳給你的訊息。你傳訊息給龍蝦後龍蝦的「回覆」是免費的，完全不計次數。
                 </div>
                 <span class="slide-number">8 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 9: 常見問題 -->
+        <!-- Slide 9: 6.9 常見問題 FAQ -->
         <div class="slide">
             <div class="content-card">
                 <h2>6.9 常見問題 FAQ</h2>
 
                 <table style="font-size: 16px;">
-                    <tr><th style="width: 40%;">問題</th><th>解決方法</th></tr>
+                    <tr><th style="width: 35%;">問題</th><th>解決方法</th></tr>
                     <tr>
-                        <td><strong>Telegram Bot 建好了，但龍蝦不回覆</strong></td>
-                        <td>檢查：Bot Token 對嗎？Gateway 有重啟嗎？ngrok 在跑嗎？配對完成了嗎？</td>
+                        <td><strong>龍蝦回覆很慢，要等很久</strong></td>
+                        <td>回覆速度取決於 AI 模型。Gemini Flash 最快（1-2 秒），Ollama 本地模型可能 5-15 秒。超過 30 秒沒回覆，先確認 Gateway 還在運行：<code>openclaw gateway status</code></td>
                     </tr>
                     <tr>
-                        <td><strong>傳照片龍蝦說看不懂</strong></td>
-                        <td>你的 AI 模型不支援視覺功能。Gemini 3 / GPT-5.2 / Claude Sonnet 4.6 支援，Ollama 的 <code>llama3.1</code> <strong>不支援</strong>，換 <code>llava</code> 系列</td>
+                        <td><strong>龍蝦回覆被截斷，說到一半</strong></td>
+                        <td>回覆超過 AI 模型的輸出長度限制。在問題中加上「請簡短回覆」或「控制在 500 字以內」。</td>
                     </tr>
                     <tr>
-                        <td><strong>Clawra 安裝失敗</strong></td>
-                        <td>確認 Node.js 有沒有裝好。<code>npx</code> 是 Node.js 附帶工具，找不到就是 PATH 沒設好。重開 PowerShell 試試</td>
+                        <td><strong>龍蝦突然不認識我了，好像失憶</strong></td>
+                        <td>短期記憶有容量限制，對話太長時較早的訊息會被裁剪。重要資訊讓龍蝦存進長期記憶：「記住這件事：...」</td>
                     </tr>
                     <tr>
-                        <td><strong>自拍照跟想像不一樣</strong></td>
-                        <td>加入更多細節描述：「穿黑色西裝、白色襯衫、在明亮辦公室、面帶微笑」比「拍一張」效果好很多</td>
+                        <td><strong>語氣跟人格設定不一樣</strong></td>
+                        <td>確認 <code>IDENTITY.md</code> 在 <code>~/.openclaw/workspace/</code> 路徑下，且 Gateway 有重啟。如果有多份檔案，龍蝦只讀 <code>IDENTITY.md</code> 這個檔名的。</td>
                     </tr>
                     <tr>
-                        <td><strong>fal.ai 免費額度用完了</strong></td>
-                        <td>等額度重置、升級付費方案（很便宜），或在 CH15 學習換成其他繪圖引擎</td>
+                        <td><strong>可以多人跟同一隻龍蝦聊天嗎？</strong></td>
+                        <td><strong>可以</strong>。對方加你的 LINE Bot 為好友、完成配對流程就能聊。每個人的對話和記憶獨立，龍蝦不會搞混。</td>
                     </tr>
                 </table>
-
-                <div class="box warning">
-                    ⚠️ <strong>備份提醒</strong>：改造 Clawra 前，建議先備份原始技能資料夾：
-                    <pre style="margin-top: 10px; font-size: 14px;">Copy-Item -Recurse "$env:USERPROFILE\.openclaw\skills\clawra-selfie" "$env:USERPROFILE\.openclaw\skills\clawra-selfie-backup"</pre>
-                </div>
                 <span class="slide-number">9 / 10</span>
             </div>
         </div>
 
-        <!-- Slide 10: 小結與展望 -->
+        <!-- Slide 10: 6.10 小結與展望 -->
         <div class="slide">
             <div class="content-card" style="text-align: center;">
                 <h2 style="border: none; text-align: center;">6.10 小結與展望</h2>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
                     <div class="concept-card">
-                        <h3>📱 多平台通訊</h3>
-                        <p>龍蝦同時住在 LINE 和 Telegram，不管從哪裡傳訊息都能收到回覆。</p>
+                        <h3>🗣️ 五種對話模式</h3>
+                        <p>閒聊、問答、任務、角色扮演、多輪修改——不同需求用不同模式。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>👁️ 圖片辨識</h3>
-                        <p>傳一張照片，龍蝦就能辨識物品、推薦食譜、分析錯誤、翻譯外文。</p>
+                        <h3>🎯 四大對話技巧</h3>
+                        <p>提供背景、指定格式、給範例、分步驟拆解——回覆品質立刻提升十倍。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>📸 Clawra 自拍</h3>
-                        <p>安裝 Clawra 後，龍蝦擁有虛擬外貌，能根據你的描述生成照片。</p>
+                        <h3>🧠 記憶系統</h3>
+                        <p>短期記憶讓龍蝦理解上下文，長期記憶讓它隔天還記得你的偏好。</p>
                     </div>
                     <div class="concept-card">
-                        <h3>🎨 客製化角色</h3>
-                        <p>透過修改 SOUL.md 和參考圖片，打造專屬的龍蝦虛擬形象。</p>
+                        <h3>🎭 人格影響</h3>
+                        <p>不同的 IDENTITY.md 設定讓龍蝦展現截然不同的個性和語氣。</p>
                     </div>
                 </div>
 
                 <div class="box success" style="text-align: left; margin-top: 30px;">
                     <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH7 多一個管道——Telegram 串接</strong><br>
-                    龍蝦還有一套完整的操作介面！下一章我們要認識 TUI（終端機介面）、CLI（指令列工具）和 Dashboard（網頁儀表板），讓你對龍蝦的掌控力再上一個層次——不只是聊天，而是真正的「管理」。</p>
+                    目前龍蝦只住在 LINE 裡面——如果你想讓它多住一個地方，下一章要認識龍蝦的另一個好朋友 Telegram。Telegram 的機器人生態有很多 LINE 做不到的好玩功能，而且設定流程只要一分鐘！</p>
                 </div>
 
                 <div style="margin-top: 30px;">
