@@ -172,7 +172,7 @@
                         <span class="highlight">做成技能（10 分鐘）</span>
                     </p>
                 </div>
-                <span class="slide-number">1 / 25</span>
+                <span class="slide-number">1 / 29</span>
             </div>
         </div>
 
@@ -210,7 +210,7 @@
                 <div class="box warning">
                     ⚠️ <strong>問題根源</strong>：CH8 的 Vision 能「理解」畫面描述場景，但它不具備<strong>精準計數</strong>的能力——它是「腦」，不是「眼」。
                 </div>
-                <span class="slide-number">2 / 25</span>
+                <span class="slide-number">2 / 29</span>
             </div>
         </div>
 
@@ -245,7 +245,7 @@
                 <div class="box success">
                     ✅ 裝完 YOLO6，同一張教室照片，龍蝦會回答：<strong>「person: 28, chair: 35, laptop: 12」</strong>——精確到個位數！
                 </div>
-                <span class="slide-number">3 / 25</span>
+                <span class="slide-number">3 / 29</span>
             </div>
         </div>
 
@@ -282,7 +282,7 @@
                 <div class="box warning">
                     ⚠️ <strong>Windows 用戶注意</strong>：安裝 Python 時，第一個畫面最下方有個勾選框「<strong>Add Python to PATH</strong>」，務必打勾！忘了勾的話，終端機會找不到 <code>python</code> 指令。
                 </div>
-                <span class="slide-number">4 / 25</span>
+                <span class="slide-number">4 / 29</span>
             </div>
         </div>
 
@@ -307,7 +307,7 @@
                 <div class="box success">
                     ✅ <strong>檢查點</strong>：看到「<strong>YOLO6 安裝成功！</strong>」就對了。如果出現紅字錯誤，最常見的原因是 Python 版本太舊——請升級到 3.10 以上。
                 </div>
-                <span class="slide-number">5 / 25</span>
+                <span class="slide-number">5 / 29</span>
             </div>
         </div>
 
@@ -332,13 +332,107 @@
                 <div class="box info">
                     💡 <strong>本章所有範例用 CPU 就能完成</strong>。GPU 加速是錦上添花——拍照偵測從 2 秒變 0.1 秒，但不影響結果正確性。
                 </div>
-                <span class="slide-number">6 / 25</span>
+                <span class="slide-number">6 / 29</span>
+            </div>
+        </div>
+
+        <!-- Slide 7: 22.2 安裝環境檢查 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>22.2 安裝前先跑檢查！</h2>
+                <p>安裝完畢後，不確定環境有沒有裝好？用 <code>install_check.py</code> 一鍵檢查所有條件：</p>
+
+                <h3>執行方式</h3>
+                <pre style="font-size: 22px; text-align: center; padding: 30px;">python install_check.py</pre>
+
+                <h3>模擬輸出</h3>
+                <pre style="font-size: 17px;">✅ Python 版本：3.12.1（需要 3.10+）
+✅ ultralytics 已安裝（版本 8.3.x）
+✅ YOLO 模型可載入
+✅ OpenCV 可用
+⚠️ Webcam：未偵測到（拍照偵測不需要，即時監控才需要）
+❌ CUDA GPU：不可用（不影響使用，CPU 也能跑）</pre>
+
+                <h3>怎麼看結果？</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="text-align: center; border-color: #28a745;">
+                        <h3>✅ 通過</h3>
+                        <p>這個項目沒問題</p>
+                        <p style="color: #28a745; font-weight: bold;">繼續往下走</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center; border-color: #ffc107;">
+                        <h3>⚠️ 警告</h3>
+                        <p>非必要項目缺失</p>
+                        <p style="color: #856404; font-weight: bold;">不影響基本功能</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center; border-color: #e91e63;">
+                        <h3>❌ 失敗</h3>
+                        <p>可選項目不可用</p>
+                        <p style="color: #e91e63; font-weight: bold;">CPU 模式也能跑</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    💡 <strong>全部 ✅ 就可以繼續</strong>，⚠️ 和 ❌ 不影響基本功能。Webcam 只有即時監控才需要，GPU 只是加速用——沒有也完全沒問題。
+                </div>
+                <span class="slide-number">7 / 29</span>
+            </div>
+        </div>
+
+        <!-- Slide 8: 22.2 安裝常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>22.2 踩到坑？這裡有解法</h2>
+                <p>安裝過程中最常遇到的 6 個問題，以及對應的解決方式：</p>
+
+                <table>
+                    <tr><th>問題</th><th>症狀</th><th>解法</th></tr>
+                    <tr>
+                        <td><strong>Python 沒裝</strong></td>
+                        <td><code>python 不是內部命令</code></td>
+                        <td>python.org 下載，勾選 Add to PATH</td>
+                    </tr>
+                    <tr>
+                        <td><strong>版本太舊</strong></td>
+                        <td>Python 3.8 / 3.9</td>
+                        <td>重裝最新版（3.12 推薦）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pip 找不到</strong></td>
+                        <td><code>pip 不是內部命令</code></td>
+                        <td>改用 <code>python -m pip install ultralytics</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>下載中斷</strong></td>
+                        <td>PyTorch 下載失敗</td>
+                        <td>重新執行 pip install（會續傳）</td>
+                    </tr>
+                    <tr>
+                        <td><strong>import 報錯</strong></td>
+                        <td>ModuleNotFoundError</td>
+                        <td><code>pip install --upgrade ultralytics</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>GPU 警告</strong></td>
+                        <td>CUDA not available</td>
+                        <td>正常！CPU 也能跑，不用管</td>
+                    </tr>
+                </table>
+
+                <div class="box warning">
+                    ⚠️ <strong>最常見的陷阱</strong>：Windows 裝 Python 時忘了勾「<strong>Add Python to PATH</strong>」。解法是重新執行安裝程式，選「Modify」，把 PATH 那個勾勾補上。
+                </div>
+
+                <div class="box info">
+                    💡 <strong>懶人解法</strong>：如果本機環境搞不定，直接用 <strong>CH5 的 GitHub Codespaces</strong>——雲端環境已經內建 Python 3.12，pip 也不用設定。
+                </div>
+                <span class="slide-number">8 / 29</span>
             </div>
         </div>
 
         <!-- ==================== Part C：第一次偵測（3 頁） ==================== -->
 
-        <!-- Slide 7: 22.3 拍張照片 -->
+        <!-- Slide 9: 22.3 拍張照片（原 Slide 7） -->
         <div class="slide">
             <div class="content-card">
                 <h2>22.3 步驟二（1/3）：準備一張照片</h2>
@@ -360,7 +454,7 @@
                 <div class="box info">
                     💡 沒照片也沒關係，可以用 YOLO6 的內建範例圖：<code>model("https://ultralytics.com/images/bus.jpg")</code>
                 </div>
-                <span class="slide-number">7 / 25</span>
+                <span class="slide-number">9 / 29</span>
             </div>
         </div>
 
@@ -391,7 +485,7 @@ for box in results[0].boxes:
                 <div class="box info">
                     💡 第一次執行時，YOLO 會自動下載模型檔（<code>yolo11s.pt</code>，約 20MB），之後就不用重複下載了。
                 </div>
-                <span class="slide-number">8 / 25</span>
+                <span class="slide-number">10 / 29</span>
             </div>
         </div>
 
@@ -429,7 +523,7 @@ for box in results[0].boxes:
                 <div class="box success">
                     ✅ <strong>檢查點</strong>：看到框框和物件列表就成功了！恭喜完成 YOLO6 的第一次偵測！
                 </div>
-                <span class="slide-number">9 / 25</span>
+                <span class="slide-number">11 / 29</span>
             </div>
         </div>
 
@@ -475,7 +569,7 @@ for box in results[0].boxes:
                         <p><strong>回覆結果</strong></p>
                     </div>
                 </div>
-                <span class="slide-number">10 / 25</span>
+                <span class="slide-number">12 / 29</span>
             </div>
         </div>
 
@@ -515,7 +609,7 @@ for box in results[0].boxes:
                 <div class="box info">
                     💡 如果你學過 CH17 技能開發，這個結構應該很熟悉——每個技能都是一個資料夾 + 一個 <code>SKILL.md</code>。
                 </div>
-                <span class="slide-number">11 / 25</span>
+                <span class="slide-number">13 / 29</span>
             </div>
         </div>
 
@@ -553,7 +647,7 @@ python ~/.openclaw/workspace/skills/yolo-vision/detect.py &lt;照片路徑&gt;
                 <div class="box info">
                     💡 <strong>重點欄位</strong>：<code>使用方式</code> 決定什麼時候觸發，<code>執行方式</code> 告訴龍蝦怎麼跑程式。寫清楚這兩個，龍蝦就知道該怎麼用了。
                 </div>
-                <span class="slide-number">12 / 25</span>
+                <span class="slide-number">14 / 29</span>
             </div>
         </div>
 
@@ -596,7 +690,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box success">
                     ✅ 程式會輸出 JSON，龍蝦就能讀懂並轉成自然語言回覆給你。
                 </div>
-                <span class="slide-number">13 / 25</span>
+                <span class="slide-number">15 / 29</span>
             </div>
         </div>
 
@@ -651,13 +745,88 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box success">
                     ✅ <strong>檢查點</strong>：重啟完成後，<strong>傳一張照片到 LINE 試試看</strong>！說「幫我數有幾個人」，龍蝦就會呼叫 YOLO6 回覆偵測結果。
                 </div>
-                <span class="slide-number">14 / 25</span>
+                <span class="slide-number">16 / 29</span>
+            </div>
+        </div>
+
+        <!-- Slide 17: 22.4 懶人包 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>22.4 懶人包：直接複製就能用！</h2>
+                <p>不想手打程式碼？沒關係，直接複製<strong>資源包</strong>就能用。整個技能包含 7 個檔案：</p>
+
+                <table>
+                    <tr><th>#</th><th>檔案名稱</th><th>用途</th></tr>
+                    <tr><td>1</td><td><code>SKILL.md</code></td><td>技能定義檔（龍蝦的說明書）</td></tr>
+                    <tr><td>2</td><td><code>detect.py</code></td><td>偵測單張照片</td></tr>
+                    <tr><td>3</td><td><code>webcam_monitor.py</code></td><td>Webcam 即時監控</td></tr>
+                    <tr><td>4</td><td><code>live_detect.py</code></td><td>即時串流偵測（視窗顯示）</td></tr>
+                    <tr><td>5</td><td><code>install_check.py</code></td><td>安裝環境檢查</td></tr>
+                    <tr><td>6</td><td><code>detect_test.py</code></td><td>快速測試用腳本</td></tr>
+                    <tr><td>7</td><td><code>README.md</code></td><td>使用說明</td></tr>
+                </table>
+
+                <h3 style="text-align: center; margin-top: 30px;">安裝方式</h3>
+                <pre style="font-size: 20px; text-align: center; padding: 25px;">把 yolo-vision 資料夾複製到
+~/.openclaw/workspace/skills/
+然後 openclaw gateway restart</pre>
+
+                <div class="box success">
+                    ✅ <strong>三步驟：複製 → 重啟 → 測試！</strong>把資料夾放對位置、重啟龍蝦、傳張照片試試看——完成！
+                </div>
+                <span class="slide-number">17 / 29</span>
+            </div>
+        </div>
+
+        <!-- Slide 18: 22.4 佈署常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>22.4 佈署踩到坑？</h2>
+                <p>技能裝好了但不會動？以下是最常見的 5 個佈署問題和解法：</p>
+
+                <table>
+                    <tr><th>問題</th><th>症狀</th><th>解法</th></tr>
+                    <tr>
+                        <td><strong>資料夾放錯</strong></td>
+                        <td>龍蝦找不到技能</td>
+                        <td>確認路徑：<code>~/.openclaw/workspace/skills/yolo-vision/</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>忘了重啟</strong></td>
+                        <td>技能沒生效</td>
+                        <td><code>openclaw gateway restart</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>腳本權限</strong></td>
+                        <td>Permission denied</td>
+                        <td>Windows：管理員 PowerShell / Mac：<code>chmod +x *.py</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Webcam 占用</strong></td>
+                        <td>攝影機打不開</td>
+                        <td>關閉 Zoom、Teams 等佔用 Webcam 的程式</td>
+                    </tr>
+                    <tr>
+                        <td><strong>傳照片沒反應</strong></td>
+                        <td>龍蝦不偵測</td>
+                        <td>先單獨測試：<code>python detect.py test.jpg</code></td>
+                    </tr>
+                </table>
+
+                <div class="box warning">
+                    ⚠️ <strong>最容易踩的坑</strong>：資料夾名稱打錯！一定要是 <code>yolo-vision</code>（有連字號），不是 <code>yolovision</code> 或 <code>yolo_vision</code>。
+                </div>
+
+                <div class="box info">
+                    💡 <strong>除錯小技巧</strong>：先用 <code>openclaw doctor</code> 檢查龍蝦狀態，再用 <code>python detect.py test.jpg</code> 確認偵測腳本本身能跑。兩邊都沒問題，再看 SKILL.md 的路徑有沒有寫對。
+                </div>
+                <span class="slide-number">18 / 29</span>
             </div>
         </div>
 
         <!-- ==================== Part E：實測點名（2 頁） ==================== -->
 
-        <!-- Slide 15: 22.5 實測 LINE 傳照片點名 -->
+        <!-- Slide 19: 22.5 實測 LINE 傳照片點名 -->
         <div class="slide">
             <div class="content-card">
                 <h2>22.5 實測：拍照就能點名！</h2>
@@ -699,7 +868,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box success">
                     🎉 從「每天 3 分鐘點名」到「<strong>拍照 3 秒搞定</strong>」！龍蝦不只會數，還會幫你算出席率。
                 </div>
-                <span class="slide-number">15 / 25</span>
+                <span class="slide-number">19 / 29</span>
             </div>
         </div>
 
@@ -728,7 +897,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box warning">
                     ⚠️ 需要電腦接 Webcam 並保持開機。搭配 <strong>CH21 排程</strong>可設定只在上課時間啟動，放假不運作。
                 </div>
-                <span class="slide-number">16 / 25</span>
+                <span class="slide-number">20 / 29</span>
             </div>
         </div>
 
@@ -764,7 +933,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box info">
                     💡 這三個延伸場景，接下來會一一示範。核心程式碼不用改——只要換觸發條件和回覆方式。
                 </div>
-                <span class="slide-number">17 / 25</span>
+                <span class="slide-number">21 / 29</span>
             </div>
         </div>
 
@@ -811,7 +980,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                         <p>只在放學後啟動監控</p>
                     </div>
                 </div>
-                <span class="slide-number">18 / 25</span>
+                <span class="slide-number">22 / 29</span>
             </div>
         </div>
 
@@ -850,7 +1019,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box success">
                     ✅ 同一個 <code>yolo-vision</code> 技能，不需要改任何程式碼——換張照片就是不同的盤點任務！
                 </div>
-                <span class="slide-number">19 / 25</span>
+                <span class="slide-number">23 / 29</span>
             </div>
         </div>
 
@@ -876,7 +1045,7 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box info">
                     💡 <strong>需要偵測清單上沒有的東西？</strong>YOLO 支援自訂訓練——準備幾百張標註照片，就能訓練出辨識新物件的模型。這屬於進階主題，但 ultralytics 官方文件有完整教學。
                 </div>
-                <span class="slide-number">20 / 25</span>
+                <span class="slide-number">24 / 29</span>
             </div>
         </div>
 
@@ -916,7 +1085,7 @@ cv2.destroyAllWindows()</pre>
                 <div class="box info">
                     💡 <strong>實際效果</strong>：螢幕上會即時顯示 Webcam 畫面，每個人、每張椅子、每台筆電都被彩色框框圈起來，旁邊標著名稱和信心分數。走動的人會被即時追蹤！
                 </div>
-                <span class="slide-number">21 / 25</span>
+                <span class="slide-number">25 / 29</span>
             </div>
         </div>
 
@@ -948,7 +1117,7 @@ cv2.destroyAllWindows()</pre>
                 <div class="box success">
                     ✅ 不論你的電腦等級如何，都能跑 YOLO6——差別只在速度，結果一樣精準。
                 </div>
-                <span class="slide-number">22 / 25</span>
+                <span class="slide-number">26 / 29</span>
             </div>
         </div>
 
@@ -981,7 +1150,7 @@ cv2.destroyAllWindows()</pre>
                         A：目前本書範例都在電腦上跑。但 YOLO 有 <strong>ONNX / CoreML / TFLite</strong> 匯出格式，理論上可以在手機執行——這是進階主題。
                     </li>
                 </ul>
-                <span class="slide-number">23 / 25</span>
+                <span class="slide-number">27 / 29</span>
             </div>
         </div>
 
@@ -1037,7 +1206,7 @@ cv2.destroyAllWindows()</pre>
                     <strong>影片分析</strong>（不只照片，整段影片都能偵測）。
                     龍蝦的視覺能力，還有無限成長空間。
                 </p>
-                <span class="slide-number">24 / 25</span>
+                <span class="slide-number">28 / 29</span>
             </div>
         </div>
 
@@ -1093,7 +1262,7 @@ cv2.destroyAllWindows()</pre>
                         🚀 回到進階篇
                     </a>
                 </div>
-                <span class="slide-number">25 / 25</span>
+                <span class="slide-number">29 / 29</span>
             </div>
         </div>
 
