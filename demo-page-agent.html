@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Agent 互動體驗 — AI 網頁代理 Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* 頂部教學橫幅 */
+        .tutorial-banner {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 25px 40px;
+            border-bottom: 3px solid #667eea;
+        }
+        .tutorial-banner h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .tutorial-banner h1 span { font-size: 36px; }
+        .tutorial-banner .instructions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .instruction-card {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 15px 18px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .instruction-card .step-num {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        .instruction-card code {
+            background: rgba(102,126,234,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #a5d6ff;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: white; }
+
+        /* 主要內容區 */
+        .main-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 30px;
+        }
+
+        /* 表單卡片 */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .form-card h2 {
+            color: #764ba2;
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+        .form-card .subtitle {
+            color: #888;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+        .form-group label .required {
+            color: #e91e63;
+            margin-left: 3px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            background: #fafbfc;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 15px;
+            color: #555;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+        }
+        .submit-btn:active { transform: translateY(0); }
+
+        /* 任務清單卡片 */
+        .task-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        .task-card h2 {
+            color: #764ba2;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        .task-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .task-input-row input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+        .task-input-row input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .task-add-btn {
+            padding: 10px 18px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: inherit;
+        }
+        .task-add-btn:hover { background: #764ba2; }
+        .task-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            font-size: 15px;
+        }
+        .task-item:hover { background: #f8f9fa; }
+        .task-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #28a745;
+        }
+        .task-item.done {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+        .task-item .delete-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #e91e63;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 5px;
+        }
+        .task-stats {
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* 龍蝦整合說明區 */
+        .integration-section {
+            max-width: 1100px;
+            margin: 0 auto 40px;
+            padding: 0 30px;
+        }
+        .integration-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 35px 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        .integration-card h2 {
+            color: #764ba2;
+            font-size: 24px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .integration-card pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            overflow-x: auto;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        .integration-card p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .chat-demo {
+            background: #f0f8ff;
+            border: 2px solid #667eea;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .chat-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .chat-row:last-child { margin-bottom: 0; }
+        .chat-role { font-weight: 700; min-width: 40px; }
+        .chat-msg { color: #444; }
+        .chat-msg.ai { color: #28a745; }
+
+        /* 成功彈窗 */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-modal.show { display: flex; }
+        .success-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            animation: bounceIn 0.5s;
+        }
+        .success-content .emoji { font-size: 60px; margin-bottom: 15px; }
+        .success-content h3 { color: #28a745; font-size: 24px; margin-bottom: 10px; }
+        .success-content p { color: #666; font-size: 16px; margin-bottom: 20px; }
+        .success-content button {
+            padding: 12px 30px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; }
+            .tutorial-banner { padding: 20px; }
+            .tutorial-banner h1 { font-size: 22px; }
+            .form-card, .task-card { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 教學橫幅 -->
+    <div class="tutorial-banner">
+        <a href="ch23.html" class="back-link">⬅️ 返回 CH23 簡報</a>
+        <h1><span>🌐🦞</span> Page Agent 互動體驗頁面</h1>
+        <div class="instructions">
+            <div class="instruction-card">
+                <span class="step-num">1</span>
+                頁面載入後，<strong>右下角</strong>會出現一個 AI 助手圓形按鈕（Page Agent 自帶 UI），點擊它開啟對話面板。
+            </div>
+            <div class="instruction-card">
+                <span class="step-num">2</span>
+                在對話框輸入自然語言指令，例如：<br>
+                <code>在姓名欄位填入王小明</code><br>
+                <code>科系選擇資訊工程系</code>
+            </div>
+            <div class="instruction-card">
+                <span class="step-num">3</span>
+                觀察 AI 如何<strong>標記頁面元素</strong>、<strong>思考操作步驟</strong>、<strong>自動執行動作</strong>。試試一口氣完成：<br>
+                <code>幫我填完整張表單然後送出</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="main-content">
+        <!-- 左側：學生註冊表單 -->
+        <div class="form-card">
+            <h2>📋 學生資料註冊表單</h2>
+            <p class="subtitle">這是一個模擬表單，供 Page Agent AI 自動填寫體驗</p>
+
+            <form id="registrationForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label>姓名 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" placeholder="請輸入中文姓名" required>
+                </div>
+
+                <div class="form-group">
+                    <label>學號 <span class="required">*</span></label>
+                    <input type="text" id="studentId" name="studentId" placeholder="例如：A123456789" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="例如：student@school.edu" required>
+                </div>
+
+                <div class="form-group">
+                    <label>電話</label>
+                    <input type="tel" id="phone" name="phone" placeholder="例如：0912345678">
+                </div>
+
+                <div class="form-group">
+                    <label>科系 <span class="required">*</span></label>
+                    <select id="department" name="department" required>
+                        <option value="">-- 請選擇科系 --</option>
+                        <option value="cs">資訊工程系</option>
+                        <option value="ee">電機工程系</option>
+                        <option value="me">機械工程系</option>
+                        <option value="ba">企業管理系</option>
+                        <option value="fl">應用外語系</option>
+                        <option value="de">數位媒體設計系</option>
+                        <option value="ai">人工智慧系</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>年級</label>
+                    <select id="grade" name="grade">
+                        <option value="">-- 請選擇年級 --</option>
+                        <option value="1">一年級</option>
+                        <option value="2">二年級</option>
+                        <option value="3">三年級</option>
+                        <option value="4">四年級</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agree" name="agree">
+                    <label for="agree" style="margin: 0; font-weight: normal;">我同意使用條款與隱私政策</label>
+                </div>
+
+                <button type="submit" class="submit-btn">🚀 送出註冊</button>
+            </form>
+        </div>
+
+        <!-- 右側：任務清單 -->
+        <div class="task-card">
+            <h2>📝 待辦任務清單</h2>
+            <div class="task-input-row">
+                <input type="text" id="taskInput" placeholder="輸入新任務..." onkeypress="if(event.key==='Enter')addTask()">
+                <button class="task-add-btn" onclick="addTask()">新增</button>
+            </div>
+            <ul class="task-list" id="taskList">
+                <li class="task-item">
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>完成 Page Agent 體驗</span>
+                    <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>填寫註冊表單</span>
+                    <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>觀察 AI 操作過程</span>
+                    <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" onchange="toggleTask(this)">
+                    <span>試試複合指令</span>
+                    <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                </li>
+            </ul>
+            <div class="task-stats" id="taskStats">4 個任務，0 個完成</div>
+        </div>
+    </div>
+
+    <!-- 龍蝦整合說明 -->
+    <div class="integration-section">
+        <div class="integration-card">
+            <h2>🦞 龍蝦 AI 如何整合 Page Agent？</h2>
+            <p>上面的 Demo 是你自己手動輸入指令。在實際使用中，你可以<strong>在 LINE 跟龍蝦說</strong>，龍蝦會自動打開瀏覽器、注入 Page Agent、完成操作。</p>
+
+            <div class="chat-demo">
+                <div class="chat-row">
+                    <span class="chat-role">你</span>
+                    <span class="chat-msg">幫我到 Demo 頁面註冊，姓名王小明、學號 A123456789、Email wang@school.edu、選資工系</span>
+                </div>
+                <div class="chat-row">
+                    <span class="chat-role">🦞</span>
+                    <span class="chat-msg ai">
+                        🌐 正在打開 Demo 頁面...<br>
+                        ✍️ 姓名 → 王小明 ✅ | 學號 → A123456789 ✅<br>
+                        ✍️ Email → wang@school.edu ✅ | 科系 → 資訊工程系 ✅<br>
+                        ☑️ 勾選同意條款 ✅ | 🔘 按下送出 ✅<br>
+                        <strong>✅ 註冊表單已送出完成！</strong>
+                    </span>
+                </div>
+            </div>
+
+            <p style="margin-top: 15px;"><strong>核心程式碼（OpenClaw 技能中的 web-control.js）：</strong></p>
+            <pre><span style="color:#569cd6;">const</span> { chromium } = <span style="color:#dcdcaa;">require</span>(<span style="color:#ce9178;">'playwright'</span>);
+
+<span style="color:#569cd6;">async function</span> <span style="color:#dcdcaa;">controlWebPage</span>(url, task) {
+    <span style="color:#6a9955;">// 1. 打開瀏覽器（學生可以看到操作過程）</span>
+    <span style="color:#569cd6;">const</span> browser = <span style="color:#569cd6;">await</span> chromium.<span style="color:#dcdcaa;">launch</span>({ headless: <span style="color:#569cd6;">false</span> });
+    <span style="color:#569cd6;">const</span> page = <span style="color:#569cd6;">await</span> browser.<span style="color:#dcdcaa;">newPage</span>();
+    <span style="color:#569cd6;">await</span> page.<span style="color:#dcdcaa;">goto</span>(url);
+
+    <span style="color:#6a9955;">// 2. 注入 Page Agent SDK</span>
+    <span style="color:#569cd6;">await</span> page.<span style="color:#dcdcaa;">addScriptTag</span>({
+        url: <span style="color:#ce9178;">'https://cdn.jsdelivr.net/npm/page-agent@1.5.7/dist/iife/page-agent.demo.js'</span>
+    });
+
+    <span style="color:#6a9955;">// 3. 用自然語言執行任務</span>
+    <span style="color:#569cd6;">await</span> page.<span style="color:#dcdcaa;">waitForTimeout</span>(<span style="color:#b5cea8;">2000</span>);
+    <span style="color:#569cd6;">const</span> result = <span style="color:#569cd6;">await</span> page.<span style="color:#dcdcaa;">evaluate</span>(<span style="color:#569cd6;">async</span> (task) => {
+        <span style="color:#569cd6;">const</span> agent = <span style="color:#569cd6;">new</span> <span style="color:#4ec9b0;">PageAgent</span>({ language: <span style="color:#ce9178;">'zh-TW'</span> });
+        <span style="color:#569cd6;">return await</span> agent.<span style="color:#dcdcaa;">execute</span>(task);
+    }, task);
+
+    <span style="color:#569cd6;">await</span> browser.<span style="color:#dcdcaa;">close</span>();
+    <span style="color:#569cd6;">return</span> result;
+}</pre>
+            <p style="color: #888; font-size: 14px; text-align: center;">完整技能檔案請參考：<a href="resources/page-agent-skill/SKILL.md" target="_blank" style="color: #667eea;">resources/page-agent-skill/SKILL.md</a></p>
+        </div>
+    </div>
+
+    <!-- 成功彈窗 -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="emoji">🎉</div>
+            <h3>註冊成功！</h3>
+            <p>表單已送出。如果這是 Page Agent 自動填寫的，恭喜你已經體驗到 AI 網頁操控的威力！</p>
+            <button onclick="closeModal()">太棒了！</button>
+        </div>
+    </div>
+
+    <script>
+        // 表單送出
+        function handleSubmit(e) {
+            e.preventDefault();
+            if (!document.getElementById('agree').checked) {
+                alert('請先勾選同意使用條款');
+                return;
+            }
+            document.getElementById('successModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            document.getElementById('registrationForm').reset();
+        }
+
+        // 任務清單
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const li = document.createElement('li');
+            li.className = 'task-item';
+            li.innerHTML = `
+                <input type="checkbox" onchange="toggleTask(this)">
+                <span>${text}</span>
+                <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+            `;
+            document.getElementById('taskList').appendChild(li);
+            input.value = '';
+            updateStats();
+        }
+
+        function toggleTask(checkbox) {
+            checkbox.parentElement.classList.toggle('done', checkbox.checked);
+            updateStats();
+        }
+
+        function deleteTask(btn) {
+            btn.parentElement.remove();
+            updateStats();
+        }
+
+        function updateStats() {
+            const items = document.querySelectorAll('.task-item');
+            const done = document.querySelectorAll('.task-item.done');
+            document.getElementById('taskStats').textContent =
+                `${items.length} 個任務，${done.length} 個完成`;
+        }
+    </script>
+
+    <!-- Page Agent SDK（免費測試版） -->
+    <script src="https://cdn.jsdelivr.net/npm/page-agent@1.5.7/dist/iife/page-agent.demo.js" crossorigin="true"></script>
+
+</body>
+</html>
