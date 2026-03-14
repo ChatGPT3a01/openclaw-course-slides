@@ -136,6 +136,7 @@
     <div class="nav-bar">
         <div class="nav-title">🦞 CH6 — 跟龍蝦聊天的正確姿勢</div>
         <div class="nav-buttons">
+            <a class="nav-btn" href="resources/取得Line_User_ID.gs" download>⬇️ GAS 程式碼</a>
             <a href="part2-安裝篇.html" class="nav-btn">📦 安裝篇</a>
             <a href="index.html" class="nav-btn">🏠 首頁</a>
             <a href="ch05.html" class="nav-btn">⬅️ CH5</a>
@@ -167,7 +168,7 @@
                         <li>初步認識龍蝦的人格如何影響對話風格</li>
                     </ul>
                 </div>
-                <span class="slide-number">1 / 10</span>
+                <span class="slide-number">1 / 15</span>
             </div>
         </div>
 
@@ -208,7 +209,7 @@
                         <p style="font-size: 16px; color: #888;">「太長了，縮短到 100 字以內」</p>
                     </div>
                 </div>
-                <span class="slide-number">2 / 10</span>
+                <span class="slide-number">2 / 15</span>
             </div>
         </div>
 
@@ -248,7 +249,7 @@
                         <p style="font-size: 16px;">複雜需求拆成小步驟，比一次丟完好得多。</p>
                     </div>
                 </div>
-                <span class="slide-number">3 / 10</span>
+                <span class="slide-number">3 / 15</span>
             </div>
         </div>
 
@@ -285,7 +286,7 @@
                 <div class="box success">
                     ✅ <strong>四步模式</strong>：① 給背景 → ② 先得到粗略版本 → ③ 逐步修改 → ④ 最後處理格式。記住這個模式，對話品質會好很多！
                 </div>
-                <span class="slide-number">4 / 10</span>
+                <span class="slide-number">4 / 15</span>
             </div>
         </div>
 
@@ -322,7 +323,7 @@
                         <p>回覆速度取決於模型：Gemini Flash 約 1-2 秒，Claude Opus 約 5-10 秒。</p>
                     </div>
                 </div>
-                <span class="slide-number">5 / 10</span>
+                <span class="slide-number">5 / 15</span>
             </div>
         </div>
 
@@ -372,7 +373,7 @@
                 <div class="box info">
                     💡 <strong>小技巧</strong>：對話太長時，較早的訊息會被自動裁剪（短期記憶有容量限制）。重要的資訊讓龍蝦存進長期記憶比較保險：「記住這件事：......」
                 </div>
-                <span class="slide-number">6 / 10</span>
+                <span class="slide-number">6 / 15</span>
             </div>
         </div>
 
@@ -410,7 +411,7 @@
                 <div class="box info">
                     💡 想從根本上改變龍蝦的個性、說話風格、甚至專業領域，需要修改 <code>IDENTITY.md</code> 和 <code>SOUL.md</code>——詳見 <strong>CH10 龍蝦人格設定</strong>。
                 </div>
-                <span class="slide-number">7 / 10</span>
+                <span class="slide-number">7 / 15</span>
             </div>
         </div>
 
@@ -446,14 +447,243 @@
                 <div class="box warning">
                     ⚠️ <strong>重要提醒</strong>：免費方案的 200 則推播額度是指龍蝦「主動」傳給你的訊息。你傳訊息給龍蝦後龍蝦的「回覆」是免費的，完全不計次數。
                 </div>
-                <span class="slide-number">8 / 10</span>
+                <span class="slide-number">8 / 15</span>
             </div>
         </div>
 
-        <!-- Slide 9: 6.9 常見問題 FAQ -->
+        <!-- Slide 9: 6.9 取得你的 LINE User ID -->
         <div class="slide">
             <div class="content-card">
-                <h2>6.9 常見問題 FAQ</h2>
+                <h2>6.9 取得你的 LINE User ID</h2>
+                <p>後面好幾個章節都會用到 <code>userId</code>——推播訊息、排程通知、語音通話都需要它。先搞清楚它是什麼、怎麼拿到手。</p>
+
+                <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
+                    <div class="concept-card">
+                        <h3 style="margin-top: 0;">💬 回覆（Reply）</h3>
+                        <p><strong>使用者先說話</strong> → 龍蝦回覆</p>
+                        <p>不需要知道 userId，用 <code>replyToken</code> 就能回</p>
+                        <p style="font-size: 16px; color: #667eea; font-weight: 600;">像是「有人問你，你回答」——免費、不限次數</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3 style="margin-top: 0;">📣 推播（Push）</h3>
+                        <p><strong>龍蝦主動傳訊息</strong>（使用者沒先說話）</p>
+                        <p>必須知道 <code>userId</code> 或 <code>groupId</code></p>
+                        <p style="font-size: 16px; color: #e65100; font-weight: 600;">像是「你主動傳訊息給朋友」——每月 200 則免費</p>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>userId 不是 LINE ID！</strong><br>
+                    <code>userId</code> 是系統產生的 <code>U</code> 開頭 33 字元字串（例如 <code>U1a2b3c4d5e6f7g8h9i0j...</code>），跟你設定的 LINE ID（@xxx）<strong>完全不同</strong>。無法自己查，只能透過程式取得。
+                </div>
+
+                <h3>哪些章節會用到 User ID？</h3>
+                <div class="concept-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="concept-card" style="text-align: center;">
+                        <h3 style="margin-top: 0;">CH11</h3>
+                        <p>推播訊息<br>Rich Menu</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3 style="margin-top: 0;">CH20</h3>
+                        <p>語音通話<br>Twilio 設定</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3 style="margin-top: 0;">CH21</h3>
+                        <p>HEARTBEAT<br>排程推播</p>
+                    </div>
+                    <div class="concept-card" style="text-align: center;">
+                        <h3 style="margin-top: 0;">技能</h3>
+                        <p>主動通知<br>推播結果</p>
+                    </div>
+                </div>
+                <span class="slide-number">9 / 15</span>
+            </div>
+        </div>
+
+        <!-- Slide 10: 6.10 三種方法取得 User ID -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>6.10 三種方法取得 User ID</h2>
+
+                <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3 style="color: #28a745; margin-top: 0;">方法一：Dashboard 查看（推薦）</h3>
+                        <p><strong>1.</strong> 先傳一則訊息給龍蝦（讓系統記錄你的資訊）</p>
+                        <p><strong>2.</strong> 打開 Dashboard<br><code>http://localhost:18789</code></p>
+                        <p><strong>3.</strong> 點「對話紀錄」頁面</p>
+                        <p><strong>4.</strong> 找到你的對話，<strong>userId 顯示在使用者資訊中</strong></p>
+                        <p><strong>5.</strong> 複製 <code>U</code> 開頭字串，存到記事本</p>
+                        <p style="font-size: 15px; color: #28a745; font-weight: 600;">最簡單！不需要額外工具</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #1565c0;">
+                        <h3 style="color: #1565c0; margin-top: 0;">方法二：Gateway 終端機日誌</h3>
+                        <p><strong>1.</strong> 在終端機啟動 Gateway</p>
+                        <pre style="font-size: 14px; padding: 10px;">openclaw gateway start</pre>
+                        <p><strong>2.</strong> 用手機 LINE 傳一則訊息</p>
+                        <p><strong>3.</strong> 終端機會顯示收到的訊息資訊，<strong>包含 userId</strong></p>
+                        <p><strong>4.</strong> 複製 <code>U</code> 開頭字串</p>
+                        <p style="font-size: 15px; color: #1565c0; font-weight: 600;">適合進階使用者和除錯</p>
+                    </div>
+                    <div class="concept-card" style="border-color: #e65100;">
+                        <h3 style="color: #e65100; margin-top: 0;">方法三：GAS 查詢小工具</h3>
+                        <p><strong>原理：</strong>建一個 Google Apps Script 小 Bot，傳訊息就自動回覆你的 userId</p>
+                        <p><strong>優點：</strong>不需要 OpenClaw，完全獨立運作</p>
+                        <p><strong>適用：</strong>還沒安裝 OpenClaw 的人，或需要取得<strong>群組 groupId</strong></p>
+                        <p><strong>步驟：</strong>建立 GAS → 貼程式碼 → 填 Token → 部署 Web App → 設 Webhook → 傳訊息取得 ID</p>
+                        <p style="font-size: 15px; color: #e65100; font-weight: 600;">詳見教學資源或附錄</p>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    🎯 <strong>取得 userId 後，把它存在記事本裡</strong>——只要對方沒有封鎖你的 Bot，userId 就<strong>永遠有效</strong>，不需要重複取得。之後在 <code>HEARTBEAT.md</code>、推播指令、技能設定中直接貼上即可。
+                </div>
+
+                <h3>取得群組 groupId</h3>
+                <p>如果要推播到<strong>群組</strong>：把龍蝦邀請加入群組 → 在群組中傳一則訊息 → Dashboard 或終端機日誌中就會出現 <code>groupId</code>（<code>C</code> 開頭字串）。<strong>userId</strong> 推播給個人，<strong>groupId</strong> 推播到群組。</p>
+                <span class="slide-number">10 / 15</span>
+            </div>
+        </div>
+
+        <!-- Slide 11: 6.11 GAS 手把手教學（上）— 建立專案 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>6.11 GAS 手把手教學（上）— 建立查詢 Bot</h2>
+                <p>用 Google Apps Script 建一個<strong>「User ID 查詢 Bot」</strong>——傳訊息就自動回覆你的 userId。不需要 OpenClaw，完全獨立運作！</p>
+
+                <h3>Step 1：開啟 Google Apps Script</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>打開瀏覽器，前往 <code>script.google.com</code><br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點擊左上角「<strong>新專案</strong>」<br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>打開 GAS 編輯器，裡面有一個空的 <code>myFunction()</code>
+                </div>
+
+                <h3>Step 2：改專案名稱</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #1565c0; font-weight: 600;">📍 位置：</span>左上角「未命名的專案」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點擊它，改名為「<strong>取得 User ID</strong>」
+                </div>
+
+                <h3>Step 3：貼上程式碼</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>把編輯器裡原本的 <code>myFunction()</code> <strong>全部刪除</strong><br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點簡報上方的「<strong>⬇️ GAS 程式碼</strong>」下載 <code>.gs</code> 檔案<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>用記事本打開 → <code>Ctrl+A</code> 全選 → <code>Ctrl+C</code> 複製 → 回到 GAS 編輯器 <code>Ctrl+V</code> 貼上<br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>編輯器裡出現完整的程式碼
+                </div>
+
+                <h3>Step 4：填入 Channel Access Token</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #1565c0; font-weight: 600;">📍 位置：</span>程式碼<strong>第 17 行</strong><br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 你會看到：</span>
+                </div>
+                <pre>var LINE_TOKEN = '在此貼上你的 Channel Access Token';</pre>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>到 LINE Developers Console → 你的 Bot → <strong>Messaging API</strong> → 複製 <strong>Channel access token</strong><br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>把引號裡的中文替換成你的 Token → 按 <code>Ctrl+S</code> 儲存<br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>看起來像 <code>'xYz123abc456def789ghi...'</code>（Token 很長，正常的）
+                </div>
+                <span class="slide-number">11 / 15</span>
+            </div>
+        </div>
+
+        <!-- Slide 12: 6.12 GAS 手把手教學（下）— 部署 & Webhook -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>6.12 GAS 手把手教學（下）— 部署 & 設定 Webhook</h2>
+
+                <h3>Step 5：部署為網頁應用程式</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #1565c0; font-weight: 600;">📍 位置：</span>GAS 編輯器<strong>右上角</strong><br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點「<strong>部署</strong>」→「<strong>新增部署作業</strong>」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>左邊齒輪圖示 → 選「<strong>網頁應用程式</strong>」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>「執行身分」選「<strong>我</strong>」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>「誰可以存取」選「<strong>所有人</strong>」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>按「<strong>部署</strong>」
+                </div>
+
+                <div class="box info">
+                    💡 <strong>第一次部署</strong>會跳出授權請求 → 點「審查權限」→ 選你的 Google 帳號 → 點「允許」。這是正常的。
+                </div>
+
+                <h3>Step 6：複製部署網址</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>部署成功後，會顯示一個<strong>網址</strong><br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點「<strong>複製</strong>」把網址複製下來
+                </div>
+                <pre>https://script.google.com/macros/s/AKfycb.../exec</pre>
+
+                <h3>Step 7：設定 LINE Bot Webhook</h3>
+                <div style="background: #fff3cd; border-left: 6px solid #ffc107; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #856404; font-weight: 700;">⚠️ 重要！</span>如果 Webhook URL 已經有設定網址（例如 ngrok 或 Cloudflare），<strong>先複製到記事本備份</strong>！等一下取得 ID 後要改回來。
+                </div>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>到 <strong>LINE Developers Console</strong> → 你的 Bot → <strong>Messaging API</strong><br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>找到 <strong>Webhook settings</strong> → 點「<strong>Edit</strong>」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>貼上剛才複製的 GAS 部署網址 → 按「<strong>Save</strong>」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>確認「<strong>Use webhook</strong>」是<strong>開啟</strong>的<br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>Webhook URL 已更新為 GAS 網址
+                </div>
+                <span class="slide-number">12 / 15</span>
+            </div>
+        </div>
+
+        <!-- Slide 13: 6.13 測試取得 ID & 善後 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>6.13 測試取得 ID & 善後</h2>
+
+                <h3>Step 8：傳訊息測試</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>打開手機 LINE App → 找到你的 Bot → 傳任何訊息（打「你好」就行）<br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>Bot <strong>立刻回覆你的 userId</strong>！
+                </div>
+
+                <pre style="font-size: 15px;">📋 你的 Line ID 資訊
+━━━━━━━━━━━━━━━
+👤 你的 userId：
+U1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
+
+💡 這是個人聊天
+💡 把上面的 userId 複製起來
+💡 貼到 HEARTBEAT.md 或技能設定中
+━━━━━━━━━━━━━━━
+✅ 複製 ID 後，記得把 Webhook
+改回原本的網址喔！</pre>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div class="concept-card" style="border-color: #28a745;">
+                        <h3 style="color: #28a745; margin-top: 0;">✅ 成功的樣子</h3>
+                        <ul style="font-size: 16px;">
+                            <li>Bot <strong>秒回</strong> <code>U</code> 開頭長字串</li>
+                            <li>在 LINE 中長按 userId 可以複製</li>
+                            <li>群組中傳訊息額外顯示 groupId</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card" style="border-color: #dc3545;">
+                        <h3 style="color: #dc3545; margin-top: 0;">❌ 失敗怎麼辦</h3>
+                        <ul style="font-size: 16px;">
+                            <li><strong>Bot 沒回應</strong> → Webhook URL 貼錯或 Use webhook 沒開</li>
+                            <li><strong>回罐頭訊息</strong> → 沒部署或版本選錯</li>
+                            <li><strong>英文錯誤</strong> → Token 填錯或沒存檔</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="box warning" style="font-size: 20px;">
+                    ⚠️ <strong>最重要！取得 userId 後，立刻把 Webhook URL 改回原本的網址</strong>（你備份的那個）。否則龍蝦只會一直回覆 ID，其他功能全部失靈！
+                </div>
+
+                <div class="box success">
+                    🎯 <strong>userId 永不過期</strong>——只要對方沒封鎖 Bot，userId 就永遠有效。存好一次，之後在 <code>HEARTBEAT.md</code>、CLI 推播、技能設定中直接貼上即可。
+                </div>
+                <span class="slide-number">13 / 15</span>
+            </div>
+        </div>
+
+        <!-- Slide 14: 6.14 常見問題 FAQ -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>6.14 常見問題 FAQ</h2>
 
                 <table style="font-size: 16px;">
                     <tr><th style="width: 35%;">問題</th><th>解決方法</th></tr>
@@ -478,14 +708,14 @@
                         <td><strong>可以</strong>。對方加你的 LINE Bot 為好友、完成配對流程就能聊。每個人的對話和記憶獨立，龍蝦不會搞混。</td>
                     </tr>
                 </table>
-                <span class="slide-number">9 / 10</span>
+                <span class="slide-number">14 / 15</span>
             </div>
         </div>
 
-        <!-- Slide 10: 6.10 小結與展望 -->
+        <!-- Slide 15: 6.15 小結與展望 -->
         <div class="slide">
             <div class="content-card" style="text-align: center;">
-                <h2 style="border: none; text-align: center;">6.10 小結與展望</h2>
+                <h2 style="border: none; text-align: center;">6.15 小結與展望</h2>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); text-align: left;">
                     <div class="concept-card">
@@ -516,7 +746,7 @@
                         前往 CH7 ➡️
                     </a>
                 </div>
-                <span class="slide-number">10 / 10</span>
+                <span class="slide-number">15 / 15</span>
             </div>
         </div>
 
