@@ -403,7 +403,8 @@ Telegram Bot Token：_______________</pre>
                 <table>
                     <tr><th>模型</th><th>提供商</th><th>費用</th><th>推薦指數</th><th>適合對象</th></tr>
                     <tr style="background: #d4edda;"><td><strong>Gemini</strong></td><td>Google</td><td>免費額度充足</td><td>⭐⭐⭐⭐⭐</td><td>新手首選</td></tr>
-                    <tr><td>GPT</td><td>OpenAI</td><td>需儲值 US$5 起</td><td>⭐⭐⭐⭐</td><td>想用最強模型</td></tr>
+                    <tr><td>GPT（API Key）</td><td>OpenAI</td><td>需儲值 US$5 起</td><td>⭐⭐⭐⭐</td><td>想用最強模型</td></tr>
+                    <tr style="background: #d4edda;"><td>GPT（OAuth 免費）</td><td>OpenAI</td><td>完全免費</td><td>⭐⭐⭐⭐⭐</td><td>有 ChatGPT 帳號即可</td></tr>
                     <tr><td>Claude</td><td>Anthropic</td><td>需儲值 US$5 起</td><td>⭐⭐⭐⭐</td><td>用 Claude Code 的人</td></tr>
                     <tr><td>Ollama</td><td>社群開源</td><td>完全免費</td><td>⭐⭐⭐</td><td>有獨顯的技術愛好者</td></tr>
                 </table>
@@ -434,17 +435,20 @@ Google AI API Key：_______________（以 AIza 開頭）</pre>
         <div class="slide">
             <div class="content-card">
                 <h2>1.5 AI 模型 API Key（二）——OpenAI 與 Anthropic</h2>
-                <p>這兩個是<strong>選用</strong>的付費方案。如果只想先用免費方案，可以直接跳到下一張投影片。</p>
+                <p>OpenAI 有<strong>兩種認證方式</strong>：OAuth 免費登入（推薦）或 API Key（付費）。Anthropic 只有 API Key。</p>
 
                 <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
                     <div class="concept-card">
-                        <h3>🟢 OpenAI GPT</h3>
+                        <h3>🟢 OpenAI GPT（兩種方式）</h3>
+                        <p><strong>方式 A：OAuth 免費登入（推薦！）</strong></p>
+                        <p>不需要申請 API Key！在 CH5 安裝 OpenClaw 時，<code>openclaw onboard</code> 選擇 OpenAI → 認證方式選「OAuth / Codex 授權」→ 瀏覽器跳出 ChatGPT 登入頁 → 登入即可免費使用。</p>
+                        <div class="box warning" style="margin: 10px 0; padding: 12px; font-size: 15px;">
+                            ⚠️ 免費帳號只能選 <strong>GPT-5.2</strong>，選 5.4 會無法連線！付費帳號可用 GPT-5.4。
+                        </div>
+                        <p><strong>方式 B：API Key（付費）</strong></p>
                         <p><span class="step-badge">1</span> 前往 <code>platform.openai.com</code></p>
-                        <p>（注意不是 chat.openai.com！）</p>
-                        <p><span class="step-badge">2</span> 用 Google 帳號註冊</p>
-                        <p><span class="step-badge">3</span> <strong>Settings → Billing</strong>，加入信用卡並儲值 <strong>US$5</strong>（約台幣 160 元，夠用 1000+ 次對話）</p>
-                        <p><span class="step-badge">4</span> <strong>API keys → Create new secret key</strong>，取名為 <code>lobster-ai</code></p>
-                        <p><span class="step-badge">5</span> <strong>立刻複製</strong>！OpenAI 的 Key 只會顯示一次</p>
+                        <p><span class="step-badge">2</span> <strong>Billing</strong> 儲值 US$5 起</p>
+                        <p><span class="step-badge">3</span> <strong>API keys → Create new secret key</strong></p>
                         <pre style="font-size: 14px;">OpenAI API Key：sk-___________</pre>
                     </div>
                     <div class="concept-card">
@@ -605,7 +609,7 @@ GitHub 密碼：_______________</pre>
                     <tr><td>LINE 回應設定</td><td>關閉自動回覆 + 啟用 Webhook</td><td>☐</td></tr>
                     <tr><td>Telegram Bot</td><td>Bot Token</td><td>☐</td></tr>
                     <tr><td>Google Gemini</td><td>API Key（AIza 開頭）</td><td>☐ ★推薦</td></tr>
-                    <tr><td>OpenAI（選用）</td><td>API Key（sk- 開頭）</td><td>☐</td></tr>
+                    <tr><td>OpenAI（選用）</td><td>OAuth 免費登入 或 API Key（sk- 開頭）</td><td>☐</td></tr>
                     <tr><td>Anthropic（選用）</td><td>API Key（sk-ant- 開頭）</td><td>☐</td></tr>
                     <tr><td>ngrok</td><td>Authtoken</td><td>☐</td></tr>
                     <tr><td>GitHub</td><td>帳號 + 密碼</td><td>☐</td></tr>

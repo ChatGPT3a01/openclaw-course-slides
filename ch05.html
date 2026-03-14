@@ -212,22 +212,27 @@
                     <tr><td>LINE Channel ID</td><td>LINE Developers Console</td><td>讓龍蝦知道連哪個 LINE 帳號</td></tr>
                     <tr><td>LINE Channel Secret</td><td>LINE Developers Console</td><td>驗證訊息來源的密鑰</td></tr>
                     <tr><td>LINE Channel Access Token</td><td>LINE Developers（點 Issue）</td><td>龍蝦發送訊息的授權碼</td></tr>
-                    <tr><td>AI API Key（至少一組）</td><td>Google AI Studio / OpenAI / Anthropic</td><td>龍蝦的大腦</td></tr>
+                    <tr><td>AI API Key 或 OAuth 帳號</td><td>Google AI Studio / OpenAI / Anthropic</td><td>龍蝦的大腦（OpenAI 可用 OAuth 免費登入，不需 Key）</td></tr>
                     <tr><td>ngrok Authtoken</td><td>ngrok Dashboard</td><td>建立通道讓 LINE 連到你的電腦</td></tr>
                 </table>
 
                 <div class="box warning">
-                    ⚠️ <strong>例外</strong>：方式三（Ollama）不需要 AI API Key。方式四（Codespaces）不需要 ngrok Authtoken。
+                    ⚠️ <strong>例外</strong>：方式三（Ollama）不需要 AI API Key。方式四（Codespaces）不需要 ngrok Authtoken。選擇 <strong>OpenAI OAuth 免費登入</strong>也不需要 API Key（只要有 ChatGPT 帳號就行）。
                 </div>
 
                 <h3>AI 模型選擇</h3>
                 <table>
                     <tr><th>AI 平台</th><th>推薦模型</th><th>費用</th><th>適合誰</th></tr>
                     <tr><td><strong>Google Gemini</strong></td><td>Gemini 3 Flash</td><td>有免費額度</td><td>新手首選</td></tr>
-                    <tr><td><strong>OpenAI</strong></td><td>GPT-5.2</td><td>付費</td><td>最強中文</td></tr>
+                    <tr><td><strong>OpenAI（API Key）</strong></td><td>GPT-5.2 / 5.4</td><td>付費</td><td>最強中文</td></tr>
+                    <tr><td><strong>OpenAI（OAuth 免費）</strong></td><td>GPT-5.2（免費帳號）<br>GPT-5.4（付費帳號）</td><td>完全免費</td><td>有 ChatGPT 帳號即可</td></tr>
                     <tr><td><strong>Anthropic</strong></td><td>Claude Sonnet 4.6</td><td>付費</td><td>最佳程式碼品質</td></tr>
                     <tr><td><strong>Ollama（本地）</strong></td><td>Llama 3.3 70B</td><td>完全免費</td><td>有好顯卡、注重隱私</td></tr>
                 </table>
+
+                <div class="box info">
+                    💡 <strong>免費用 GPT？</strong>OpenAI 支援 OAuth 網頁授權登入，不需要 API Key！設定時選「OAuth / Codex 授權」，瀏覽器會跳出 ChatGPT 登入頁面，登入後就能免費使用。<strong>注意：免費 ChatGPT 帳號只能選 GPT-5.2，選 5.4 會無法連線。</strong>
+                </div>
                 <span class="slide-number">3 / 16</span>
             </div>
         </div>
@@ -275,9 +280,10 @@
                     <tr><th>問題</th><th>建議回答</th></tr>
                     <tr><td>I understand this is powerful...?</td><td>輸入 <code>Yes</code></td></tr>
                     <tr><td>Onboarding mode?</td><td>選擇 <code>QuickStart</code></td></tr>
-                    <tr><td>Model/auth provider?</td><td>依你的 API Key 選擇（如 <code>Google</code>）</td></tr>
-                    <tr><td>貼上 API Key</td><td>複製貼上你的 API Key（PowerShell 用<strong>右鍵貼上</strong>）</td></tr>
-                    <tr><td>Default model?</td><td>選擇 <code>Keep current</code> 或偏好的模型</td></tr>
+                    <tr><td>Model/auth provider?</td><td>依你的需求選擇（如 <code>Google</code>、<code>OpenAI</code>）</td></tr>
+                    <tr><td>認證方式？</td><td>選 <strong>OAuth 網頁授權</strong>（免費，推薦）或 <strong>API Key</strong>（付費）<br>選 OAuth → 瀏覽器跳出登入頁 → 登入 ChatGPT 帳號即完成</td></tr>
+                    <tr><td>貼上 API Key<br>（選 API Key 才需要）</td><td>複製貼上你的 API Key（PowerShell 用<strong>右鍵貼上</strong>）</td></tr>
+                    <tr><td>Default model?</td><td>選擇偏好的模型（免費帳號選 <code>GPT-5.2</code>）</td></tr>
                     <tr><td>Select channel?</td><td>選擇 <code>LINE (Messaging API)</code></td></tr>
                 </table>
 
@@ -306,14 +312,20 @@
 
                 <h3>完整步驟流程</h3>
                 <pre>
+# 0. 設定 PowerShell 執行權限（首次安裝必做！否則會閃退）
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
 # 1. 確認 Node.js（需要 v22+）
 node -v
 
 # 2. 確認 Git
 git --version
 
-# 3. 安裝 OpenClaw
+# 3. 安裝 OpenClaw（二擇一）
 npm install -g openclaw@latest
+# 或用一行式安裝（自動處理所有相依套件）：
+# powershell -c "irm https://openclaw.ai/install.ps1 | iex"
 
 # 4. 確認安裝成功
 openclaw --version
@@ -337,8 +349,12 @@ ngrok config add-authtoken 你的ngrok_authtoken
 openclaw gateway start      # 視窗一
 ngrok http 18789             # 視窗二</pre>
 
+                <div class="box warning">
+                    ⚠️ <strong>步驟 0 不能跳過！</strong>如果沒有設定 PowerShell 執行權限，安裝過程中腳本可能會自動閃退。只需要做一次，之後就不用再設定了。
+                </div>
+
                 <div class="box info">
-                    💡 <code>-g</code> 代表 global（全域安裝），<code>@latest</code> 代表最新版本。<code>18789</code> 是 OpenClaw Gateway 的預設連接埠。
+                    💡 <code>-g</code> 代表 global（全域安裝），<code>@latest</code> 代表最新版本。<code>18789</code> 是 OpenClaw Gateway 的預設連接埠。Mac/Linux 用戶可用：<code>curl -fsSL https://openclaw.ai/install.sh | bash</code>
                 </div>
                 <span class="slide-number">6 / 16</span>
             </div>
