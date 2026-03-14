@@ -169,6 +169,12 @@
                         <li>實戰打造一隻完整人設的龍蝦</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 820px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/checklists/CH10-人格設定檢核表.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">人格設定檢核表</a></p>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/installer/Workspace-Generator.html" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">Workspace Generator</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/workspace-templates/IDENTITY-親切風.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">人格範本</a></p>
+                </div>
                 <span class="slide-number">1 / 12</span>
             </div>
         </div>
@@ -204,6 +210,11 @@
                 <div class="box info">
                     💡 五個設定檔都住在 <code>~/.openclaw/workspace/</code> 資料夾裡，你可以用 VS Code、記事本或 Dashboard 來編輯。
                 </div>
+                <div class="box info">
+                    <strong>Windows 使用者直接記這個路徑就好：</strong><br>
+                    <code>C:\Users\user\.openclaw\workspace\</code><br>
+                    這一章提到的 <code>IDENTITY.md</code>、<code>SOUL.md</code>、<code>USER.md</code>、<code>AGENTS.md</code>、<code>TOOLS.md</code> 都是在這個資料夾裡。
+                </div>
                 <span class="slide-number">2 / 12</span>
             </div>
         </div>
@@ -232,6 +243,12 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                 <div class="box info">
                     💡 每次龍蝦開始一段新對話，它會先讀這五個檔案，就像你每天早上醒來先回想「我是誰、我今天要做什麼」一樣。
                 </div>
+                <div class="box info">
+                    <strong>這裡先不要被五個檔案嚇到：</strong><br>
+                    新手先改 <code>IDENTITY.md</code> 和 <code>USER.md</code> 就夠了。<br>
+                    想加邊界規則再補 <code>SOUL.md</code>。<br>
+                    <code>AGENTS.md</code> 和 <code>TOOLS.md</code> 可以後面再慢慢調。
+                </div>
                 <span class="slide-number">3 / 12</span>
             </div>
         </div>
@@ -251,6 +268,14 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
 - **Emoji:** 🦞
 - **Avatar:**</pre>
 
+                <div class="box info">
+                    <strong>這份檔案要存去哪裡？</strong><br>
+                    檔名就叫 <code>IDENTITY.md</code>，存到龍蝦的 workspace 目錄：<br>
+                    Windows：<code>C:\Users\你的名稱\.openclaw\workspace\IDENTITY.md</code><br>
+                    如果你是 Codespaces / Linux / Mac：<code>~/.openclaw/workspace/IDENTITY.md</code><br>
+                    存好之後執行 <code>openclaw gateway restart</code>，新人設才會生效。
+                </div>
+
                 <table>
                     <tr><th>欄位</th><th>說明</th><th>範例</th></tr>
                     <tr><td><strong>Name</strong></td><td>龍蝦的名字</td><td>亮的龍蝦、小龍、助手阿蝦</td></tr>
@@ -261,6 +286,12 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
 
                 <div class="box warning">
                     ⚡ <strong>重要</strong>：IDENTITY.md 不只是那五行——你可以（而且應該）加入「我的個性」「我的專長」「說話風格」「不要做的事」等段落！
+                </div>
+                <div class="box info">
+                    <strong>如果你不知道怎麼建立這個檔：</strong><br>
+                    最簡單就是在 PowerShell 輸入：<br>
+                    <code>notepad $env:USERPROFILE\.openclaw\workspace\IDENTITY.md</code><br>
+                    第一次如果檔案不存在，記事本會幫你建立。貼上內容後按儲存，再回終端機跑 <code>openclaw gateway restart</code>。
                 </div>
                 <span class="slide-number">4 / 12</span>
             </div>
@@ -315,6 +346,11 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                     <li><strong>長度適中</strong>——建議 20-50 行，太短沒參考，太長稀釋重點</li>
                     <li><strong>用中文寫</strong>——龍蝦要用中文回覆，設定檔也用中文效果最好</li>
                 </ol>
+                <div class="box info">
+                    <strong>寫完後怎麼驗證有沒有成功？</strong><br>
+                    重啟後直接去 LINE 或 Telegram 問：<code>你是誰？</code><br>
+                    如果它開始用你設定的名字、語氣和角色介紹自己，就代表 <code>IDENTITY.md</code> 已經吃到了。
+                </div>
                 <span class="slide-number">5 / 12</span>
             </div>
         </div>
@@ -356,6 +392,12 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                     <tr><td style="color: #ffc107;"><strong>做之前要先問</strong></td><td>需要確認才做</td><td>傳訊息給別人、修改設定檔、刪檔案</td></tr>
                     <tr><td style="color: #dc3545;"><strong>絕對不能做</strong></td><td>紅線不可跨越</td><td>洩漏個人資料、在群組代替發言、假裝人類</td></tr>
                 </table>
+                <div class="box info">
+                    <strong>SOUL.md 要放哪裡、怎麼開？</strong><br>
+                    Windows 路徑：<code>C:\Users\user\.openclaw\workspace\SOUL.md</code><br>
+                    最簡單直接在 PowerShell 輸入：<code>notepad $env:USERPROFILE\.openclaw\workspace\SOUL.md</code><br>
+                    改完一樣要跑 <code>openclaw gateway restart</code>。
+                </div>
                 <span class="slide-number">6 / 12</span>
             </div>
         </div>
@@ -397,6 +439,12 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                 <div class="box warning">
                     ⚠️ <strong>不要放敏感資訊</strong>——身分證號、銀行帳號、密碼等絕對不要寫在 USER.md 裡。養成好習慣比較安全！
                 </div>
+                <div class="box info">
+                    <strong>USER.md 也是同樣的做法：</strong><br>
+                    檔案位置：<code>C:\Users\user\.openclaw\workspace\USER.md</code><br>
+                    建立或編輯可直接輸入：<code>notepad $env:USERPROFILE\.openclaw\workspace\USER.md</code><br>
+                    存好後再重啟：<code>openclaw gateway restart</code>
+                </div>
                 <span class="slide-number">7 / 12</span>
             </div>
         </div>
@@ -431,7 +479,22 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                 </div>
 
                 <div class="box info">
+                    <strong>這兩個檔案要放哪裡？</strong><br>
+                    都是放在 OpenClaw 的 <strong>workspace 根目錄</strong>。<br>
+                    以這台 Windows 來說：<br>
+                    <code>C:\Users\user\.openclaw\workspace\AGENTS.md</code><br>
+                    <code>C:\Users\user\.openclaw\workspace\TOOLS.md</code><br>
+                    macOS / Linux 則是：<code>~/.openclaw/workspace/AGENTS.md</code>、<code>~/.openclaw/workspace/TOOLS.md</code>
+                </div>
+
+                <div class="box info">
                     💡 <strong>新手建議</strong>：最重要的是 IDENTITY.md 和 USER.md。SOUL.md 用預設的也可以，AGENTS.md 和 TOOLS.md 先不用動，等熟悉之後再慢慢調整。
+                </div>
+                <div class="box info">
+                    <strong>如果你真的要自己建立這兩個檔：</strong><br>
+                    <code>notepad $env:USERPROFILE\.openclaw\workspace\AGENTS.md</code><br>
+                    <code>notepad $env:USERPROFILE\.openclaw\workspace\TOOLS.md</code><br>
+                    但上課時新手通常先不用改這兩個。
                 </div>
                 <span class="slide-number">8 / 12</span>
             </div>
@@ -442,6 +505,11 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
             <div class="content-card">
                 <h2>10.7 龍蝦人格生成器</h2>
                 <p>不知道怎麼寫設定檔嗎？用<strong>龍蝦人格生成器</strong>，點幾下就能產生完整的人格設定！</p>
+                <div class="box info">
+                    <strong>生成器在哪裡開？</strong><br>
+                    直接點本章首頁的 <strong>Workspace Generator</strong> 連結，或打開對應網頁後在瀏覽器中操作。<br>
+                    生成完的內容，最後還是要存回你自己的 <code>workspace</code> 資料夾。
+                </div>
 
                 <img src="images/CH10/ch10_02_generator_home.png" alt="人格生成器首頁" class="screenshot">
 
@@ -488,8 +556,23 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                     </div>
                     <div class="concept-card" style="text-align: center;">
                         <h3 style="font-size: 36px; margin-bottom: 5px;">5</h3>
-                        <p style="font-size: 16px;"><strong>重啟並測試</strong><br><code style="font-size: 13px;">gateway restart</code></p>
+                        <p style="font-size: 16px;"><strong>重啟並測試</strong><br><code style="font-size: 13px;">openclaw gateway restart</code></p>
                     </div>
+                </div>
+
+                <div class="box info" style="margin-top: 20px;">
+                    <strong>這五個檔案都放在 workspace 根目錄：</strong><br>
+                    <code>C:\Users\user\.openclaw\workspace\IDENTITY.md</code><br>
+                    <code>C:\Users\user\.openclaw\workspace\SOUL.md</code><br>
+                    <code>C:\Users\user\.openclaw\workspace\USER.md</code><br>
+                    <code>C:\Users\user\.openclaw\workspace\AGENTS.md</code><br>
+                    <code>C:\Users\user\.openclaw\workspace\TOOLS.md</code>
+                </div>
+                <div class="box info">
+                    <strong>這五步要在哪裡做？</strong><br>
+                    生成器是在瀏覽器操作。<br>
+                    真正存檔是把內容貼進 <code>C:\Users\user\.openclaw\workspace\</code> 裡的各個 <code>.md</code> 檔。<br>
+                    重啟則回到 PowerShell / 終端機輸入 <code>openclaw gateway restart</code>。
                 </div>
 
                 <h3>測試對話範例</h3>
@@ -541,6 +624,12 @@ TOOLS.md     →  我的環境有什麼特殊配置？</pre>
                         <h3>Q：龍蝦能自己改檔案嗎？</h3>
                         <p>可以！跟龍蝦說「記住我喜歡吃壽司」，它可能會自動更新。</p>
                     </div>
+                </div>
+                <div class="box info">
+                    <strong>最實用的排查順序：</strong><br>
+                    1. 先確認檔案是不是放在 <code>C:\Users\user\.openclaw\workspace\</code><br>
+                    2. 再確認檔名有沒有寫錯，例如一定要叫 <code>IDENTITY.md</code><br>
+                    3. 最後再跑 <code>openclaw gateway restart</code>
                 </div>
                 <span class="slide-number">11 / 12</span>
             </div>

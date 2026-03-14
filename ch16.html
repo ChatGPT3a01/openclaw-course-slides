@@ -173,6 +173,20 @@
                         <li>認識 30+ 種生活與企業應用情境</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 820px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/heartbeat-templates/basic-morning.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">HEARTBEAT 基本範本</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../附錄E_Skills設定速查表/book/附錄E_Skills設定速查表.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">Skills 設定速查表</a></p>
+                </div>
+                <div style="margin-top: 20px; background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.08)); padding: 20px 28px; border-radius: 15px; text-align: left; max-width: 820px;">
+                    <h3 style="margin-top: 0; text-align: center;">🚀 本章建議先做這 4 個</h3>
+                    <ol style="margin-bottom: 0;">
+                        <li>先做 <strong>天氣</strong>，最快看到成果</li>
+                        <li>再做 <strong>新聞</strong>，最容易養成日常使用</li>
+                        <li>進階再做 <strong>Notion</strong> 或 <strong>Google Calendar</strong></li>
+                        <li>最後把常用任務寫進 <code>HEARTBEAT.md</code></li>
+                    </ol>
+                </div>
                 <span class="slide-number">1 / 15</span>
             </div>
         </div>
@@ -205,6 +219,20 @@
                 <div class="box info">
                     💡 龍蝦會定期「醒來」檢查 HEARTBEAT.md（每 15-30 分鐘），判斷是否有任務需要執行。有就做，沒有就安靜繼續睡（回覆 <code>HEARTBEAT_OK</code>）。
                 </div>
+                <div class="box info">
+                    <strong>這一頁怎麼做：</strong><br>
+                    先開 <strong>記事本 / VS Code</strong>，編輯 <code>C:\Users\你的名稱\.openclaw\workspace\HEARTBEAT.md</code>。<br>
+                    如果檔案還不存在，可以在 <strong>PowerShell / 終端機</strong> 輸入：<code>notepad $env:USERPROFILE\.openclaw\workspace\HEARTBEAT.md</code><br>
+                    存檔後再回到 <strong>PowerShell / 終端機</strong> 輸入：<code>openclaw gateway restart</code>
+                </div>
+                <div class="box warning">
+                    ⚠️ 第一次設 HEARTBEAT，先只寫 1 到 2 個任務。先確認會動，再慢慢加，不要一開始就塞滿整份清單。
+                </div>
+                <div class="box success">
+                    <strong>第一次驗證怎麼做：</strong><br>
+                    先不要寫太多任務，先寫一條像「每天晚上 21:00 問我今天過得怎麼樣」。<br>
+                    到時間後，看 LINE / Telegram 有沒有主動收到訊息。
+                </div>
                 <span class="slide-number">2 / 15</span>
             </div>
         </div>
@@ -234,6 +262,12 @@
                 <div class="box success">
                     ✅ 龍蝦回覆：「🌤️ 早安！今天 26°C 多雲。帶傘出門比較保險。📅 10:00 部門會議 / 14:00 客戶拜訪。💡 記得帶上週五整理的報告！」
                 </div>
+                <div class="box info">
+                    <strong>這個範例要先具備什麼：</strong><br>
+                    這不是只靠 <code>HEARTBEAT.md</code> 就會成功。<br>
+                    你還要先把 <code>weather</code> 和 <code>google-calendar</code> 相關設定都做好。<br>
+                    如果你還沒接好 Google Calendar，先把第 2 點拿掉，先做只有天氣版的早安助理。
+                </div>
                 <span class="slide-number">3 / 15</span>
             </div>
         </div>
@@ -253,6 +287,13 @@
 - 預設城市: 台北
 - 溫度單位: 攝氏</pre>
 
+                <div class="box info">
+                    <strong>這一段分別在哪裡做：</strong><br>
+                    第 1 行安裝指令在 <strong>PowerShell / 終端機</strong>。<br>
+                    下面的 <code>## Weather</code> 內容，是貼到 <code>C:\Users\你的名稱\.openclaw\workspace\TOOLS.md</code>。<br>
+                    存檔後要再跑 <code>openclaw gateway restart</code>。
+                </div>
+
                 <h3>日常使用方式</h3>
                 <div style="max-width: 600px; margin: 0 auto;">
                     <div class="chat-label" style="text-align: right;">你</div>
@@ -270,6 +311,15 @@
                 </div>
                 <div class="box warning">
                     🔑 <strong>API Key 怎麼拿？</strong> 到 <code>openweathermap.org/api</code> 免費註冊，每分鐘 60 次不用錢。詳細申請步驟請見<strong>附錄 E：Skills 設定速查表</strong>。
+                </div>
+                <div class="box success">
+                    ✅ <strong>實作順序</strong>：安裝 <code>weather</code> → 補 <code>TOOLS.md</code> → <code>openclaw gateway restart</code> → 回 LINE 測「台北今天天氣」。
+                </div>
+                <div class="box success">
+                    <strong>做完後先測這兩句：</strong><br>
+                    <code>請告訴我台北今天的天氣</code><br>
+                    <code>明天台北適合洗車嗎？</code><br>
+                    如果這兩句都能正常回，就代表天氣技能大致接好了。
                 </div>
                 <span class="slide-number">4 / 15</span>
             </div>
@@ -291,6 +341,13 @@
 - 偏好類別: 科技、國際、財經
 - 每次摘要數量: 5 則</pre>
 
+                <div class="box info">
+                    <strong>這一段分別在哪裡做：</strong><br>
+                    安裝指令在 <strong>PowerShell / 終端機</strong>。<br>
+                    <code>## News</code> 這段貼到 <code>TOOLS.md</code>。<br>
+                    存檔後一樣要 <code>openclaw gateway restart</code>。
+                </div>
+
                 <h3>日常使用方式</h3>
                 <div style="max-width: 600px; margin: 0 auto;">
                     <div class="chat-label" style="text-align: right;">你</div>
@@ -304,6 +361,14 @@
                 </div>
                 <div class="box warning">
                     🔑 <strong>API Key 怎麼拿？</strong> 到 <code>newsapi.org</code> 免費註冊，每天 100 次不用錢。詳細申請步驟請見<strong>附錄 E：Skills 設定速查表</strong>。
+                </div>
+                <div class="box success">
+                    ✅ <strong>實作順序</strong>：安裝 <code>news</code> → 補 <code>NewsAPI Key</code> → 重啟 Gateway → 回 LINE 測「今天有什麼新聞？」。
+                </div>
+                <div class="box success">
+                    <strong>第一句先這樣測：</strong><br>
+                    <code>今天有什麼科技新聞？</code><br>
+                    這比只說「新聞」更容易讓技能正確觸發。
                 </div>
                 <span class="slide-number">5 / 15</span>
             </div>
@@ -323,7 +388,27 @@
                     <li>取得 Internal Integration Token（<code>ntn_</code> 開頭）</li>
                     <li>在 Notion 頁面加入 Integration 的 connections</li>
                     <li>在 TOOLS.md 寫入 Token 和資料庫 ID</li>
+                    <li>重啟 Gateway，再回 LINE 測試新增與查詢</li>
                 </ol>
+
+                <div class="box info">
+                    <strong>這 5 步分別在哪裡做：</strong><br>
+                    第 1 到 3 步都在 <strong>瀏覽器</strong> 的 Notion 後台。<br>
+                    第 4 步在 <strong>記事本 / VS Code</strong> 編輯 <code>C:\Users\你的名稱\.openclaw\workspace\TOOLS.md</code>。<br>
+                    第 5 步先回 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code>，再回 LINE 測試。
+                </div>
+
+                <div class="box warning">
+                    <strong>最容易卡住的是第 3 步：</strong><br>
+                    你就算拿到了 Token，如果沒有把 Integration 加進該頁面或資料庫的 <code>connections</code>，龍蝦還是讀不到 Notion。
+                </div>
+
+                <div class="box info">
+                    <strong>TOOLS.md 最簡單可先這樣寫：</strong><br>
+                    <code>## Notion</code><br>
+                    <code>- Token: 你的 ntn_... Token</code><br>
+                    <code>- Database ID: 你的資料庫 ID</code>
+                </div>
 
                 <h3>日常使用</h3>
                 <div style="max-width: 600px; margin: 0 auto;">
@@ -335,6 +420,14 @@
                     <div class="chat-bubble user">我的 Notion 待辦清單有什麼？</div>
                     <div class="chat-label">龍蝦</div>
                     <div class="chat-bubble bot">📋 你的待辦清單（3 筆未完成）：<br>1. ❌ 明天交報告（截止：3/8）<br>2. ❌ 買牛奶<br>3. ❌ 回覆客戶 Email<br>要標記哪一筆為完成嗎？</div>
+                </div>
+                <div class="box warning">
+                    ⚠️ 如果連不上，先檢查三件事：<code>Token</code> 對不對、<code>connections</code> 有沒有加、<code>資料庫 ID</code> 有沒有貼錯。
+                </div>
+                <div class="box success">
+                    <strong>第一句先這樣測：</strong><br>
+                    <code>幫我在 Notion 的待辦清單加一筆「測試 Notion 整合」</code><br>
+                    如果新增成功，再問：<code>我的 Notion 待辦清單有什麼？</code>
                 </div>
                 <span class="slide-number">6 / 15</span>
             </div>
@@ -355,7 +448,28 @@
                     <li>建立服務帳號，下載 JSON 金鑰</li>
                     <li>把服務帳號 Email 加為行事曆共用對象（可編輯）</li>
                     <li>在 TOOLS.md 寫入憑證路徑</li>
+                    <li>重啟 Gateway，回 LINE 測試新增行程</li>
                 </ol>
+
+                <div class="box info">
+                    <strong>這 6 步分別在哪裡做：</strong><br>
+                    第 1 到 4 步都在 <strong>瀏覽器</strong> 的 Google Cloud Console / Google Calendar。<br>
+                    第 5 步在 <strong>記事本 / VS Code</strong> 編輯 <code>TOOLS.md</code>。<br>
+                    第 6 步先回 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code>，再回 LINE 測。
+                </div>
+
+                <div class="box info">
+                    <strong>TOOLS.md 最簡單可先這樣寫：</strong><br>
+                    <code>## Google Calendar</code><br>
+                    <code>- 服務帳號金鑰路徑: C:\Users\你的名稱\.openclaw\workspace\google-credentials.json</code><br>
+                    <code>- 主要行事曆: primary</code>
+                </div>
+
+                <div class="box warning">
+                    <strong>第 3 步下載的 JSON 要放哪裡？</strong><br>
+                    最簡單就是放到 <code>C:\Users\你的名稱\.openclaw\workspace\google-credentials.json</code><br>
+                    然後在 <code>TOOLS.md</code> 裡填同一條路徑，不要自己記兩套位置。
+                </div>
 
                 <h3>日常使用</h3>
                 <div style="max-width: 600px; margin: 0 auto;">
@@ -367,6 +481,14 @@
                     <div class="chat-bubble user">要</div>
                     <div class="chat-label">龍蝦</div>
                     <div class="chat-bubble bot">✅ 已設定提醒，會在 14:30 通知你。</div>
+                </div>
+                <div class="box warning">
+                    ⚠️ 如果 Google Calendar 沒反應，通常是三個地方有漏：<code>Calendar API 沒啟用</code>、<code>服務帳號沒加入共用</code>、<code>JSON 路徑寫錯</code>。
+                </div>
+                <div class="box success">
+                    <strong>第一句先這樣測：</strong><br>
+                    <code>幫我加一筆行程，明天下午三點測試 Google Calendar，一個小時</code><br>
+                    如果成功，再去 Google Calendar 網頁確認這筆行程真的出現。
                 </div>
                 <span class="slide-number">7 / 15</span>
             </div>
@@ -666,12 +788,19 @@
 
                 <table style="font-size: 17px;">
                     <tr><th style="width: 35%;">問題</th><th>解決方式</th></tr>
-                    <tr><td>HEARTBEAT.md 任務沒有執行</td><td>① Heartbeat 功能沒啟用 → 檢查 AGENTS.md<br>② Gateway 沒在跑 → 需持續運行<br>③ 時間未到（±15 分鐘誤差）<br>④ 格式有問題 → 確保合法 Markdown</td></tr>
+                    <tr><td>HEARTBEAT.md 任務沒有執行</td><td>① <code>HEARTBEAT.md</code> 沒放在 <code>C:\Users\你的名稱\.openclaw\workspace\</code><br>② 改完後忘了 <code>openclaw gateway restart</code><br>③ Gateway 沒在跑 → 需持續運行<br>④ 時間未到（±15 分鐘誤差）</td></tr>
                     <tr><td>天氣技能回覆城市不對</td><td>在 TOOLS.md 設定預設城市，或每次明確說「台北天氣」</td></tr>
                     <tr><td>Notion 連不上</td><td>① API Token 是否正確（<code>ntn_</code> 開頭）<br>② Integration 有沒有加入頁面 connections<br>③ 資料庫 ID 是否正確</td></tr>
                     <tr><td>Google Calendar 沒有反應</td><td>① JSON 金鑰路徑錯誤<br>② 服務帳號沒有被加為共用對象<br>③ Calendar API 沒有啟用</td></tr>
                     <tr><td>這些技能會消耗很多 API 費用嗎？</td><td>大部分都有免費額度：<br>OpenWeatherMap 每分鐘 60 次免費<br>NewsAPI 每天 100 次免費<br>Notion API 免費<br>Google Calendar API 每天 100 萬次</td></tr>
                 </table>
+                <div class="box warning">
+                    <strong>這章最穩的排查順序：</strong><br>
+                    先看技能有沒有安裝。<br>
+                    再看 <code>TOOLS.md</code> / Token / JSON 路徑有沒有真的填對。<br>
+                    再跑 <code>openclaw gateway restart</code>。<br>
+                    最後才回 LINE / Telegram 重測。
+                </div>
                 <span class="slide-number">14 / 15</span>
             </div>
         </div>
@@ -746,6 +875,9 @@
             slides[currentSlide].classList.remove('active');
             currentSlide = index;
             slides[currentSlide].classList.add('active');
+            const card = slides[currentSlide].querySelector('.content-card');
+            if (card) card.scrollTop = 0;
+            window.scrollTo(0, 0);
             updateUI();
         }
 
@@ -770,6 +902,12 @@
             if (e.key === 'ArrowLeft') changeSlide(-1);
             if (e.key === 'ArrowRight') changeSlide(1);
             if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeCard = document.querySelector('.slide.active .content-card');
+            if (activeCard) activeCard.scrollTop = 0;
+            window.scrollTo(0, 0);
         });
 
         updateUI();

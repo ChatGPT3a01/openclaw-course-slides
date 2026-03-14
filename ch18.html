@@ -168,6 +168,10 @@
                         <li>理解安全注意事項</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 800px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/security/desktop-agent-rules.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">Desktop Agent 安全規則</a></p>
+                </div>
                 <span class="slide-number">1 / 12</span>
             </div>
         </div>
@@ -190,6 +194,11 @@
 
                 <div class="box info">
                     💡 龍蝦的 Desktop Agent 能力介於第二代和第三代之間——它可以操控瀏覽器、管理檔案、執行腳本，但還不到「完全自主操控整台電腦」的程度。
+                </div>
+                <div class="box info">
+                    <strong>這章的操作分工先記住：</strong><br>
+                    安裝技能、重啟 Gateway、安裝 Playwright，都在 <strong>PowerShell / 終端機</strong>。<br>
+                    真正叫龍蝦去幫你查資料、整理檔案，是回到 <strong>LINE / Telegram</strong> 下自然語言指令。
                 </div>
                 <span class="slide-number">2 / 12</span>
             </div>
@@ -231,6 +240,11 @@
                 <div class="box warning">
                     ⚠️ <strong>Desktop Agent 的限制</strong>：不能操作沒有 API 的圖形介面軟體（如直接點 PhotoShop 按鈕）。主要透過命令列和 API 操作，每次操作需要你的授權。
                 </div>
+                <div class="box warning">
+                    <strong>學生最容易誤會的點：</strong><br>
+                    這不是把整台電腦完全交給龍蝦。<br>
+                    它比較像是：你透過 LINE 遙控龍蝦，再由龍蝦用技能去操作瀏覽器、檔案或腳本。
+                </div>
                 <span class="slide-number">3 / 12</span>
             </div>
         </div>
@@ -257,6 +271,19 @@
                 <div class="box warning">
                     ⚠️ <strong>Playwright 首次下載</strong>：<code>npx playwright install chromium</code> 會下載約 200MB 的瀏覽器引擎，依網路速度需要幾分鐘。看到進度條在跑就是正常的，請耐心等候。
                 </div>
+                <div class="box info">
+                    <strong>這一頁的所有指令都在 <span style="font-weight:700;">PowerShell / 終端機</span> 輸入。</strong><br>
+                    建議第一次先只裝兩個：<code>agent-browser</code> 和 <code>file-manager</code>。<br>
+                    裝完後一定要再輸入：<code>openclaw gateway restart</code>
+                </div>
+                <div class="box success">
+                    <strong>第一輪最穩的順序：</strong><br>
+                    1. <code>npx clawhub@latest install agent-browser</code><br>
+                    2. <code>npx playwright install chromium</code><br>
+                    3. <code>npx clawhub@latest install file-manager</code><br>
+                    4. <code>openclaw gateway restart</code><br>
+                    5. 回 LINE 測一個瀏覽器任務，再測一個檔案任務
+                </div>
                 <span class="slide-number">4 / 12</span>
             </div>
         </div>
@@ -281,6 +308,18 @@ npx playwright install chromium</pre>
 - 瀏覽器: Chromium
 - 無頭模式: 是（不會彈出瀏覽器視窗）
 - 截圖: 每次操作後自動截圖回報</pre>
+                <div class="box info">
+                    <strong>這一頁分三個地方做：</strong><br>
+                    前兩行安裝指令在 <strong>PowerShell / 終端機</strong>。<br>
+                    <code>## Agent Browser</code> 這段貼到 <code>C:\Users\你的名稱\.openclaw\workspace\TOOLS.md</code>。<br>
+                    存檔後再回 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code>。
+                </div>
+                <div class="box success">
+                    <strong>裝好後先這樣測：</strong><br>
+                    回 LINE / Telegram 傳：<br>
+                    <code>幫我打開中央氣象署網站，看看台北今天的天氣</code><br>
+                    如果龍蝦真的能回網站內容，就代表 <code>agent-browser</code> 大致接好了。
+                </div>
                 <span class="slide-number">5 / 12</span>
             </div>
         </div>
@@ -324,6 +363,11 @@ npx playwright install chromium</pre>
                 <div class="box info">
                     💡 龍蝦操控的是<strong>獨立的沙盒瀏覽器</strong>，跟你平常用的瀏覽器完全隔離，安全無虞。
                 </div>
+                <div class="box warning">
+                    <strong>教學時建議先用「查資料」場景測試。</strong><br>
+                    因為查資料最安全，也最容易看出有沒有成功。<br>
+                    「填表單」放到後面再示範，避免學生一開始就做到送出資料的動作。
+                </div>
                 <span class="slide-number">6 / 12</span>
             </div>
         </div>
@@ -357,6 +401,16 @@ npx playwright install chromium</pre>
       📁 安裝檔（EXE、MSI）→ 5 個
       📁 其他 → 4 個
       要執行嗎？</pre>
+                <div class="box info">
+                    <strong>這一頁的前提：</strong><br>
+                    你要先在 <strong>PowerShell / 終端機</strong> 安裝 <code>file-manager</code>，再 <code>openclaw gateway restart</code>。<br>
+                    實際整理檔案時，回到 <strong>LINE / Telegram</strong> 下自然語言指令。
+                </div>
+                <div class="box success">
+                    <strong>第一句先這樣測最安全：</strong><br>
+                    <code>桌面上有多少個 PDF 檔？</code><br>
+                    先測「讀取」成功，再做搬移或重新命名，不要一開始就做大量改動。
+                </div>
                 <span class="slide-number">7 / 12</span>
             </div>
         </div>
@@ -386,6 +440,10 @@ npx playwright install chromium</pre>
 
                 <div class="box success">
                     ✅ 龍蝦不只能做簡單的搬移——它可以用 <strong>AI 理解檔案的內容</strong>來智慧分類！
+                </div>
+                <div class="box warning">
+                    <strong>這類任務一定要先看龍蝦的建議，再決定要不要確認執行。</strong><br>
+                    尤其是批次改名、批次移動、掃描整個磁碟這種操作，不要讓學生直接跳過確認。
                 </div>
                 <span class="slide-number">8 / 12</span>
             </div>
@@ -431,6 +489,17 @@ npx playwright install chromium</pre>
       4. Teams → 650MB
       5. Node.js（龍蝦 Gateway）→ 180MB
       建議：Chrome 分頁太多了！</pre>
+                <div class="box info">
+                    <strong>這一頁的前提技能：</strong><br>
+                    先在 <strong>PowerShell / 終端機</strong> 安裝 <code>system-monitor</code>。<br>
+                    如果要讀檔轉檔，可能還會用到其他技能或本機腳本。<br>
+                    裝完一樣先 <code>openclaw gateway restart</code>，再回 LINE / Telegram 測。
+                </div>
+                <div class="box success">
+                    <strong>第一句建議這樣測：</strong><br>
+                    <code>幫我看看目前 CPU、記憶體、磁碟使用率</code><br>
+                    這比一開始就做轉檔或複雜腳本更容易判斷有沒有成功。
+                </div>
                 <span class="slide-number">9 / 12</span>
             </div>
         </div>
@@ -468,6 +537,11 @@ npx playwright install chromium</pre>
                     <tr><td style="color: #ffc107; font-weight: bold;">🟡 需要確認</td><td>每次確認</td><td>其他磁碟（D:、E:）、應用程式資料夾</td></tr>
                     <tr><td style="color: #dc3545; font-weight: bold;">🔴 絕對禁止</td><td>禁止存取</td><td>C:\Windows\、Program Files、密碼檔案</td></tr>
                 </table>
+                <div class="box info">
+                    <strong>這段要改在哪裡：</strong><br>
+                    你可以把這種安全規則寫進 <code>C:\Users\你的名稱\.openclaw\workspace\AGENTS.md</code> 或 <code>SOUL.md</code>。<br>
+                    改完後回到 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code> 才會生效。
+                </div>
                 <span class="slide-number">10 / 12</span>
             </div>
         </div>
@@ -503,6 +577,13 @@ npx playwright install chromium</pre>
 
                 <div class="box warning">
                     ⚠️ <strong>不建議做的事</strong>：讓龍蝦自動登入銀行帳號、把整台電腦的管理員權限給龍蝦、讓龍蝦操作密碼管理器等含敏感資料的軟體。
+                </div>
+                <div class="box warning">
+                    <strong>這章最穩的排查順序：</strong><br>
+                    先確認對應技能有沒有安裝。<br>
+                    再確認有沒有 <code>openclaw gateway restart</code>。<br>
+                    如果是瀏覽器任務，再確認 <code>npx playwright install chromium</code> 有做。<br>
+                    最後回 LINE / Telegram 用最簡單的一句話重測。
                 </div>
                 <span class="slide-number">11 / 12</span>
             </div>

@@ -172,6 +172,16 @@
                         <span class="highlight">做成技能（10 分鐘）</span>
                     </p>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 840px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/README.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">yolo-vision README</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/SKILL.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">yolo-vision SKILL.md</a></p>
+                </div>
+                <div style="margin-top: 18px; background: rgba(255,255,255,0.92); border: 2px solid rgba(102,126,234,0.25); padding: 18px 24px; border-radius: 15px; text-align: left; max-width: 840px;">
+                    <h3 style="margin-top: 0; text-align: center;">📌 本章先記兩件事</h3>
+                    <p style="font-size: 17px; margin-bottom: 6px;">1. 這章前半段都在 <strong>PowerShell / 終端機</strong> 與 <strong>記事本 / VS Code</strong> 做，不是在 LINE。</p>
+                    <p style="font-size: 17px; margin-bottom: 0;">2. 一定要先完成「單張照片偵測成功」，再做成 OpenClaw 技能，不要反過來。</p>
+                </div>
                 <span class="slide-number">1 / 29</span>
             </div>
         </div>
@@ -260,6 +270,12 @@
                 <pre>python --version
 # 需要 Python 3.10 以上</pre>
 
+                <div class="box info">
+                    <strong>這一行要在哪裡打：</strong><br>
+                    在 <strong>PowerShell / 終端機</strong> 輸入。<br>
+                    Windows 可以用 PowerShell、Windows Terminal，或 VS Code 內建終端機。
+                </div>
+
                 <h3>三種情況的處理</h3>
                 <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="concept-card" style="text-align: center; border-color: #28a745;">
@@ -282,6 +298,11 @@
                 <div class="box warning">
                     ⚠️ <strong>Windows 用戶注意</strong>：安裝 Python 時，第一個畫面最下方有個勾選框「<strong>Add Python to PATH</strong>」，務必打勾！忘了勾的話，終端機會找不到 <code>python</code> 指令。
                 </div>
+                <div class="box success">
+                    <strong>這一頁做完的標準：</strong><br>
+                    <code>python --version</code> 能正常顯示版本號，而且是 <code>3.10</code> 以上。<br>
+                    沒看到版本號，就先不要繼續下一頁。
+                </div>
                 <span class="slide-number">4 / 29</span>
             </div>
         </div>
@@ -290,9 +311,15 @@
         <div class="slide">
             <div class="content-card">
                 <h2>22.2 步驟一（2/3）：安裝 YOLO6</h2>
-                <p>確認有 Python 之後，一行指令就能安裝 YOLO6：</p>
+                <p>確認有 Python 之後，一行指令就能安裝 Ultralytics 套件。本書沿用「YOLO6 智慧視覺」這個章名，但實際安裝的是目前官方維護的 Ultralytics YOLO 模型工具鏈。</p>
 
                 <pre style="font-size: 22px; text-align: center; padding: 30px;">pip install ultralytics</pre>
+
+                <div class="box warning">
+                    <strong>這裡要先講清楚：</strong><br>
+                    章名寫的是 <code>YOLO6</code>，但簡報裡實際用到的模型檔名是 <code>yolo11n.pt</code>、<code>yolo11s.pt</code>。<br>
+                    學生上課時不用糾結版本名稱，先記成：<strong>我們現在用 Ultralytics 的 YOLO 模型來做物件偵測</strong>。
+                </div>
 
                 <h3>安裝過程說明</h3>
                 <ul>
@@ -306,6 +333,10 @@
 
                 <div class="box success">
                     ✅ <strong>檢查點</strong>：看到「<strong>YOLO6 安裝成功！</strong>」就對了。如果出現紅字錯誤，最常見的原因是 Python 版本太舊——請升級到 3.10 以上。
+                </div>
+                <div class="box info">
+                    <strong>這一頁全部都在 <span style="font-weight:700;">PowerShell / 終端機</span> 做。</strong><br>
+                    還沒成功看到驗證文字前，不要急著去寫技能或改 OpenClaw。
                 </div>
                 <span class="slide-number">5 / 29</span>
             </div>
@@ -331,6 +362,11 @@
 
                 <div class="box info">
                     💡 <strong>本章所有範例用 CPU 就能完成</strong>。GPU 加速是錦上添花——拍照偵測從 2 秒變 0.1 秒，但不影響結果正確性。
+                </div>
+                <div class="box info">
+                    <strong>第一次上課的建議：</strong><br>
+                    先直接接受 <code>CPU 模式</code> 也能用。<br>
+                    只要能成功偵測出結果，就先往下，不要把時間卡在 CUDA / 驅動 / 顯卡設定。
                 </div>
                 <span class="slide-number">6 / 29</span>
             </div>
@@ -426,6 +462,11 @@
                 <div class="box info">
                     💡 <strong>懶人解法</strong>：如果本機環境搞不定，直接用 <strong>CH5 的 GitHub Codespaces</strong>——雲端環境已經內建 Python 3.12，pip 也不用設定。
                 </div>
+                <div class="box warning">
+                    <strong>這一頁如果還沒解掉，就先停在這裡。</strong><br>
+                    安裝階段沒過，後面的 <code>detect.py</code>、<code>SKILL.md</code> 都只會跟著一起報錯。<br>
+                    先把 <code>python</code>、<code>pip install ultralytics</code>、驗證載入這三關走通。
+                </div>
                 <span class="slide-number">8 / 29</span>
             </div>
         </div>
@@ -454,6 +495,11 @@
                 <div class="box info">
                     💡 沒照片也沒關係，可以用 YOLO6 的內建範例圖：<code>model("https://ultralytics.com/images/bus.jpg")</code>
                 </div>
+                <div class="box info">
+                    <strong>最簡單的做法：</strong><br>
+                    先把 <code>test.jpg</code> 放在你等等要執行 Python 的同一個資料夾裡。<br>
+                    例如你等一下要在 <code>D:\Moltbot\龍蝦課程\CH22_YOLO6智慧視覺\resources\yolo-vision\</code> 執行，就把照片先放到同一層，最不容易路徑錯誤。
+                </div>
                 <span class="slide-number">9 / 29</span>
             </div>
         </div>
@@ -463,6 +509,14 @@
             <div class="content-card">
                 <h2>22.3 步驟二（2/3）：寫偵測程式</h2>
                 <p>新建一個檔案 <code>detect_test.py</code>，只要 <strong>10 行</strong>就能完成偵測：</p>
+
+                <div class="box info">
+                    <strong>這個檔案建在哪裡：</strong><br>
+                    建議先建在你現在測試用的資料夾裡，和 <code>test.jpg</code> 放同一層。<br>
+                    Windows 可以直接用記事本建立，例如：<br>
+                    <code>notepad detect_test.py</code><br>
+                    或用 VS Code 新增同名檔案。
+                </div>
 
                 <pre>from ultralytics import YOLO      # 1. 載入 YOLO 模組
 
@@ -484,6 +538,13 @@ for box in results[0].boxes:
 
                 <div class="box info">
                     💡 第一次執行時，YOLO 會自動下載模型檔（<code>yolo11s.pt</code>，約 20MB），之後就不用重複下載了。
+                </div>
+                <div class="box warning">
+                    <strong>這一步要在 <span style="font-weight:700;">PowerShell / 終端機</span> 裡執行，而且目前工作目錄要放對。</strong><br>
+                    你所在的資料夾裡，至少要有：<br>
+                    <code>detect_test.py</code><br>
+                    <code>test.jpg</code><br>
+                    否則最常見就是報「找不到照片」。
                 </div>
                 <span class="slide-number">10 / 29</span>
             </div>
@@ -522,6 +583,11 @@ for box in results[0].boxes:
 
                 <div class="box success">
                     ✅ <strong>檢查點</strong>：看到框框和物件列表就成功了！恭喜完成 YOLO6 的第一次偵測！
+                </div>
+                <div class="box success">
+                    <strong>這一頁成功後，才繼續做成技能。</strong><br>
+                    如果這裡還沒成功，就先不要回到 OpenClaw。<br>
+                    因為技能化只是把這個成功的 Python 偵測包進龍蝦裡，不會自動幫你修好底層環境問題。
                 </div>
                 <span class="slide-number">11 / 29</span>
             </div>
@@ -581,6 +647,14 @@ for box in results[0].boxes:
 
                 <pre style="font-size: 20px;">mkdir ~/.openclaw/workspace/skills/yolo-vision</pre>
 
+                <div class="box info">
+                    <strong>Windows 使用者請直接用這樣做：</strong><br>
+                    在 <strong>PowerShell / 終端機</strong> 輸入：<br>
+                    <code>mkdir $env:USERPROFILE\.openclaw\workspace\skills\yolo-vision</code><br>
+                    建好後，資料夾位置應該是：<br>
+                    <code>C:\Users\你的名稱\.openclaw\workspace\skills\yolo-vision\</code>
+                </div>
+
                 <h3>這個技能需要三個檔案</h3>
                 <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="concept-card" style="text-align: center;">
@@ -608,6 +682,11 @@ for box in results[0].boxes:
 
                 <div class="box info">
                     💡 如果你學過 CH17 技能開發，這個結構應該很熟悉——每個技能都是一個資料夾 + 一個 <code>SKILL.md</code>。
+                </div>
+                <div class="box warning">
+                    <strong>這一步開始，才是 OpenClaw 技能區。</strong><br>
+                    前面 <code>detect_test.py</code> 是單獨測試 YOLO。<br>
+                    這裡開始才是在把已經成功的偵測流程搬進龍蝦的技能資料夾。
                 </div>
                 <span class="slide-number">13 / 29</span>
             </div>
@@ -646,6 +725,12 @@ python ~/.openclaw/workspace/skills/yolo-vision/detect.py &lt;照片路徑&gt;
 
                 <div class="box info">
                     💡 <strong>重點欄位</strong>：<code>使用方式</code> 決定什麼時候觸發，<code>執行方式</code> 告訴龍蝦怎麼跑程式。寫清楚這兩個，龍蝦就知道該怎麼用了。
+                </div>
+                <div class="box info">
+                    <strong>這個檔案要存到哪裡：</strong><br>
+                    <code>C:\Users\你的名稱\.openclaw\workspace\skills\yolo-vision\SKILL.md</code><br>
+                    可以直接用：<br>
+                    <code>notepad $env:USERPROFILE\.openclaw\workspace\skills\yolo-vision\SKILL.md</code>
                 </div>
                 <span class="slide-number">14 / 29</span>
             </div>
@@ -689,6 +774,12 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
 
                 <div class="box success">
                     ✅ 程式會輸出 JSON，龍蝦就能讀懂並轉成自然語言回覆給你。
+                </div>
+                <div class="box info">
+                    <strong>這個檔案也要放在技能資料夾裡：</strong><br>
+                    <code>C:\Users\你的名稱\.openclaw\workspace\skills\yolo-vision\detect.py</code><br>
+                    建好後，先不要急著回 LINE。<br>
+                    先在這個資料夾裡單獨測一次：<code>python detect.py test.jpg</code>
                 </div>
                 <span class="slide-number">15 / 29</span>
             </div>
@@ -745,6 +836,12 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box success">
                     ✅ <strong>檢查點</strong>：重啟完成後，<strong>傳一張照片到 LINE 試試看</strong>！說「幫我數有幾個人」，龍蝦就會呼叫 YOLO6 回覆偵測結果。
                 </div>
+                <div class="box warning">
+                    <strong>這裡的正確順序是：</strong><br>
+                    1. 先單獨測 <code>python detect.py test.jpg</code> 成功<br>
+                    2. 再 <code>openclaw gateway restart</code><br>
+                    3. 最後才回 LINE / Telegram 傳照片測試技能觸發
+                </div>
                 <span class="slide-number">16 / 29</span>
             </div>
         </div>
@@ -773,6 +870,16 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
 
                 <div class="box success">
                     ✅ <strong>三步驟：複製 → 重啟 → 測試！</strong>把資料夾放對位置、重啟龍蝦、傳張照片試試看——完成！
+                </div>
+                <div class="box info">
+                    <strong>資源包就在這裡：</strong><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/README.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">yolo-vision README</a><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/SKILL.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">yolo-vision SKILL.md</a><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/detect.py" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">detect.py</a><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/webcam_monitor.py" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">webcam_monitor.py</a><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/live_detect.py" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">live_detect.py</a><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/install_check.py" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">install_check.py</a><br>
+                    <a href="../CH22_YOLO6智慧視覺/resources/yolo-vision/detect_test.py" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">detect_test.py</a>
                 </div>
                 <span class="slide-number">17 / 29</span>
             </div>
@@ -816,6 +923,14 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
                 <div class="box warning">
                     ⚠️ <strong>最容易踩的坑</strong>：資料夾名稱打錯！一定要是 <code>yolo-vision</code>（有連字號），不是 <code>yolovision</code> 或 <code>yolo_vision</code>。
                 </div>
+                <div class="box warning">
+                    <strong>這章最穩的排查順序：</strong><br>
+                    先看 <code>python --version</code>。<br>
+                    再看 <code>pip install ultralytics</code> 有沒有成功。<br>
+                    再看 <code>python detect_test.py</code> 能不能正常框圖。<br>
+                    再看 <code>python detect.py test.jpg</code> 能不能輸出 JSON。<br>
+                    最後才去檢查 <code>SKILL.md</code> 路徑和 LINE 技能觸發。
+                </div>
 
                 <div class="box info">
                     💡 <strong>除錯小技巧</strong>：先用 <code>openclaw doctor</code> 檢查龍蝦狀態，再用 <code>python detect.py test.jpg</code> 確認偵測腳本本身能跑。兩邊都沒問題，再看 SKILL.md 的路徑有沒有寫對。
@@ -831,6 +946,39 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
             <div class="content-card">
                 <h2>22.5 實測：拍照就能點名！</h2>
                 <p>這就是整章的高潮——拍一張教室照片，龍蝦幫你搞定點名。</p>
+
+                <div class="box warning">
+                    <strong>注意：這不是零設定直接可用。</strong><br>
+                    這一頁能成立，前面至少要先完成這 4 件事：<br>
+                    1. <code>pip install ultralytics</code> 已成功<br>
+                    2. <code>python detect_test.py</code> 已成功框出照片<br>
+                    3. <code>yolo-vision</code> 技能資料夾、<code>SKILL.md</code>、<code>detect.py</code> 都已放到正確位置<br>
+                    4. 已經執行 <code>openclaw gateway restart</code>
+                </div>
+
+                <div class="box info">
+                    <strong>真正的順序是：</strong><br>
+                    先在 <strong>PowerShell / 終端機</strong> 完成 YOLO 安裝與技能設定。<br>
+                    都完成後，才回到 <strong>LINE / Telegram</strong> 傳照片做「拍照點名」。
+                </div>
+
+                <div class="box info">
+                    <strong>這一頁的實際操作過程：</strong><br>
+                    1. 先在 <strong>PowerShell / 終端機</strong> 確認 <code>python detect.py test.jpg</code> 已經能成功輸出 JSON。<br>
+                    2. 再確認 <code>C:\Users\你的名稱\.openclaw\workspace\skills\yolo-vision\</code> 裡至少有 <code>SKILL.md</code> 和 <code>detect.py</code>。<br>
+                    3. 在 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code>。<br>
+                    4. 打開 <strong>LINE / Telegram</strong>，進入龍蝦對話。<br>
+                    5. 拍一張教室照片或從相簿選一張教室照片傳給龍蝦。<br>
+                    6. 照片送出後，立刻再傳一句：<code>幫我數有幾個人</code>。<br>
+                    7. 等龍蝦回出 <code>person</code> 數量後，再補一句：<code>今天應到 32 人</code>，讓它幫你算缺席與出席率。
+                </div>
+
+                <div class="box warning">
+                    <strong>如果你照做卻沒反應，先看是哪一段卡住：</strong><br>
+                    <code>python detect.py test.jpg</code> 失敗 → 先修 Python / YOLO。<br>
+                    LINE 傳照片沒觸發 → 先看 <code>SKILL.md</code> 路徑和 <code>openclaw gateway restart</code>。<br>
+                    有回覆但沒有人數 → 先看照片裡的人是不是太小、太暗、太模糊。
+                </div>
 
                 <div style="background: #f0f8ff; border: 2px solid #667eea; border-radius: 16px; padding: 25px; margin: 20px 0;">
                     <table style="border: none; margin: 0;">
@@ -867,6 +1015,12 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
 
                 <div class="box success">
                     🎉 從「每天 3 分鐘點名」到「<strong>拍照 3 秒搞定</strong>」！龍蝦不只會數，還會幫你算出席率。
+                </div>
+                <div class="box success">
+                    <strong>第一句最建議這樣測：</strong><br>
+                    <code>[拍教室照片] 幫我數有幾個人</code><br>
+                    先確認它真的會回 <code>person</code> 數量。<br>
+                    成功之後，再追問：<code>今天應到 32 人</code> 讓它幫你算缺席與出席率。
                 </div>
                 <span class="slide-number">19 / 29</span>
             </div>
@@ -1044,6 +1198,24 @@ print(json.dumps(output, ensure_ascii=False, indent=2))</pre>
 
                 <div class="box info">
                     💡 <strong>需要偵測清單上沒有的東西？</strong>YOLO 支援自訂訓練——準備幾百張標註照片，就能訓練出辨識新物件的模型。這屬於進階主題，但 ultralytics 官方文件有完整教學。
+                </div>
+                <div class="box info">
+                    <strong>這一頁要怎麼操作：</strong><br>
+                    不是去手動切換「80 種模式」。<br>
+                    你只要照前面步驟把 YOLO 跑起來，然後傳一張照片或用 <code>python detect.py test.jpg</code> 偵測，模型就會自動在這 80 種物件裡挑出它看見的東西。<br>
+                    也就是說：<strong>你不用先指定 car、person、book，YOLO 會自己辨識。</strong>
+                </div>
+                <div class="box success">
+                    <strong>最簡單的三個測試方式：</strong><br>
+                    1. 拍教室照片：最容易看到 <code>person</code>、<code>chair</code>、<code>laptop</code><br>
+                    2. 拍桌面照片：最容易看到 <code>book</code>、<code>cell phone</code>、<code>cup</code><br>
+                    3. 拍停車場或路邊：最容易看到 <code>car</code>、<code>bus</code>、<code>bicycle</code>
+                </div>
+                <div class="box warning">
+                    <strong>如果你想只看某一類物件：</strong><br>
+                    最簡單不是改模型，而是偵測完後只讀你要的類別。<br>
+                    例如你只在意人數，就只看輸出裡的 <code>person</code> 數量。<br>
+                    如果你只在意車位，就只看 <code>car</code>。
                 </div>
                 <span class="slide-number">24 / 29</span>
             </div>

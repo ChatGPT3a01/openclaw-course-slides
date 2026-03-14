@@ -196,6 +196,12 @@
 
                 <h3>怎麼用？——就是傳照片</h3>
                 <p>打開 LINE 或 Telegram，傳一張照片給龍蝦，然後附上問題。就這樣。先傳照片再打字，或照片和文字一起傳都行。</p>
+                <div class="box info">
+                    <strong>開始前先確認一件事：</strong><br>
+                    你現在用的模型本身要支援 Vision。<br>
+                    如果你前面是用 Ollama 的純文字模型，例如 <code>llama3.1</code>，那你就算傳照片，龍蝦也看不懂。<br>
+                    這種情況要先換成支援視覺的模型，例如 <code>llava</code>。
+                </div>
                 <span class="slide-number">2 / 10</span>
             </div>
         </div>
@@ -263,6 +269,13 @@
 
                 <div class="box success">
                     ✅ 這些功能在 <strong>LINE 和 Telegram 上都能用</strong>，操作方式完全一樣——傳照片 + 附上問題。
+                </div>
+                <div class="box info">
+                    <strong>學生實作時可以先用這三句測試：</strong><br>
+                    1. 傳一張照片，問：<code>這張照片裡有什麼？</code><br>
+                    2. 傳一張截圖，問：<code>這個錯誤訊息在說什麼？</code><br>
+                    3. 傳一張外文圖片，問：<code>幫我翻成中文</code><br>
+                    先從最短最直接的問法開始，最容易看出功能有沒有正常。
                 </div>
                 <span class="slide-number">4 / 10</span>
             </div>
@@ -349,6 +362,12 @@
                 <div class="box info">
                     💡 <strong>fal.ai 有免費額度</strong>，足夠學習和日常使用。每個月重置。偶爾讓龍蝦自拍，免費額度綽綽有餘。
                 </div>
+                <div class="box info">
+                    <strong>這一頁做完後，你手上應該要有：</strong><br>
+                    1. 一組可用的 <code>fal.ai API Key</code><br>
+                    2. 並且已經把它記到 <code>龍蝦課程-帳號清單.txt</code><br>
+                    沒有這個 Key，下一頁 Clawra 安裝時就無法完成。
+                </div>
                 <span class="slide-number">6 / 10</span>
             </div>
         </div>
@@ -366,6 +385,23 @@ npx clawra@latest
 # 安裝完成後重啟龍蝦
 openclaw gateway restart</pre>
                 <p>安裝程式會自動：檢查 OpenClaw → 要求你輸入 fal.ai API Key → 安裝技能 → 修改設定檔 → 更新 SOUL.md。</p>
+                <div class="box info">
+                    <strong>這兩行指令要在哪裡打？</strong><br>
+                    直接在你平常執行 OpenClaw 的 PowerShell / 終端機裡輸入。<br>
+                    先跑 <code>npx clawra@latest</code>，等安裝程式跑完，再輸入 <code>openclaw gateway restart</code>。<br>
+                    安裝過程如果跳出要你貼 API Key，就是把上一頁拿到的 <code>fal.ai API Key</code> 貼進去。
+                </div>
+
+                <div class="box info">
+                    <strong>安裝完要看哪兩個檔？</strong><br>
+                    1. <code>C:\Users\你的名稱\.openclaw\openclaw.json</code>：確認 <code>skills.entries</code> 裡有啟用 <code>clawra-selfie</code><br>
+                    2. <code>C:\Users\你的名稱\.openclaw\workspace\SOUL.md</code>：設定誰負責自拍、用什麼語氣回你
+                </div>
+                <div class="box info">
+                    <strong>改完後怎麼確認真的生效？</strong><br>
+                    最簡單的方法就是重啟後直接去 LINE 或 Telegram 傳：<code>拍張自拍給我看</code>。<br>
+                    如果龍蝦開始回你「正在拍」之類的語句，接著回傳圖片，就代表安裝大致成功。
+                </div>
 
                 <h3>如果一鍵安裝失敗——手動安裝</h3>
                 <pre>
@@ -382,9 +418,37 @@ git clone https://github.com/SumeLabs/clawra $env:USERPROFILE\.openclaw\skills\c
 
 # 手動步驟 4：重啟 Gateway
 openclaw gateway restart</pre>
+                <div class="box warning">
+                    <strong>手動安裝適合什麼時候用？</strong><br>
+                    只有在 <code>npx clawra@latest</code> 真的失敗時才走這條。<br>
+                    正常上課時，先以一鍵安裝為主，不要一開始就跳手動。
+                </div>
+
+                <h3>如果你想指定「小勳」負責自拍</h3>
+                <pre>
+# 打開 SOUL.md
+notepad $env:USERPROFILE\.openclaw\workspace\SOUL.md
+
+## 自拍能力
+
+你有一個分身叫「小勳」，是一個活潑、可愛、愛撒嬌的女生角色。
+小勳有實體外貌，可以自拍。
+當使用者提到「小勳」或要求自拍時，用小勳的語氣回覆，並使用 clawra-selfie 技能。
+小勳的說話風格：親暱、會用表情符號、語氣像在跟好朋友聊天。</pre>
+
+                <div class="box warning">
+                    💡 <strong>重點</strong>：<code>openclaw.json</code> 是把自拍技能「打開」；<code>SOUL.md</code> 是決定「誰來拍、怎麼說話、長什麼感覺」。<br>
+                    例如你傳「小勳，拍一張給我看」，就是靠 <code>SOUL.md</code> 裡這段設定來觸發。
+                </div>
 
                 <div class="box success">
                     ✅ <strong>試試看</strong>：安裝完成後，在 LINE 或 Telegram 傳訊息給龍蝦：「拍張自拍給我看」
+                </div>
+                <div class="box info">
+                    <strong>如果你想指定小勳出場，直接這樣測：</strong><br>
+                    <code>小勳，拍一張給我看</code><br>
+                    或 <code>小勳，穿牛仔外套自拍一張</code><br>
+                    這樣比較容易看出 <code>SOUL.md</code> 裡的人格設定有沒有吃到。
                 </div>
 
                 <img src="images/CH08/ch08_03_clawra_selfie.png" alt="Clawra 自拍" class="screenshot">
@@ -440,6 +504,12 @@ openclaw gateway restart</pre>
                 <div class="box info">
                     💡 龍蝦會<strong>自動判斷</strong>你的描述偏向穿搭還是場景，選擇最合適的拍照模式。你不需要手動選擇。
                 </div>
+                <div class="box info">
+                    <strong>新手最穩的下法：</strong><br>
+                    一次只講 1 到 2 個條件。<br>
+                    例如先說 <code>穿牛仔外套自拍一張</code>，不要一開始就丟很長一串「穿搭 + 場景 + 表情 + 動作 + 鏡位」。<br>
+                    先確認功能正常，再慢慢加描述。
+                </div>
                 <span class="slide-number">8 / 10</span>
             </div>
         </div>
@@ -488,6 +558,12 @@ openclaw gateway restart</pre>
                     <strong>超時沒回應</strong> → fal.ai 伺服器忙碌，稍後再試；檢查 API Key 是否有效<br>
                     <strong>生成失敗</strong> → API Key 格式錯誤 / 免費額度用完 / 描述觸發安全過濾<br>
                     <strong>照片畸形（手指不對、臉部扭曲）</strong> → AI 繪圖已知限制，避免手部特寫、多試幾次、用 <code>anime style</code> 較不易出錯
+                </div>
+                <div class="box info" style="margin-top: 15px;">
+                    <strong>如果你改了 <code>SOUL.md</code> 但結果沒變：</strong><br>
+                    先確認你改的是 <code>C:\Users\user\.openclaw\workspace\SOUL.md</code>。<br>
+                    然後再執行一次 <code>openclaw gateway restart</code>。<br>
+                    沒重啟時，新設定常常不會立刻生效。
                 </div>
                 <span class="slide-number">9 / 10</span>
             </div>

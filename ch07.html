@@ -167,6 +167,10 @@
                         <li>熟悉 Telegram 獨有的 Bot 功能（指令選單、群組、Inline 模式）</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 760px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../附錄B_疑難排解大全/book/附錄B_疑難排解大全.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">疑難排解大全</a></p>
+                </div>
                 <span class="slide-number">1 / 10</span>
             </div>
         </div>
@@ -230,6 +234,11 @@
                 </div>
 
                 <p><strong>【步驟 2】</strong> 點進 BotFather，按底部的 <strong>「START」</strong> 按鈕開始對話。</p>
+                <div class="box info">
+                    <strong>這一頁做完後，你至少要看到：</strong><br>
+                    已經成功和 <code>@BotFather</code> 開始對話，聊天視窗裡看得到它回你的指令清單。<br>
+                    如果連 BotFather 都還沒加到，先不要往下。
+                </div>
                 <span class="slide-number">3 / 10</span>
             </div>
         </div>
@@ -240,14 +249,14 @@
                 <h2>7.3 用 BotFather 建立機器人</h2>
                 <p>整個過程就像在餐廳點餐——你跟服務生說你要什麼，服務生幫你準備好。<strong>三句對話，不到一分鐘</strong>。</p>
 
-                <img src="images/CH07/ch07_02_botfather_create.png" alt="BotFather 建立機器人" class="screenshot">
+                <img src="images/CH07/ch07_02_bot_token.png" alt="BotFather 建立機器人" class="screenshot">
 
                 <h3>步驟流程</h3>
                 <table>
                     <tr><th>步驟</th><th>你做的事</th><th>BotFather 的回應</th></tr>
-                    <tr><td><strong>步驟 1</strong></td><td>輸入 <code>/newbot</code></td><td>問你機器人的顯示名稱</td></tr>
-                    <tr><td><strong>步驟 2</strong></td><td>輸入顯示名稱（可中文）<br>例如：<code>龍蝦小助手</code></td><td>問你機器人的 username</td></tr>
-                    <tr><td><strong>步驟 3</strong></td><td>輸入英文 username（必須以 <code>bot</code> 結尾）<br>例如：<code>my_lobster_ai_bot</code></td><td>恭喜！給你 Bot Token</td></tr>
+                    <tr><td><strong>步驟 1</strong></td><td>在 <strong>BotFather 聊天視窗的輸入框</strong> 輸入 <code>/newbot</code></td><td>問你機器人的顯示名稱</td></tr>
+                    <tr><td><strong>步驟 2</strong></td><td>直接在 <strong>同一個聊天視窗</strong> 輸入顯示名稱（可中文）<br>例如：<code>龍蝦小助手</code></td><td>問你機器人的 username</td></tr>
+                    <tr><td><strong>步驟 3</strong></td><td>再直接在 <strong>同一個聊天視窗</strong> 輸入英文 username（必須以 <code>bot</code> 結尾）<br>例如：<code>my_lobster_ai_bot</code></td><td>恭喜！給你 Bot Token</td></tr>
                 </table>
 
                 <h3>取得 Bot Token</h3>
@@ -256,6 +265,18 @@
 
                 <div class="box warning">
                     ⚠️ <strong>Bot Token 就像你家鑰匙</strong>——絕對不要貼在公開的地方（GitHub、部落格、社群）。如果洩漏了，回到 BotFather 輸入 <code>/revoke</code> 重新產生一組新的。
+                </div>
+                <div class="box info">
+                    <strong>username 命名規則要先知道：</strong><br>
+                    username 只能用英文、數字、底線，不能有空白。<br>
+                    而且一定要以 <code>bot</code> 結尾，例如 <code>my_lobster_ai_bot</code>。<br>
+                    建議你把 <code>Bot username</code> 和 <code>Bot Token</code> 都一起記到 <code>龍蝦課程-帳號清單.txt</code>。
+                </div>
+                <div class="box info">
+                    <strong>這一頁做完後，你手上應該要有兩個東西：</strong><br>
+                    1. 你的 <code>Bot username</code><br>
+                    2. 你的 <code>Bot Token</code><br>
+                    這兩個都要先存好，再進下一頁連接 OpenClaw。
                 </div>
                 <span class="slide-number">4 / 10</span>
             </div>
@@ -290,9 +311,30 @@ openclaw gateway restart</pre>
                 <div class="box info">
                     💡 <strong>為什麼只要一個 Token？</strong>LINE 需要設定 Channel ID、Channel Secret、Channel Access Token 三個值。Telegram 架構更簡潔——一個 Bot Token 就包含所有驗證資訊。
                 </div>
+                <div class="box info">
+                    <strong>這三個指令要在哪裡打？</strong><br>
+                    直接在你安裝 OpenClaw 時用的 PowerShell 或終端機輸入。<br>
+                    如果你前一章 LINE 已經能正常用，代表 Gateway 和對外網址大多都已經有了，現在通常只要補裝 Telegram 外掛、貼 Token、重啟就好。
+                </div>
+                <div class="box warning">
+                    <strong>指令要一行一行執行：</strong><br>
+                    先安裝外掛，再設定 Token，最後才重啟 Gateway。<br>
+                    不要只改完 Token 就直接跳去 Telegram 測試，重啟前新設定可能還沒生效。
+                </div>
 
                 <h3>Webhook 自動設定</h3>
                 <p>Telegram 外掛啟動時會<strong>自動</strong>幫你設定好 Webhook。不需要像 LINE 那樣手動填 URL。外掛會偵測你的對外網址（ngrok / Cloudflare Tunnel / Codespaces），然後自動註冊。</p>
+                <div class="box warning">
+                    <strong>但有一個前提：</strong><br>
+                    你的 OpenClaw 本來就要能從外部連進來。<br>
+                    也就是說，地端安裝的人要確認 <code>ngrok</code> 或 Cloudflare Tunnel 還在跑；Codespaces / Zeabur 則要確認公開網址還有效。<br>
+                    如果前一章 LINE 已經能正常回覆，這裡通常就沒問題。
+                </div>
+                <div class="box info">
+                    <strong>怎麼知道這一步大致成功？</strong><br>
+                    最簡單的判斷方式就是：重啟後直接去 Telegram 搜尋你的 Bot，按 <strong>START</strong>。<br>
+                    如果很快就收到配對碼，通常代表 Telegram 外掛和 Webhook 都已經接上了。
+                </div>
                 <span class="slide-number">5 / 10</span>
             </div>
         </div>
@@ -302,7 +344,7 @@ openclaw gateway restart</pre>
             <div class="content-card">
                 <h2>7.5 第一次 Telegram 對話</h2>
 
-                <img src="images/CH07/ch07_03_telegram_chat.png" alt="Telegram 首次對話" class="screenshot">
+                <img src="images/CH07/ch07_03_telegram_first_chat.png" alt="Telegram 首次對話" class="screenshot">
 
                 <h3>對話流程</h3>
                 <table>
@@ -324,6 +366,18 @@ openclaw gateway restart</pre>
 
                 <div class="box success">
                     ✅ 龍蝦是同一隻龍蝦，只是換了一個窗口和你聊天。回覆和在 LINE 上一樣流暢自然。
+                </div>
+                <div class="box info">
+                    <strong>如果你在 Telegram 找不到自己的 Bot：</strong><br>
+                    先回 BotFather 記下你剛剛設定的 <code>username</code>。<br>
+                    Telegram 搜尋時通常要用 <code>@username</code> 去找，例如 <code>@my_lobster_ai_bot</code>。<br>
+                    找到後先按 <strong>START</strong>，不按開始，Bot 不會主動回你。
+                </div>
+                <div class="box info">
+                    <strong>配對碼要在哪裡輸入？</strong><br>
+                    配對碼不是回到 Telegram 裡輸入，而是回到你剛剛執行 OpenClaw 的 PowerShell / 終端機。<br>
+                    在那個視窗輸入 <code>openclaw pairing approve telegram 配對碼</code>。<br>
+                    輸入完成後，再回 Telegram 傳第二次訊息測試。
                 </div>
                 <span class="slide-number">6 / 10</span>
             </div>
@@ -368,6 +422,11 @@ openclaw gateway restart</pre>
                 <div class="box warning">
                     ⚠️ <strong>隱私模式</strong>：Bot 預設開啟 Privacy Mode，在群組中只能看到 <code>@</code> 它的訊息和 <code>/</code> 指令。要關閉可到 BotFather 輸入 <code>/setprivacy</code>，但請謹慎使用。
                 </div>
+                <div class="box info">
+                    <strong>群組裡沒反應時先檢查：</strong><br>
+                    先確認你是不是有用 <code>@你的Bot名稱</code> 明確叫它。<br>
+                    如果只是直接丟一句話，Privacy Mode 開著時，Bot 可能根本看不到。
+                </div>
                 <span class="slide-number">7 / 10</span>
             </div>
         </div>
@@ -406,6 +465,11 @@ openclaw gateway restart</pre>
                     <tr><td>分享給朋友或同事用</td><td>LINE</td><td>對方不用額外安裝 App</td></tr>
                     <tr><td>在外面用手機遠端操控電腦</td><td>Telegram</td><td>操控瀏覽器、管理檔案、安裝 Skills（詳見 CH18）</td></tr>
                 </table>
+                <div class="box info">
+                    <strong>這裡最容易搞混的一點：</strong><br>
+                    雖然龍蝦的知識和部分記憶是共用的，但 <strong>LINE 配對</strong> 和 <strong>Telegram 配對</strong> 仍然是兩次獨立授權。<br>
+                    也就是說，LINE 已經能聊，不代表 Telegram 端就不用再配對一次。
+                </div>
                 <span class="slide-number">8 / 10</span>
             </div>
         </div>
@@ -438,6 +502,12 @@ openclaw gateway restart</pre>
                         <h3>Q4：Telegram 和 LINE 會互相干擾嗎？</h3>
                         <p><strong>不會</strong>。兩個頻道完全獨立運作。龍蝦收到 LINE 訊息用 LINE 回覆，收到 Telegram 訊息用 Telegram 回覆，不會搞混。</p>
                     </div>
+                </div>
+                <div class="box info">
+                    <strong>新手最實用的排查順序：</strong><br>
+                    先看 BotFather 給的 <code>Token</code> 有沒有貼對。<br>
+                    再看 <code>openclaw gateway restart</code> 之後 Gateway 是否正常。<br>
+                    最後才檢查對外連線（<code>ngrok</code>、Cloudflare、Codespaces、Zeabur）。
                 </div>
                 <span class="slide-number">9 / 10</span>
             </div>

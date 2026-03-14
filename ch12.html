@@ -169,6 +169,11 @@
                         <li>了解 HTTPS 和安全性的基本概念</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 800px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/checklists/CH12-Cloudflare設定檢核表.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">Cloudflare 設定檢核表</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/config-examples/cloudflare-config.yml" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">cloudflare-config.yml 範例</a></p>
+                </div>
                 <span class="slide-number">1 / 12</span>
             </div>
         </div>
@@ -215,6 +220,12 @@
 
                 <div class="box success">
                     ✅ 唯一的「代價」是你需要有一個域名。好消息是，域名很便宜——有些 <code>.xyz</code> 域名第一年只要 30-50 元台幣！
+                </div>
+                <div class="box info">
+                    <strong>這一章先記一句白話：</strong><br>
+                    <strong>ngrok</strong> 是先用的臨時網址。<br>
+                    <strong>Cloudflare Tunnel</strong> 是把你的正式網址穩定接到 OpenClaw。<br>
+                    所以後面做的事，本質上就是把「亂碼網址」換成「你自己的固定網址」。
                 </div>
                 <span class="slide-number">3 / 12</span>
             </div>
@@ -311,15 +322,43 @@ Cloudflare 全球網路（幫你接收訊息）
                     <li>Dashboard 點 <strong>「Add a site」</strong>，輸入域名</li>
                     <li>選擇 <strong>「Free」</strong> 方案</li>
                     <li>Cloudflare 會給你兩組 <strong>Nameserver</strong></li>
-                    <li>到域名商把 Nameserver 改成 Cloudflare 給的那兩組</li>
+                    <li>到你買網域的網站後台，把原本的 Nameserver 全部刪掉，改填成 Cloudflare 給你的那兩組</li>
                     <li>回到 Cloudflare 點 <strong>「Done, check nameservers」</strong></li>
                     <li>等待 DNS 生效（幾分鐘到幾小時不等）</li>
                 </ol>
 
                 <img src="images/CH12/ch12_03_cloudflare_nameserver.png" alt="Nameserver 設定" class="screenshot">
 
+                <div class="box warning">
+                    <strong>這句話到底是什麼意思？</strong><br>
+                    假設你是在 Namecheap、GoDaddy、Gandi 這些地方買的網域，網域目前一定有自己的 Nameserver 設定。<br>
+                    Cloudflare 會顯示兩個新的 Nameserver，例如：<code>alice.ns.cloudflare.com</code>、<code>bob.ns.cloudflare.com</code>。<br>
+                    你要做的事就是：到網域商後台找到 <strong>Nameservers / DNS 伺服器</strong> 設定頁，把原本的值換成 Cloudflare 給的這兩個。
+                </div>
+                <div class="box info">
+                    <strong>學生版直接照這個順序做：</strong><br>
+                    1. 先在 <strong>Cloudflare</strong> 畫面抄下那兩組 Nameserver。<br>
+                    2. 再登入你買網域的網站後台，例如 Namecheap / GoDaddy。<br>
+                    3. 找到該網域的 <strong>Nameservers / DNS 伺服器</strong> 設定頁。<br>
+                    4. 把原本的 Nameserver 全部刪掉。<br>
+                    5. 改貼成 Cloudflare 給你的那兩組。<br>
+                    6. 儲存後，再回 Cloudflare 按 <strong>Done, check nameservers</strong>。<br>
+                    7. 等狀態變成 <strong>Active</strong>，才算真的完成。
+                </div>
+                <div class="box info">
+                    <strong>這一頁最容易搞混的是：</strong><br>
+                    你不是在 Cloudflare 裡直接改掉 Nameserver。<br>
+                    你是先在 Cloudflare <strong>看到新的 Nameserver</strong>，再回到你原本買網域的網站去修改。<br>
+                    也就是會來回兩個網站，不是只待在同一個後台。
+                </div>
+
                 <div class="box info">
                     💡 DNS 切換需要時間「傳播」到全球的 DNS 伺服器。Cloudflare Dashboard 顯示域名狀態為「Active」就表示成功了。
+                </div>
+                <div class="box info">
+                    <strong>這一頁哪些在瀏覽器做？</strong><br>
+                    申請 Cloudflare、Add a site、看 Nameserver、按 <strong>Done, check nameservers</strong>，全部都是在瀏覽器後台做。<br>
+                    只有去原本的網域商網站改 Nameserver 時，才會跳到另一個網站後台。
                 </div>
                 <span class="slide-number">6 / 12</span>
             </div>
@@ -336,10 +375,21 @@ winget install Cloudflare.cloudflared
 
 # 確認安裝成功
 cloudflared --version</pre>
+                <div class="box info">
+                    <strong>這幾行都是在 PowerShell / 終端機裡輸入。</strong><br>
+                    不是在 Cloudflare 網站裡貼，也不是在 LINE 後台裡做。<br>
+                    這一頁開始看到的 <code>cloudflared ...</code> 都是本機指令。
+                </div>
 
                 <h3>步驟二：登入 Cloudflare</h3>
                 <pre>cloudflared tunnel login</pre>
                 <p>會自動打開瀏覽器，登入帳號後選擇域名。成功後電腦上會存一個認證檔案（<code>cert.pem</code>）。</p>
+                <div class="box info">
+                    <strong>這一步是「終端機啟動，瀏覽器完成」：</strong><br>
+                    先在 PowerShell 輸入 <code>cloudflared tunnel login</code>。<br>
+                    接著瀏覽器會自己打開，你在瀏覽器裡登入 Cloudflare 並選擇網域。<br>
+                    做完後再回終端機繼續下一步。
+                </div>
 
                 <h3>步驟三：建立隧道</h3>
                 <pre># 建立隧道（lobster 是自取的名字）
@@ -349,7 +399,27 @@ cloudflared tunnel create lobster
 cloudflared tunnel route dns lobster bot.mylobster.xyz</pre>
 
                 <div class="box info">
-                    💡 建立隧道後會顯示一串 <strong>UUID</strong>（如 <code>a1b2c3d4-5678-90ab-cdef-1234567890ab</code>），記下來等一下設定檔要用。
+                    💡 這一步做完後，Cloudflare 會建立一條名字叫 <code>lobster</code> 的 Tunnel，並顯示一串 <strong>UUID</strong>（如 <code>a1b2c3d4-5678-90ab-cdef-1234567890ab</code>）。這個 UUID 等一下要填進 <code>config.yml</code>。
+                </div>
+
+                <div class="box warning">
+                    <strong>你會得到兩個重要結果：</strong><br>
+                    1. 隧道名稱：<code>lobster</code>（你可以自己改名，但後面指令要一致）<br>
+                    2. 認證檔：<code>C:\Users\你的使用者名稱\.cloudflared\隧道UUID.json</code><br>
+                    這個 <code>.json</code> 檔是自動產生的，不用自己手打。
+                </div>
+
+                <div class="box info">
+                    <strong>這兩行各在做什麼？</strong><br>
+                    <code>cloudflared tunnel create lobster</code>：在本機建立 Tunnel，並產生憑證檔。<br>
+                    <code>cloudflared tunnel route dns lobster bot.mylobster.xyz</code>：把你的子網域 <code>bot.mylobster.xyz</code> 指到這條 Tunnel。
+                </div>
+
+                <div class="box warning">
+                    <strong><code>bot.mylobster.xyz</code> 是什麼？</strong><br>
+                    這裡的 <code>bot.mylobster.xyz</code> <strong>只是示範</strong>，意思是「你自己網域底下的一個子網域」。<br>
+                    例如你有網域 <code>example.com</code>，就可以改成 <code>bot.example.com</code>、<code>lobster.example.com</code>、<code>line.example.com</code>。<br>
+                    重點不是一定要叫 <code>bot</code>，而是這個名稱必須屬於你已經加到 Cloudflare 的網域。
                 </div>
                 <span class="slide-number">7 / 12</span>
             </div>
@@ -370,6 +440,30 @@ ingress:
     service: http://localhost:18789
   - service: http_status:404</pre>
 
+                <div class="box warning">
+                    <strong>這一步到底要怎麼做？</strong><br>
+                    1. 打開記事本<br>
+                    2. 把上面這段內容整段複製貼上<br>
+                    3. 把裡面的 <code>你的隧道UUID</code> 改成剛剛建立 Tunnel 時看到的那串 UUID<br>
+                    4. 把 <code>bot.mylobster.xyz</code> 改成你自己的子網域，例如 <code>bot.example.com</code><br>
+                    5. 存檔成 <code>config.yml</code>，放到 <code>C:\Users\你的使用者名稱\.cloudflared\</code> 裡
+                </div>
+
+                <div class="box info">
+                    <strong>Windows 最簡單做法：</strong><br>
+                    在 PowerShell 輸入 <code>notepad $env:USERPROFILE\.cloudflared\config.yml</code><br>
+                    如果檔案不存在，記事本會問你要不要建立新檔，按「是」就好。
+                </div>
+
+                <div class="box info">
+                    <strong>每一行在做什麼？</strong><br>
+                    <code>tunnel:</code> 這一行填你的 Tunnel UUID。<br>
+                    <code>credentials-file:</code> 這一行填剛剛自動產生的那個 <code>.json</code> 憑證檔路徑。<br>
+                    <code>hostname:</code> 這一行填你要給龍蝦用的正式網址。<br>
+                    <code>service: http://localhost:18789</code> 這一行代表外部連進來後，要轉到你本機的 OpenClaw Gateway。<br>
+                    <code>http_status:404</code> 這一行是保底規則，其他沒匹配到的網址一律回 404。
+                </div>
+
                 <table>
                     <tr><th>設定項目</th><th>說明</th></tr>
                     <tr><td><code>tunnel</code></td><td>你的隧道 UUID</td></tr>
@@ -379,11 +473,25 @@ ingress:
                     <tr><td><code>http_status:404</code></td><td>其他所有請求回 404（安全考量）</td></tr>
                 </table>
 
+                <div class="box warning">
+                    <strong>範例：</strong><br>
+                    如果你的 UUID 是 <code>a1b2c3d4-5678-90ab-cdef-1234567890ab</code>，網域是 <code>bot.example.com</code>，那就改成：<br><br>
+                    <code>tunnel: a1b2c3d4-5678-90ab-cdef-1234567890ab</code><br>
+                    <code>credentials-file: C:\Users\你的使用者名稱\.cloudflared\a1b2c3d4-5678-90ab-cdef-1234567890ab.json</code><br>
+                    <code>hostname: bot.example.com</code>
+                </div>
+
                 <h3>步驟五：啟動隧道</h3>
                 <pre>cloudflared tunnel run lobster</pre>
 
                 <div class="box success">
                     ✅ 看到四條 <strong>「Connection registered」</strong> 就表示隧道通了！
+                </div>
+                <div class="box info">
+                    <strong>這一步做完先不要急著關視窗：</strong><br>
+                    如果你現在是手動執行 <code>cloudflared tunnel run lobster</code>，這個 PowerShell 視窗要先保持開著。<br>
+                    因為隧道現在就是跑在這個視窗裡。<br>
+                    等你後面真的安裝成 Windows 服務後，才可以不用靠這個視窗常駐。
                 </div>
                 <span class="slide-number">8 / 12</span>
             </div>
@@ -404,6 +512,12 @@ https://bot.mylobster.xyz
 curl https://bot.mylobster.xyz/health</pre>
 
                 <p>如果龍蝦有在運行（<code>openclaw gateway start</code>），你應該會看到龍蝦的回應。</p>
+                <div class="box info">
+                    <strong>最實際的測法：</strong><br>
+                    先確認 OpenClaw Gateway 本身有在跑。<br>
+                    再用瀏覽器打開你的正式網址，或直接去 LINE 後台按 Webhook Verify。<br>
+                    如果 Verify 成功，對上課來說就已經很夠用了。
+                </div>
 
                 <h3>安裝為 Windows 服務（開機自動啟動）</h3>
                 <pre># 安裝為服務
@@ -417,6 +531,10 @@ cloudflared service restart</pre>
 
                 <div class="box success">
                     ✅ 安裝為服務後，每次電腦開機隧道就會自動啟動，不用手動操作！
+                </div>
+                <div class="box warning">
+                    <strong>這幾行還是在 PowerShell 輸入。</strong><br>
+                    安裝成服務之後，之後如果你有改 <code>config.yml</code>，記得不是只存檔就好，還要跑 <code>cloudflared service restart</code>。
                 </div>
                 <span class="slide-number">9 / 12</span>
             </div>
@@ -432,8 +550,8 @@ cloudflared service restart</pre>
 
                 <h3>更新 LINE Webhook</h3>
                 <ol>
-                    <li>到 LINE 官方帳號管理後台（<code>manager.line.biz</code>）</li>
-                    <li>進入 Channel → <strong>Messaging API</strong> 分頁</li>
+                    <li>到瀏覽器打開 LINE 官方帳號後台（<code>manager.line.biz</code>）</li>
+                    <li>進入你的官方帳號，找到 <strong>Messaging API / Webhook settings</strong> 相關區塊</li>
                     <li>把 Webhook URL 改成新域名：</li>
                 </ol>
                 <pre>舊的：https://a1b2c3d4.ngrok-free.app/line/webhook
@@ -442,6 +560,11 @@ cloudflared service restart</pre>
                     <li>按 <strong>「Verify」</strong> → 看到 <strong>「Success」</strong> 就大功告成</li>
                     <li>確認 <strong>「Use webhook」</strong> 是開啟的</li>
                 </ol>
+                <div class="box info">
+                    <strong>這一段是在瀏覽器後台做，不是在 PowerShell 裡做。</strong><br>
+                    學生最容易漏的是：網址最後面一定要帶 <code>/line/webhook</code>。<br>
+                    不是只貼 <code>https://bot.mylobster.xyz</code>。
+                </div>
 
                 <h3>更新 Telegram Webhook</h3>
                 <pre># 更新 Webhook 網址
@@ -449,6 +572,12 @@ openclaw config set telegram.webhookUrl https://bot.mylobster.xyz
 
 # 重啟 Gateway
 openclaw gateway restart</pre>
+                <div class="box info">
+                    <strong>這兩行就換回 PowerShell / 終端機輸入。</strong><br>
+                    也就是說：<br>
+                    LINE Webhook 在瀏覽器後台改。<br>
+                    Telegram Webhook 在終端機用 <code>openclaw config set ...</code> 改。
+                </div>
 
                 <div class="box success">
                     ✅ <strong>從此以後你不需要再改 Webhook 了！</strong>不管電腦重開幾次、關機多少天，網址永遠不變。

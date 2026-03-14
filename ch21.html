@@ -167,6 +167,12 @@
                         <li>實戰打造全自動 AI 助手</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 820px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/heartbeat-templates/full-secretary.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">全自動 AI 秘書範本</a></p>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/heartbeat-templates/teacher-edition.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">老師版 HEARTBEAT 範本</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/heartbeat-templates/system-maintenance.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">系統維護範本</a></p>
+                </div>
                 <span class="slide-number">1 / 14</span>
             </div>
         </div>
@@ -184,6 +190,19 @@
 - 動作: &lt;要做什麼&gt;
 - 條件: &lt;（可選）什麼情況下才執行&gt;
 - 靜默: &lt;（可選）true/false，不回報執行結果&gt;</pre>
+
+                <div class="box info">
+                    <strong>這一整份內容要寫在哪裡：</strong><br>
+                    寫進 <code>C:\Users\你的名稱\.openclaw\workspace\HEARTBEAT.md</code><br>
+                    如果還沒有這個檔案，可以先在 <strong>PowerShell / 終端機</strong> 輸入：<br>
+                    <code>notepad $env:USERPROFILE\.openclaw\workspace\HEARTBEAT.md</code>
+                </div>
+
+                <div class="box warning">
+                    <strong>改完後不要忘記：</strong><br>
+                    回到 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code>。<br>
+                    不 restart，新的排程和事件規則通常不會生效。
+                </div>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="concept-card">
@@ -224,6 +243,11 @@
                 <div class="box info">
                     💡 不熟 Cron 語法沒關係——OpenClaw 支援<strong>自然語言</strong>排程，它會自動幫你轉換！
                 </div>
+                <div class="box info">
+                    <strong>第一次上手建議：</strong><br>
+                    先用自然語言寫法，例如 <code>每天 07:30</code>、<code>每週一 09:00</code>。<br>
+                    等你真的需要更細的控制，再改用 Cron。
+                </div>
                 <span class="slide-number">3 / 14</span>
             </div>
         </div>
@@ -245,6 +269,17 @@
 - 通道: line
 - 對象: C1234567890abcdef（群組 ID）
 - 動作: 傳送早安問候和今日重點新聞</pre>
+                <div class="box info">
+                    <strong>如果你還沒有自己的 <code>userId</code> 或 <code>groupId</code>：</strong><br>
+                    回到 <strong>CH6 的 6.10 到 6.13</strong>，那裡有完整的取得方法。
+                </div>
+
+                <div class="box warning">
+                    <strong>這一頁最容易出錯的地方：</strong><br>
+                    <code>通道</code> 寫的是 <code>line</code> / <code>telegram</code> / <code>discord</code> 這種固定值。<br>
+                    <code>對象</code> 才是你自己的 <code>userId</code> 或 <code>groupId</code>。<br>
+                    不要把兩者寫反。
+                </div>
 
                 <h3>條件執行——不是每次都做</h3>
                 <pre>## 下雨提醒
@@ -259,6 +294,13 @@
 
                 <div class="box info">
                     💡 龍蝦會先檢查條件是否成立，<strong>條件成立才執行</strong>。不會收到一堆不需要的通知。
+                </div>
+                <div class="box success">
+                    <strong>第一次測試最穩的做法：</strong><br>
+                    先不要做太複雜條件。<br>
+                    先建一條簡單規則，例如：<br>
+                    <code>每天 21:00 推播一句「測試成功」到 LINE</code><br>
+                    先確認能收到，再慢慢加天氣、新聞、股價條件。
                 </div>
                 <span class="slide-number">4 / 14</span>
             </div>
@@ -294,6 +336,12 @@
                 <div class="box success">
                     ✅ 把多個排程組合起來，龍蝦就變成你的<strong>每日 AI 秘書</strong>——從早到晚幫你整理資訊！
                 </div>
+                <div class="box info">
+                    <strong>這一頁要先有前提：</strong><br>
+                    如果你想做完整的 AI 秘書版本，前面章節的技能要先接好。<br>
+                    例如：<code>weather</code>、<code>news</code>、<code>google-calendar</code>。<br>
+                    沒接好的功能先拿掉，先讓最基本的一兩個通知跑起來。
+                </div>
                 <span class="slide-number">5 / 14</span>
             </div>
         </div>
@@ -327,6 +375,11 @@
                     <li><strong>每月最後一天 20:00</strong> — 月度回顧報告</li>
                     <li><strong>每天 08:00（條件）</strong> — 查生日清單，有人生日就提醒</li>
                 </ul>
+                <div class="box success">
+                    <strong>如果你想立即測，不想等到隔天早上：</strong><br>
+                    把這份早安報告先暫時改成「5 分鐘後」或「今晚 21:00」。<br>
+                    確認會收到之後，再改回正式時間。
+                </div>
                 <span class="slide-number">6 / 14</span>
             </div>
         </div>
@@ -361,6 +414,12 @@
                 <div class="box info">
                     💡 <strong>靜默模式</strong>：背景任務用 <code>靜默: true</code>，正常不打擾你，有異常才通知。
                 </div>
+                <div class="box warning">
+                    <strong>這類維護任務最適合放在哪：</strong><br>
+                    放在 24 小時會開著的那台機器。<br>
+                    如果你的主機常關機，排程時間到時它根本不會執行。<br>
+                    所以這類任務特別適合搭配 <strong>CH19 的雲端 Primary</strong>。
+                </div>
                 <span class="slide-number">7 / 14</span>
             </div>
         </div>
@@ -389,6 +448,20 @@
                     <tr><td><code>keyword-detected</code></td><td>訊息含特定關鍵字</td><td>特殊指令觸發</td></tr>
                     <tr><td><code>price-alert</code></td><td>股價/匯率觸發條件</td><td>投資警報</td></tr>
                 </table>
+                <div class="box warning">
+                    <strong>事件驅動不是只寫進 HEARTBEAT.md 就一定會動。</strong><br>
+                    它還要有對應來源真的存在。<br>
+                    例如：
+                    <code>email-received</code> 要先接好 Email 相關能力。<br>
+                    <code>calendar-event</code> 要先接好 Google Calendar。<br>
+                    <code>file-changed</code> 要先有 Desktop / 檔案能力。
+                </div>
+                <div class="box info">
+                    <strong>事件驅動規則也是存在哪裡？</strong><br>
+                    一樣是寫在同一份 <code>HEARTBEAT.md</code> 裡。<br>
+                    不是另外再建一個事件檔。<br>
+                    Windows 路徑就是：<code>C:\Users\你的名稱\.openclaw\workspace\HEARTBEAT.md</code>
+                </div>
                 <span class="slide-number">8 / 14</span>
             </div>
         </div>
@@ -435,6 +508,19 @@
                 <div class="box warning">
                     ⚠️ <strong>欄位名稱</strong>（事件、條件、通道、靜默、動作）是固定關鍵字不能改；<strong>值的內容</strong>用你自己的話寫就好。
                 </div>
+                <div class="box info">
+                    <strong>這一頁最適合怎麼用：</strong><br>
+                    直接整段複製到 <code>HEARTBEAT.md</code>，先把欄位名稱保留不動。<br>
+                    你只改 <strong>事件後面的值</strong>、<strong>條件內容</strong>、<strong>動作內容</strong> 就好。
+                </div>
+                <div class="box info">
+                    <strong>也就是說：</strong><br>
+                    你前面寫的定時任務、這裡寫的事件驅動，都是放在同一份 <code>HEARTBEAT.md</code>。<br>
+                    同一份檔案裡可以同時有：
+                    <code>排程:</code> 任務<br>
+                    也可以有：
+                    <code>事件:</code> 任務
+                </div>
                 <span class="slide-number">10 / 14</span>
             </div>
         </div>
@@ -474,6 +560,11 @@
 - 事件: webhook-received
 - 條件: 來源是 GitHub，事件類型 issues.opened
 - 動作: 自動判斷 bug/feature，友善初始回覆</pre>
+                <div class="box info">
+                    <strong>第一次做事件驅動，建議先選最容易成功的一種。</strong><br>
+                    如果你前面已經接好 Google Calendar，就先做 <code>calendar-event</code>。<br>
+                    如果還沒接 Email / GitHub / 檔案監看，就不要一開始挑那些最複雜的。
+                </div>
                 <span class="slide-number">11 / 14</span>
             </div>
         </div>
@@ -548,6 +639,14 @@
                     <li><strong>關機還會執行嗎？</strong>不會，所以用 Nodes 把主控放雲端</li>
                     <li><strong>可以測試嗎？</strong><code>openclaw heartbeat run "早安報告"</code></li>
                 </ul>
+                <div class="box success">
+                    <strong>這章最穩的排查順序：</strong><br>
+                    1. 先確認 <code>HEARTBEAT.md</code> 放在正確位置。<br>
+                    2. 改完後先 <code>openclaw gateway restart</code>。<br>
+                    3. 用 <code>openclaw heartbeat run "任務名稱"</code> 手動測一次。<br>
+                    4. 確定推播對象的 <code>userId</code> / <code>groupId</code> 沒寫錯。<br>
+                    5. 最後再等真正的排程時間到。
+                </div>
                 <span class="slide-number">13 / 14</span>
             </div>
         </div>

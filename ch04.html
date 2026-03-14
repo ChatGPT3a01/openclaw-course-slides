@@ -217,6 +217,13 @@
                 <h3>【步驟 1】開啟 Claude Code</h3>
                 <pre>cd D:\
 claude</pre>
+                <div class="box info">
+                    <strong>學生操作順序：</strong><br>
+                    1. 先打開 PowerShell<br>
+                    2. 輸入 <code>cd D:\</code><br>
+                    3. 再輸入 <code>claude</code><br>
+                    4. 看到 Claude Code 輸入游標後，才把下面那段中文需求貼進去
+                </div>
 
                 <h3>【步驟 2】請 Claude Code 建立專案</h3>
                 <pre style="font-size: 15px;">幫我在 D 槽建立一個專案資料夾叫做「lobster-profile-generator」，
@@ -236,6 +243,11 @@ lobster-profile-generator/
                 <div class="box warning">
                     ⚡ <strong>為什麼現在就要 commit？</strong>因為接下來 Antigravity 會大幅修改這些檔案。如果改壞了，我們可以用 Git 回到這個「乾淨」的起點。養成「做完一個階段就 commit 一次」的習慣，是很好的工作方式。
                 </div>
+                <div class="box info">
+                    <strong>這一頁做完後，你應該檢查什麼？</strong><br>
+                    <code>D:\lobster-profile-generator</code> 真的存在，裡面有 <code>index.html</code>、<code>style.css</code>、<code>script.js</code>、<code>README.md</code>。<br>
+                    如果 Claude 也成功初始化 Git，資料夾裡還會有隱藏的 <code>.git</code>。
+                </div>
                 <span class="slide-number">3 / 10</span>
             </div>
         </div>
@@ -248,6 +260,30 @@ lobster-profile-generator/
 
                 <h3>在 AI 面板（Ctrl+L）中描述需求</h3>
                 <p>告訴 Antigravity 你想要什麼：</p>
+
+                <pre style="font-size: 15px;">請幫我製作一個「龍蝦 AI 個人檔案產生器」網頁，直接修改目前專案裡的
+index.html、style.css、script.js。
+
+需求如下：
+1. 頁面標題是「🦞 龍蝦 AI 個人檔案產生器」
+2. 整體風格要現代、簡潔、有質感
+3. 背景使用深藍漸層：#1a1a2e 到 #16213e
+4. 主要按鈕使用橘紅色：#e94560
+5. 中間放一張白色圓角卡片，帶陰影
+6. 表單欄位要包含：
+   - 龍蝦名字
+   - 說話風格（下拉選單）
+   - 主要語言（下拉選單）
+   - 個性描述（多行文字）
+   - 擅長領域（可多選）
+   - 回覆長度偏好
+7. 需要有「產生個人檔案」按鈕
+8. 需要有「複製到剪貼簿」按鈕
+9. 按下產生按鈕後，要在下方輸出完整的 IDENTITY.md 文字內容
+10. 輸出的文字區塊要用等寬字體，方便直接複製
+11. 手機版也要能正常顯示
+
+請完成可直接在瀏覽器打開使用的版本。</pre>
 
                 <table>
                     <tr><th>設計項目</th><th>規格</th></tr>
@@ -289,12 +325,52 @@ lobster-profile-generator/
             </div>
         </div>
 
-        <!-- Slide 5: 產生器預覽 + 微調 -->
+        <!-- Slide 5: 可直接複製的提示詞 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>4.3.1 可直接複製貼上的提示詞</h2>
+                <p>這一頁不講解，直接整段複製到 Antigravity 的 AI 面板即可。</p>
+
+                <pre style="font-size: 15px;">請幫我製作一個「龍蝦 AI 個人檔案產生器」網頁，直接修改目前專案裡的
+index.html、style.css、script.js。
+
+需求如下：
+1. 頁面標題是「🦞 龍蝦 AI 個人檔案產生器」
+2. 整體風格要現代、簡潔、有質感
+3. 背景使用深藍漸層：#1a1a2e 到 #16213e
+4. 主要按鈕使用橘紅色：#e94560
+5. 中間放一張白色圓角卡片，帶陰影
+6. 表單欄位要包含：
+   - 龍蝦名字
+   - 說話風格（下拉選單）
+   - 主要語言（下拉選單）
+   - 個性描述（多行文字）
+   - 擅長領域（可多選）
+   - 回覆長度偏好
+7. 需要有「產生個人檔案」按鈕
+8. 需要有「複製到剪貼簿」按鈕
+9. 按下產生按鈕後，要在下方輸出完整的 IDENTITY.md 文字內容
+10. 輸出的文字區塊要用等寬字體，方便直接複製
+11. 手機版也要能正常顯示
+
+請完成可直接在瀏覽器打開使用的版本。</pre>
+
+                <div class="box info">
+                    💡 複製方式：把上面整段從第一行拖到最後一行，完整複製後貼到 Antigravity。
+                </div>
+                <span class="slide-number">5 / 11</span>
+            </div>
+        </div>
+
+        <!-- Slide 6: 產生器預覽 + 微調 -->
         <div class="slide">
             <div class="content-card">
                 <h2>4.3 網頁成果預覽與微調</h2>
 
-                <img src="images/CH04/ch04_01_generator_preview.png" alt="龍蝦個人檔案產生器網頁成果" class="screenshot">
+                <a href="https://chatgpt3a01.github.io/lobster-workspace-generator/?fbclid=IwY2xjawQiG0VleHRuA2FlbQIxMABicmlkETFxZHFHU2cyckttT0sxbjdXc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgvz-D5_DPsxOW6UgJQRK4GnEWEVjEJInRPAYHQw9mk1i9duzPauon_b-ozY_aem_i7Z6XDuk77yzPWDQuDqVYQ" target="_blank" style="text-decoration:none;">
+                    <img src="images/CH04/ch04_01_generator_preview.png" alt="龍蝦個人檔案產生器網頁成果" class="screenshot">
+                </a>
+                <p style="text-align:center; margin-top: 8px;"><a href="https://chatgpt3a01.github.io/lobster-workspace-generator/?fbclid=IwY2xjawQiG0VleHRuA2FlbQIxMABicmlkETFxZHFHU2cyckttT0sxbjdXc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHgvz-D5_DPsxOW6UgJQRK4GnEWEVjEJInRPAYHQw9mk1i9duzPauon_b-ozY_aem_i7Z6XDuk77yzPWDQuDqVYQ" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">龍蝦AI 世界觀與人格生成器</a></p>
 
                 <p>第一次生成的結果可能不完美。直接在 AI 面板裡用中文告訴它要怎麼改：</p>
 
@@ -325,11 +401,20 @@ lobster-profile-generator/
 - 永遠保持友善和耐心
 - 不確定的事情要誠實說「我不確定」
 - 保護使用者的隱私</pre>
-                <span class="slide-number">5 / 10</span>
+                <div class="box info">
+                    💾 <strong>這一章先存哪裡？</strong>先把產生好的內容存成專案裡的 <code>output/IDENTITY.md</code>。等 CH5 安裝好 OpenClaw 後，再把這份檔案放進龍蝦的 workspace 資料夾正式使用。
+                </div>
+                <div class="box warning">
+                    <strong>實際怎麼存？</strong><br>
+                    在專案裡先建立一個 <code>output</code> 資料夾。<br>
+                    然後把產生器產出的文字內容存成：<code>D:\lobster-profile-generator\output\IDENTITY.md</code><br>
+                    這一章先不要急著放進 OpenClaw，因為龍蝦本體要到 CH5 才安裝。
+                </div>
+                <span class="slide-number">6 / 11</span>
             </div>
         </div>
 
-        <!-- Slide 6: 步驟三——Claude Code 微調 -->
+        <!-- Slide 7: 步驟三——Claude Code 微調 -->
         <div class="slide">
             <div class="content-card">
                 <h2>4.4 步驟三：Claude Code 微調設定檔格式</h2>
@@ -365,11 +450,11 @@ _這是你的龍蝦 AI 的身分設定。
                 <div class="box success">
                     ✅ Claude Code 對文字格式的掌控力非常強——精準修改 JavaScript 字串模板，確保生成的格式符合你的要求。
                 </div>
-                <span class="slide-number">6 / 10</span>
+                <span class="slide-number">7 / 11</span>
             </div>
         </div>
 
-        <!-- Slide 7: 步驟四——Git 版本控制 -->
+        <!-- Slide 8: 步驟四——Git 版本控制 -->
         <div class="slide">
             <div class="content-card">
                 <h2>4.5 步驟四：版本控制</h2>
@@ -394,11 +479,11 @@ _這是你的龍蝦 AI 的身分設定。
                 <div class="box info">
                     💡 這就是 Git 的魅力：你的每一步工作都被記錄下來了，隨時可以回溯。
                 </div>
-                <span class="slide-number">7 / 10</span>
+                <span class="slide-number">8 / 11</span>
             </div>
         </div>
 
-        <!-- Slide 8: 步驟五——產生設定檔 + 使用 -->
+        <!-- Slide 9: 步驟五——產生設定檔 + 使用 -->
         <div class="slide">
             <div class="content-card">
                 <h2>4.6 步驟五：產生你的龍蝦設定檔</h2>
@@ -416,7 +501,7 @@ _這是你的龍蝦 AI 的身分設定。
                 </table>
 
                 <ol>
-                    <li>用瀏覽器打開 <code>index.html</code></li>
+                    <li>用瀏覽器打開 <code>D:\lobster-profile-generator\index.html</code></li>
                     <li>填寫你的龍蝦資料</li>
                     <li>點擊「🦞 產生個人檔案」按鈕</li>
                     <li>點擊「📋 複製到剪貼簿」按鈕</li>
@@ -426,11 +511,27 @@ _這是你的龍蝦 AI 的身分設定。
                 <div class="box warning">
                     ⚡ <strong>保管好這份 IDENTITY.md</strong>：在 CH5 安裝 OpenClaw、CH10 設定龍蝦人格的時候，我們會把這份檔案放到龍蝦的 workspace 資料夾中。
                 </div>
-                <span class="slide-number">8 / 10</span>
+                <div class="box info">
+                    <strong>如果你不知道怎麼「用瀏覽器打開 index.html」：</strong><br>
+                    最簡單的方法是在檔案總管進到 <code>D:\lobster-profile-generator</code>，直接雙擊 <code>index.html</code>。<br>
+                    也可以在網址列輸入 <code>file:///D:/lobster-profile-generator/index.html</code>。
+                </div>
+                <div class="box info">
+                    <strong>回到 Claude Code 後怎麼存檔？</strong><br>
+                    直接對 Claude Code 說：<br>
+                    <code>幫我在 D:\lobster-profile-generator\output\IDENTITY.md 建立檔案，然後把我剛剛複製的內容貼進去存檔</code><br>
+                    或自己用記事本建立這個檔案也可以。
+                </div>
+                <div class="box warning">
+                    <strong>到 CH5 安裝完 OpenClaw 後，正式位置會是：</strong><br>
+                    <code>C:\Users\user\.openclaw\workspace\IDENTITY.md</code><br>
+                    也就是先暫存在專案的 <code>output</code> 裡，之後再搬到龍蝦的 workspace。
+                </div>
+                <span class="slide-number">9 / 11</span>
             </div>
         </div>
 
-        <!-- Slide 9: 三王協作回顧 + 延伸挑戰 -->
+        <!-- Slide 10: 三王協作回顧 + 延伸挑戰 -->
         <div class="slide">
             <div class="content-card">
                 <h2>4.7 三王協作的工作模式</h2>
@@ -477,11 +578,11 @@ Claude Code                    Antigravity
                         <p>用 GitHub Pages 部署到網路上</p>
                     </div>
                 </div>
-                <span class="slide-number">9 / 10</span>
+                <span class="slide-number">10 / 11</span>
             </div>
         </div>
 
-        <!-- Slide 10: 小結與展望 -->
+        <!-- Slide 11: 小結與展望 -->
         <div class="slide">
             <div class="content-card" style="text-align: center;">
                 <h2 style="border: none; text-align: center;">4.10 小結與展望</h2>
@@ -516,7 +617,7 @@ Claude Code                    Antigravity
                         前往 CH5 安裝篇 ➡️
                     </a>
                 </div>
-                <span class="slide-number">10 / 10</span>
+                <span class="slide-number">11 / 11</span>
             </div>
         </div>
 

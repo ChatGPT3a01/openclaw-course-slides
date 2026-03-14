@@ -163,9 +163,14 @@
                     <ul style="margin-bottom: 0;">
                         <li>認識 Twilio 的功能和費用</li>
                         <li>學會申請 Twilio 帳號和電話號碼</li>
-                        <li>設定龍蝦接聽語音通話</li>
+                        <li>設定 OpenClaw 官方 Voice Call Plugin</li>
                         <li>了解語音通話的實際應用場景</li>
                     </ul>
+                </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 820px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="https://docs.openclaw.ai/plugins/voice-call" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">OpenClaw 官方 Voice Call 文件</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../附錄E_Skills設定速查表/book/附錄E_Skills設定速查表.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">附錄 E 設定速查表</a></p>
                 </div>
                 <span class="slide-number">1 / 12</span>
             </div>
@@ -198,6 +203,11 @@
 
                 <div class="box info">
                     💡 這就是 OpenClaw 的 <strong>Twilio 語音通話</strong>功能——給龍蝦一個電話號碼，讓它能接打電話。
+                </div>
+                <div class="box info">
+                    <strong>這章的操作先分兩類記：</strong><br>
+                    申請 Twilio 帳號、買號碼、改 Voice Webhook，都是在 <strong>瀏覽器後台</strong>。<br>
+                    安裝 Voice Call Plugin、修改 OpenClaw 設定、重啟 Gateway，則是在 <strong>PowerShell / 終端機</strong>。
                 </div>
                 <span class="slide-number">2 / 12</span>
             </div>
@@ -273,6 +283,14 @@
                 <pre>Account SID：AC1234567890abcdef...
 Auth Token：（點擊眼睛圖示顯示）</pre>
 
+                <div class="box info">
+                    <strong>這三個值請立刻記到你的帳號清單：</strong><br>
+                    <code>Account SID</code><br>
+                    <code>Auth Token</code><br>
+                    <code>Twilio 電話號碼</code><br>
+                    不要只看過畫面就關掉，後面設定時一定會用到。
+                </div>
+
                 <div class="box warning">
                     ⚠️ <strong>Auth Token 是密碼等級的敏感資訊</strong>，不要分享給任何人，不要放到 GitHub 上。
                 </div>
@@ -305,6 +323,12 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                 <div class="box info">
                     💡 註冊時用的手機號碼會自動驗證，用同一支手機測試通常不需額外操作。
                 </div>
+                <div class="box success">
+                    <strong>這一頁做完後，手上至少要有這 3 樣：</strong><br>
+                    1. <code>Account SID</code><br>
+                    2. <code>Auth Token</code><br>
+                    3. 一個可接聽 Voice 的 Twilio 號碼
+                </div>
                 <span class="slide-number">5 / 12</span>
             </div>
         </div>
@@ -314,27 +338,65 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
             <div class="content-card">
                 <h2>20.3 設定龍蝦接聽語音通話</h2>
 
-                <h3>安裝 Twilio 外掛</h3>
-                <pre>openclaw plugins install twilio-voice</pre>
+                <h3>安裝官方 Voice Call 外掛</h3>
+                <pre>openclaw plugins install @openclaw/voice-call</pre>
                 <div class="box info">
-                    💡 <code>openclaw plugins install</code> 是安裝系統外掛（plugin），跟 CH15 的 <code>npx clawhub@latest install</code> 安裝社群技能（skill）是不同層級的東西。
+                    💡 官方文件目前是用 <code>@openclaw/voice-call</code>。<br>
+                    這是 <strong>plugin</strong>，不是 CH15 那種從 ClawHub 裝的 <strong>skill</strong>。
+                </div>
+                <div class="box info">
+                    <strong>這一行要在 <span style="font-weight:700;">PowerShell / 終端機</span> 輸入。</strong><br>
+                    不要貼到 LINE，也不是在 Twilio 網站裡輸入。
                 </div>
 
-                <h3>設定認證資訊（擇一即可）</h3>
-                <pre>## Twilio（語音通話）
-- Account SID: 你的_Account_SID
-- Auth Token: 你的_Auth_Token
-- 電話號碼: +1xxxxxxxxxx（你買的號碼）
-- 語音語言: zh-TW（中文）
-- TTS 引擎: google（Google 語音合成）</pre>
+                <h3>設定 Voice Call Plugin</h3>
+                <pre>{
+  "plugins": {
+    "entries": {
+      "voice-call": {
+        "enabled": true,
+        "config": {
+          "provider": "twilio",
+          "fromNumber": "+1xxxxxxxxxx",
+          "toNumber": "+8869xxxxxxxx",
+          "twilio": {
+            "accountSid": "ACxxxxxxxx",
+            "authToken": "你的 Auth Token"
+          },
+          "serve": {
+            "port": 3334,
+            "path": "/voice/webhook"
+          },
+          "publicUrl": "https://你的公開網址/voice/webhook"
+        }
+      }
+    }
+  }
+}</pre>
+
+                <div class="box info">
+                    <strong>這裡要改觀念：</strong><br>
+                    Voice Call Plugin 的主要設定是放在 <strong>OpenClaw 設定檔</strong> 裡，例如 <code>openclaw.json</code> 的 <code>plugins.entries.voice-call.config</code>。<br>
+                    不是單純只貼一段到 <code>TOOLS.md</code> 就會完成。
+                </div>
+
+                <div class="box info">
+                    <strong>學生版先記這 6 個值：</strong><br>
+                    <code>provider = twilio</code><br>
+                    <code>fromNumber = 你的 Twilio 號碼</code><br>
+                    <code>toNumber = 你自己的測試手機</code><br>
+                    <code>twilio.accountSid</code><br>
+                    <code>twilio.authToken</code><br>
+                    <code>publicUrl = 你的公開 Webhook 網址</code>
+                </div>
 
                 <h3>設定 Webhook</h3>
                 <img src="images/CH20/ch20_03_twilio_webhook.png" alt="Twilio Webhook 設定" class="screenshot">
 
                 <p><strong>Webhook URL 取得方式（擇一）：</strong></p>
                 <ul>
-                    <li><strong>Cloudflare Tunnel（CH12）</strong>：<code>https://lobster.你的域名.com/twilio/voice</code></li>
-                    <li><strong>ngrok（還沒做 CH12 的人）</strong>：執行 <code>ngrok http 18789</code>，URL 為 <code>https://xxxx.ngrok.io/twilio/voice</code></li>
+                    <li><strong>Cloudflare / 固定網域</strong>：<code>https://voice.你的域名.com/voice/webhook</code></li>
+                    <li><strong>ngrok（教學測試）</strong>：公開 <code>serve.port</code> 後得到 <code>https://xxxx.ngrok.app/voice/webhook</code></li>
                 </ul>
 
                 <p>到 Twilio Console 設定：</p>
@@ -351,6 +413,32 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                 </ol>
 
                 <pre>openclaw gateway restart    # 重啟 Gateway</pre>
+                <div class="box warning">
+                    <strong>這裡最容易寫錯的是路徑。</strong><br>
+                    依官方文件，預設 Webhook 路徑是 <code>/voice/webhook</code>。<br>
+                    所以你公開出去的網址也要對應到這條路徑，不要自己改成別的尾巴。
+                </div>
+                <div class="box warning">
+                    <strong>還有一個關鍵：</strong><br>
+                    Voice Call Plugin 是跑在 <strong>Gateway 那台機器</strong> 裡。<br>
+                    如果你用的是遠端 Gateway，就要在那台遠端機器上安裝、設定、重啟，不是在你本機做完就算。
+                </div>
+                <div class="box info">
+                    <strong>Inbound 來電預設不是直接全面開放。</strong><br>
+                    官方文件提到可以用 <code>inboundPolicy</code> 控制誰能打進來。<br>
+                    教學最穩的做法是先設成只允許自己的號碼，例如：<br>
+                    <code>inboundPolicy: "allowlist"</code><br>
+                    <code>allowFrom: ["+8869xxxxxxxx"]</code>
+                </div>
+                <div class="box success">
+                    <strong>最穩的實作順序：</strong><br>
+                    1. 在 Gateway 那台機器安裝 <code>@openclaw/voice-call</code><br>
+                    2. 在 OpenClaw 設定檔填好 <code>provider</code>、<code>fromNumber</code>、<code>accountSid</code>、<code>authToken</code><br>
+                    3. 先把來電限制設成只允許自己的測試號碼<br>
+                    4. 去 Twilio 後台把 Voice Webhook 改成 <code>/voice/webhook</code><br>
+                    5. 回 PowerShell 輸入 <code>openclaw gateway restart</code><br>
+                    5. 用你自己的手機先打第一通測試電話
+                </div>
                 <span class="slide-number">6 / 12</span>
             </div>
         </div>
@@ -364,16 +452,22 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                 <table style="font-size: 17px;">
                     <tr><th style="width: 5%;">#</th><th style="width: 35%;">檢查項目</th><th>操作方式</th></tr>
                     <tr><td>1</td><td>Gateway 有在跑嗎？</td><td><code>openclaw gateway status</code> 應顯示 Running</td></tr>
-                    <tr><td>2</td><td>Webhook URL 正確嗎？</td><td>在 Twilio Console 檢查，結尾要是 <code>/twilio/voice</code></td></tr>
+                    <tr><td>2</td><td>Webhook URL 正確嗎？</td><td>在 Twilio Console 檢查，結尾要是 <code>/voice/webhook</code></td></tr>
                     <tr><td>3</td><td>ngrok / Tunnel 有在跑嗎？</td><td>確認終端機還開著、URL 還有效</td></tr>
                     <tr><td>4</td><td>Twilio 有錯誤紀錄嗎？</td><td><strong>Monitor → Logs → Errors</strong> 查看</td></tr>
                     <tr><td>5</td><td>手機號碼已驗證嗎？</td><td>試用帳號需先在 <strong>Verified Caller IDs</strong> 驗證</td></tr>
                     <tr><td>6</td><td>聽到英文語音提示？</td><td>這是試用帳號正常現象，不是錯誤</td></tr>
-                    <tr><td>7</td><td>接通但沒聲音？</td><td>檢查 TOOLS.md 的 TTS 引擎設定和 API Key</td></tr>
+                    <tr><td>7</td><td>接通但沒聲音？</td><td>先檢查 Voice Call Plugin 的 TTS 設定；通話通常會吃核心 <code>messages.tts</code> 或插件覆寫的 <code>tts</code> 設定</td></tr>
                 </table>
 
                 <div class="box success">
                     ✅ 大部分問題都是 Webhook URL 填錯或 Gateway 沒啟動造成的，修正後重試即可。
+                </div>
+                <div class="box warning">
+                    <strong>第一通測試建議這樣做：</strong><br>
+                    用你自己已驗證的手機，直接撥打那個 Twilio 號碼。<br>
+                    如果完全沒接通，先不要急著調語音品質，先回頭檢查：<br>
+                    <code>Webhook URL</code>、<code>Gateway 狀態</code>、<code>Verified Caller ID</code>、<code>inboundPolicy / allowFrom</code>。
                 </div>
                 <span class="slide-number">7 / 12</span>
             </div>
@@ -428,7 +522,13 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                 </table>
 
                 <div class="box info">
-                    💡 建議先用 Twilio 內建的 STT/TTS，夠用了。如果覺得音質不夠好再升級到 ElevenLabs 或 OpenAI TTS。
+                    💡 官方文件提到：通話用的 TTS 會優先沿用核心 <code>messages.tts</code> 設定，也可以只針對 Voice Call Plugin 另外覆寫。<br>
+                    如果你只是要先打通流程，先用預設或核心 TTS 就好；等能正常通話後，再升級到 ElevenLabs 或 OpenAI TTS。
+                </div>
+                <div class="box info">
+                    <strong>第一次上課先不要急著升級引擎。</strong><br>
+                    先用 Twilio 內建的 STT / TTS 把整個通話流程打通。<br>
+                    真的能接、能聽、能回，再來追求更好的聲音品質。
                 </div>
                 <div class="box warning">
                     🔑 <strong>ElevenLabs API Key</strong>：到 <code>elevenlabs.io</code> 免費註冊，每月 10,000 字元免費額度。詳見<strong>附錄 E</strong>。
@@ -500,6 +600,14 @@ Auth Token：（點擊眼睛圖示顯示）</pre>
                     <tr><td>可以多人同時打嗎？</td><td>可以，每通電話獨立對話、獨立計費</td></tr>
                     <tr><td>有其他選擇嗎？</td><td>目前官方支援 Twilio，社群開發中 SIP/WebRTC 方案</td></tr>
                 </table>
+                <div class="box warning">
+                    <strong>這章最穩的排查順序：</strong><br>
+                    先確認 Twilio 帳號裡真的有號碼。<br>
+                    再確認 Gateway 那台機器的 <strong>plugin 設定</strong> 已經填對 <code>provider</code>、<code>fromNumber</code>、<code>accountSid</code>、<code>authToken</code>。<br>
+                    再確認 Twilio 後台的 Voice Webhook 指到正確的 <code>/voice/webhook</code>。<br>
+                    再確認 <code>inboundPolicy</code> 沒把你的測試號碼擋掉。<br>
+                    最後回 PowerShell 跑 <code>openclaw gateway restart</code>，再重打電話。
+                </div>
                 <span class="slide-number">11 / 12</span>
             </div>
         </div>

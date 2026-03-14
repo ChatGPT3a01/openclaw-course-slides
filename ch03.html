@@ -154,7 +154,7 @@
             <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <span class="emoji-large">🤖</span>
                 <p style="color: #667eea; letter-spacing: 3px; font-weight: 700; font-size: 18px; margin-bottom: 15px;">AI Agent 自主代理三王實戰</p>
-                <h1>CH3 | 終端機裡的 AI 特助——Claude Code 實戰</h1>
+                <h1>CH3 | 終端機裡的 AI 特助<br>Claude Code 實戰</h1>
                 <p style="font-size: 22px; color: #666; max-width: 700px; margin: 10px auto 30px;">
                     住在終端機裡的 AI 特助——沒有花俏畫面，但做事又快又精準。用中文對話就能讀檔、改檔、管版本！
                 </p>
@@ -250,6 +250,11 @@
                 <div class="box success">
                     ✅ 登入之後，你會看到一個簡潔的對話介面——一個輸入游標在等你打字。這就是 Claude Code 的全部介面了！
                 </div>
+                <div class="box info">
+                    <strong>這一頁最容易搞混的地方：</strong><br>
+                    <code>npm install -g @anthropic-ai/claude-code</code> 和 <code>claude</code> 這兩行，是你在 <strong>PowerShell 直接輸入</strong> 的系統指令。<br>
+                    進入 Claude Code 畫面之後，後面那些「幫我看資料夾」「幫我改檔案」才是你<strong>對 Claude 說的話</strong>。
+                </div>
                 <span class="slide-number">4 / 10</span>
             </div>
         </div>
@@ -274,6 +279,12 @@
 
                 <div class="box warning">
                     ⚡ <strong>Claude Code 的工作目錄</strong>：啟動時會以你在 PowerShell 裡所在的目錄作為起點。想操作特定資料夾，可以先用 <code>cd D:\Moltbot</code> 切換過去，再輸入 <code>claude</code>。
+                </div>
+                <div class="box info">
+                    <strong>學生操作順序請照這樣：</strong><br>
+                    1. 先在 PowerShell 輸入 <code>cd D:\Moltbot</code><br>
+                    2. 再輸入 <code>claude</code><br>
+                    3. 看到 Claude Code 的輸入游標後，才開始貼這一頁的中文指令
                 </div>
                 <span class="slide-number">5 / 10</span>
             </div>
@@ -313,6 +324,10 @@
 
                 <div class="box warning">
                     ⚠️ <strong>安全機制</strong>：Claude Code 在修改檔案或執行可能影響系統的指令之前，通常會先跟你確認「是否允許這個操作？」你可以選擇允許或拒絕。
+                </div>
+                <div class="box info">
+                    <strong>這一頁的四個範例，都是在 Claude Code 裡對它說的話，不是 PowerShell 指令。</strong><br>
+                    也就是說，你不用自己打 <code>type</code>、<code>mkdir</code>、<code>find</code> 這些系統命令，直接用中文叫它做就可以。
                 </div>
                 <span class="slide-number">6 / 10</span>
             </div>
@@ -411,6 +426,19 @@
 
 # 步驟 5：版本控制
 幫我初始化 Git，然後 commit，訊息寫「初始設定完成」</pre>
+                <div class="box warning">
+                    <strong>這整段練習怎麼做？</strong><br>
+                    先在 VS Code 下方終端機輸入 <code>claude</code> 啟動 Claude Code。<br>
+                    進入 Claude Code 之後，再把上面每一句中文需求一條一條貼進去。<br>
+                    不要把整段包含 <code># 步驟 1</code> 這種註解，直接丟到 PowerShell 執行。
+                </div>
+                <div class="box info">
+                    <strong>做完後你應該檢查什麼？</strong><br>
+                    1. `D:\龍蝦練習` 或你指定的位置真的有新資料夾<br>
+                    2. 裡面真的有 <code>config.json</code><br>
+                    3. 檔案內容真的被改成你要的名字<br>
+                    4. 如果成功初始化 Git，資料夾裡會出現隱藏的 <code>.git</code> 結構
+                </div>
                 <span class="slide-number">9 / 10</span>
             </div>
         </div>

@@ -258,6 +258,18 @@
                 <div class="box info">
                     💡 <strong>什麼是工作區？</strong> 你可以把工作區想像成一個「工作桌」。每個專案有自己的工作桌，上面放著屬於這個專案的所有檔案和工具。你可以同時擁有多個工作區，各自獨立、互不影響。
                 </div>
+                <div class="box warning">
+                    <strong>新手最簡單做法：</strong><br>
+                    1. 先到桌面建立一個空資料夾，例如 <code>my-first-project</code><br>
+                    2. 不要放任何舊檔案進去<br>
+                    3. 再回 Antigravity 用「開啟資料夾」把它打開<br>
+                    這樣最不容易讓 AI 改到別的檔案。
+                </div>
+                <div class="box info">
+                    <strong>這一步做完後，你應該看到什麼？</strong><br>
+                    左側檔案區已經顯示你剛開啟的資料夾名稱，不再是歡迎畫面。<br>
+                    如果還停在歡迎頁，代表你還沒有真的進入工作區。
+                </div>
                 <span class="slide-number">4 / 10</span>
             </div>
         </div>
@@ -298,6 +310,11 @@
                         <h3>④ 終端機 Terminal</h3>
                         <p>下方黑色區域。AI 會自動在這裡執行指令。按 <code>Ctrl+`</code> 可以開啟/關閉。</p>
                     </div>
+                </div>
+                <div class="box info">
+                    <strong>新手先記三個地方就夠：</strong><br>
+                    左邊看檔案，中間看內容，右邊跟 AI 講話。<br>
+                    找不到 AI 面板就按 <code>Ctrl+L</code>，找不到終端機就按 <code>Ctrl+`</code>。
                 </div>
                 <span class="slide-number">5 / 10</span>
             </div>
@@ -353,6 +370,12 @@
 
 請建立 index.html 和 style.css 兩個檔案。</pre>
 
+                <div class="box info">
+                    <strong>這段文字要貼在哪裡？</strong><br>
+                    直接貼到右側 AI 面板最下面的輸入框，然後按 Enter。<br>
+                    如果你沒看到輸入框，先按 <code>Ctrl+L</code> 把 AI 面板叫出來。
+                </div>
+
                 <h3>【步驟 3 ~ 4】觀察 AI 工作 → 預覽成果</h3>
                 <p>AI 會自動分析需求、建立檔案、撰寫程式碼、執行測試。整個過程 30 秒到 1 分鐘，你只需要在旁邊看。完成後用內建瀏覽器預覽成果：</p>
 
@@ -360,6 +383,16 @@
 
                 <div class="box success">
                     ✅ 恭喜！你剛做的事情，傳統上需要 HTML + CSS 技能花十幾分鐘完成。而你只用了幾句中文和不到兩分鐘。想微調？直接告訴 AI：「請把名字放大到 36px，背景色改淡灰色」即可。
+                </div>
+                <div class="box warning">
+                    <strong>這一步做完後，至少要看到兩件事：</strong><br>
+                    1. 左側檔案區出現 <code>index.html</code> 和 <code>style.css</code><br>
+                    2. 預覽畫面打得開，不是空白頁
+                </div>
+                <div class="box info">
+                    <strong>如果沒有自動預覽怎麼辦？</strong><br>
+                    直接再跟 AI 說：<code>請幫我啟動預覽，讓我看到這個網頁</code><br>
+                    或自己在下方終端機輸入：<code>npx serve .</code>
                 </div>
                 <span class="slide-number">7 / 10</span>
             </div>
@@ -387,6 +420,12 @@
 
                 <div class="box warning">
                     ⚡ <strong>注意</strong>：多個 Agent 同時工作時，如果它們要修改同一個檔案（如共用的 <code>style.css</code>），偶爾會產生衝突。建議在任務描述中明確指定每個 Agent 負責哪些檔案。
+                </div>
+                <div class="box info">
+                    <strong>學生版最簡單理解：</strong><br>
+                    Editor View = 一個 AI 幫你做一件事。<br>
+                    Manager View = 你一次派多個 AI，各自做不同頁面或不同檔案。<br>
+                    如果你第一次上手，先會用 Editor View 就夠了。
                 </div>
                 <span class="slide-number">8 / 10</span>
             </div>
@@ -422,6 +461,12 @@
 
                 <div class="box info">
                     💡 <strong>建議策略</strong>：平常用 <strong>Gemini 3 Flash</strong>（免費、最快），複雜任務切 <strong>Gemini 3.1 Pro (High)</strong> 或 <strong>Claude Opus 4.6</strong>。模型和對話模式都在 AI 面板輸入框下方的下拉選單切換。
+                </div>
+                <div class="box warning">
+                    <strong>新手直接這樣選就好：</strong><br>
+                    簡單任務先用 <strong>Fast + Gemini 3 Flash</strong>。<br>
+                    如果任務很多步、需要先規劃，再切 <strong>Planning</strong>。<br>
+                    不要一開始就一直換模型，先把操作流程跑順。
                 </div>
 
                 <h3>❓ 新手常見問題速解</h3>

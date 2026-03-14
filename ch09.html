@@ -199,6 +199,12 @@
                 <div class="box info">
                     💡 三種介面操作的是<strong>同一隻龍蝦</strong>，就像你可以用遙控器、手機 App、或面板來操作同一台冷氣——用哪個都行，效果一樣。
                 </div>
+                <div class="box info">
+                    <strong>這章先建立一個觀念：</strong><br>
+                    <strong>LINE / Telegram</strong> 是跟龍蝦聊天。<br>
+                    <strong>TUI / CLI / Dashboard</strong> 是管理龍蝦本體。<br>
+                    所以這一章大多數操作，都是在你電腦上的 PowerShell、終端機或瀏覽器裡做，不是在聊天視窗裡做。
+                </div>
                 <span class="slide-number">2 / 12</span>
             </div>
         </div>
@@ -210,7 +216,7 @@
 
                 <table>
                     <tr><th>比較項目</th><th>🖥️ TUI（終端機介面）</th><th>⌨️ CLI（指令列工具）</th><th>🌐 Dashboard（網頁儀表板）</th></tr>
-                    <tr><td><strong>開啟方式</strong></td><td>終端機輸入 <code>openclaw</code></td><td>終端機輸入指令</td><td>瀏覽器開啟網頁</td></tr>
+                    <tr><td><strong>開啟方式</strong></td><td>終端機輸入 <code>openclaw</code></td><td>終端機輸入 <code>openclaw gateway status</code>、<code>openclaw doctor</code> 這類指令</td><td>先在終端機輸入 <code>openclaw dashboard</code>，再開 <code>http://localhost:18790</code></td></tr>
                     <tr><td><strong>操作方式</strong></td><td>鍵盤選選單</td><td>打指令</td><td>滑鼠點按鈕</td></tr>
                     <tr><td><strong>視覺化</strong></td><td>★★★ 中等</td><td>★ 純文字</td><td>★★★★★ 最高</td></tr>
                     <tr><td><strong>適合誰</strong></td><td>想快速操作的人</td><td>進階用戶</td><td>喜歡圖形介面的人</td></tr>
@@ -221,6 +227,12 @@
                 <div class="box success">
                     ✅ <strong>新手建議路線</strong>：先學 Dashboard（最直覺）→ 再學 TUI（最方便）→ 最後學 CLI（最強大）
                 </div>
+                <div class="box info">
+                    <strong>如果你只是想先把課上完：</strong><br>
+                    平常檢查狀態先學 <strong>Dashboard</strong>。<br>
+                    要重啟、診斷、裝技能時再學 <strong>CLI</strong>。<br>
+                    TUI 可以當成「不想背指令時的折衷方案」。
+                </div>
                 <span class="slide-number">3 / 12</span>
             </div>
         </div>
@@ -229,11 +241,11 @@
         <div class="slide">
             <div class="content-card">
                 <h2>9.2 TUI — 終端機互動介面</h2>
-                <p>TUI 是龍蝦的「半圖形化」終端機介面，用選單和按鈕引導操作，不用記指令。</p>
+                <p>TUI 是龍蝦的「半圖形化」終端機介面，也就是跑在終端機裡的 Terminal UI。它用選單和按鈕引導操作，不用記指令。</p>
 
                 <h3>啟動 TUI</h3>
                 <pre>openclaw</pre>
-                <p>就是單獨一個 <code>openclaw</code>，不加任何參數。龍蝦就會進入 TUI 模式：</p>
+                <p>在<strong>互動式終端機</strong>中直接輸入 <code>openclaw</code>，不加任何參數，通常就會進入 OpenClaw 的 TUI 模式；若你在非互動環境，則可能改顯示 help 或直接退出。</p>
 
                 <img src="images/CH09/ch09_01_tui_main.png" alt="TUI 主畫面" class="screenshot">
 
@@ -255,6 +267,15 @@
 
                 <div class="box info">
                     💡 <strong>操作方式</strong>：用<strong>上下方向鍵</strong>移動，按 <strong>Enter</strong> 進入，按 <strong>Esc</strong> 返回上一層
+                </div>
+                <div class="box info">
+                    <strong>這個 <code>openclaw</code> 要在哪裡輸入？</strong><br>
+                    直接在你電腦上的 PowerShell、CMD 或 Windows Terminal 輸入。<br>
+                    不是在 LINE、Telegram，也不是在瀏覽器網址列。<br>
+                    如果你是 Windows 使用者，最常見就是打開 PowerShell 後輸入 <code>openclaw</code>。
+                </div>
+                <div class="box warning">
+                    ⚠️ <strong>先注意兩個前提</strong>：第一，你現在要在 PowerShell、CMD、Windows Terminal 這類<strong>有 TTY 的互動式終端機</strong>裡操作；第二，你的 OpenClaw 版本 / 建置要有啟用 TUI。一般新版都有，但在某些特殊執行環境中可能開不起來。
                 </div>
                 <span class="slide-number">4 / 12</span>
             </div>
@@ -301,6 +322,20 @@
                 <div class="box warning">
                     ⚡ 關掉 TUI 不會影響龍蝦的運行。只要 Gateway 啟動過，龍蝦就會持續在背景運行，不需要一直開著 TUI。
                 </div>
+                <div class="box info">
+                    <strong>這頁的重點不是要你背選單名，而是記住用途：</strong><br>
+                    改完人格後要生效 → 用 TUI 重啟。<br>
+                    龍蝦突然不回 → 用 TUI 看狀態。<br>
+                    朋友拿到配對碼 → 用 TUI 做配對核准。
+                </div>
+                <div class="box info">
+                    <strong>什麼時候最適合用 TUI？</strong><br>
+                    剛裝好 OpenClaw 想快速看看功能、不想背指令、或現場教學要帶學生一步一步選單操作時，TUI 最方便。
+                </div>
+                <div class="box warning">
+                    <strong>什麼時候不要用 TUI？</strong><br>
+                    你要寫教材給別人照抄、要做自動化 / 排程 / 背景執行，或目前環境沒有 TTY 時，改用 CLI 會更清楚也更穩。
+                </div>
                 <span class="slide-number">5 / 12</span>
             </div>
         </div>
@@ -321,6 +356,11 @@ openclaw skills list         # 列出所有技能
 openclaw --help              # 查看所有子指令</pre>
 
                 <img src="images/CH09/ch09_02_cli_gateway_status.png" alt="CLI gateway status 輸出" class="screenshot">
+                <div class="box info">
+                    <strong>CLI 的所有指令都在哪裡打？</strong><br>
+                    一樣是在你電腦上的 PowerShell / 終端機裡打。<br>
+                    這一頁開始看到的所有 <code>openclaw ...</code> 指令，都不是丟到聊天視窗給龍蝦看的。
+                </div>
 
                 <h3>Gateway 管理指令</h3>
                 <table>
@@ -330,6 +370,11 @@ openclaw --help              # 查看所有子指令</pre>
                     <tr><td><code>openclaw gateway restart</code></td><td>重啟龍蝦</td><td>修改設定後</td></tr>
                     <tr><td><code>openclaw gateway status</code></td><td>查看狀態</td><td>確認龍蝦是否運行中</td></tr>
                 </table>
+                <div class="box info">
+                    <strong>新手最常用的其實只有兩個：</strong><br>
+                    改完設定後跑 <code>openclaw gateway restart</code>。<br>
+                    懷疑龍蝦沒在跑時，先看 <code>openclaw gateway status</code>。
+                </div>
                 <span class="slide-number">6 / 12</span>
             </div>
         </div>
@@ -368,6 +413,12 @@ openclaw skills remove 技能名稱</pre>
                 <div class="box warning">
                     ⚠️ <strong>安全提醒</strong>：<code>openclaw config list</code> 可能會顯示你的 API Key。在錄影、直播或截圖時要特別注意！
                 </div>
+                <div class="box info">
+                    <strong>這頁先記三件事就夠：</strong><br>
+                    想看目前設定 → <code>openclaw config list</code><br>
+                    想看有哪些外掛 → <code>openclaw plugins list</code><br>
+                    想裝技能 → <code>npx clawhub@latest install 技能名稱</code>
+                </div>
                 <span class="slide-number">7 / 12</span>
             </div>
         </div>
@@ -379,6 +430,7 @@ openclaw skills remove 技能名稱</pre>
                 <p>龍蝦出問題時，<strong>第一件事就是跑它</strong>！就像人不舒服先量體溫一樣。</p>
 
                 <pre>openclaw doctor
+openclaw doctor -fix
 
 🩺 OpenClaw Doctor - 健康檢查報告
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -411,6 +463,18 @@ openclaw skills remove 技能名稱</pre>
                         <p>可以運行，但建議處理</p>
                     </div>
                 </div>
+                <div class="box info">
+                    <strong><code>doctor</code> 和 <code>doctor -fix</code> 差在哪裡？</strong><br>
+                    <code>openclaw doctor</code> 是純檢查。<br>
+                    <code>openclaw doctor -fix</code> 是檢查後，順手嘗試自動修一部分小問題。<br>
+                    但如果是 Webhook、Token、路徑貼錯，通常還是要你自己手動修。
+                </div>
+                <div class="box info">
+                    <strong>學生版使用順序：</strong><br>
+                    先跑 <code>openclaw doctor</code> 看問題在哪。<br>
+                    如果只是一般小錯誤，再試 <code>openclaw doctor -fix</code>。<br>
+                    如果仍然不行，再回前面章節檢查設定值。
+                </div>
                 <span class="slide-number">8 / 12</span>
             </div>
         </div>
@@ -424,6 +488,16 @@ openclaw skills remove 技能名稱</pre>
                 <h3>啟動 Dashboard</h3>
                 <pre>openclaw dashboard
 # 自動開啟瀏覽器 → http://localhost:18790</pre>
+                <div class="box info">
+                    <strong>這個指令一樣是在 PowerShell / 終端機輸入。</strong><br>
+                    輸入後通常會自動開瀏覽器。<br>
+                    如果沒有自動開，自己手動打開瀏覽器，在網址列輸入 <code>http://localhost:18790</code> 就行。
+                </div>
+                <div class="box warning">
+                    <strong><code>localhost</code> 是什麼？</strong><br>
+                    它的意思就是「你現在這台電腦自己」。<br>
+                    所以 <code>http://localhost:18790</code> 要在執行 OpenClaw 的同一台電腦上打開，不是拿去手機上直接開。
+                </div>
 
                 <img src="images/CH09/ch09_03_dashboard_overview.png" alt="Dashboard 總覽頁面" class="screenshot">
 
@@ -479,6 +553,11 @@ openclaw skills remove 技能名稱</pre>
                 <div class="box info">
                     💡 Dashboard 的對話記錄是即時更新的——龍蝦收到新訊息並回覆後，重新整理頁面就能看到最新對話。
                 </div>
+                <div class="box info">
+                    <strong>這一頁最常用的其實是：</strong><br>
+                    看對話記錄有沒有進來。<br>
+                    如果學生說「我明明有傳訊息」，你就來這裡看有沒有收到、是不是有回覆、是從 LINE 還是 Telegram 進來。
+                </div>
                 <span class="slide-number">10 / 12</span>
             </div>
         </div>
@@ -502,6 +581,12 @@ openclaw skills remove 技能名稱</pre>
                     <tr><td>第一次設定龍蝦</td><td>🖥️ TUI</td><td>精靈引導最友善</td></tr>
                     <tr><td>日常監控</td><td>🌐 Dashboard</td><td>首頁一目瞭然</td></tr>
                 </table>
+                <div class="box info">
+                    <strong>如果你只想記最實用的分工：</strong><br>
+                    看紀錄、看畫面 → <strong>Dashboard</strong><br>
+                    重啟、檢查、裝東西 → <strong>CLI</strong><br>
+                    不想背指令但又想管理 → <strong>TUI</strong>
+                </div>
                 <span class="slide-number">11 / 12</span>
             </div>
         </div>

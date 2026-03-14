@@ -231,6 +231,13 @@
                     ✅ 如果你已經有 Gmail 帳號，確認記得帳號和密碼後就可以直接跳到下一張投影片！
                 </div>
 
+                <div class="box info">
+                    <strong>從這一頁開始，請先做一件事：</strong><br>
+                    先開一個記事本，專門記這堂課申請到的所有資料。<br>
+                    建議檔名：<code>龍蝦課程-帳號清單.txt</code><br>
+                    建議存放位置：桌面，這樣後面複製貼上最快。
+                </div>
+
                 <h3>申請步驟</h3>
                 <p><span class="step-badge">步驟 1</span> 打開瀏覽器，前往 <code>https://accounts.google.com/signup</code></p>
                 <p><span class="step-badge">步驟 2</span> 依序填入以下資料：</p>
@@ -289,6 +296,11 @@ Gmail 密碼：_______________</pre>
                 <div class="box info">
                     💡 Provider 名稱隨便取就好，之後可以改。
                 </div>
+                <div class="box warning">
+                    <strong>這一頁做完，你應該看到什麼？</strong><br>
+                    你應該已經成功登入 <code>manager.line.biz</code>，而且畫面裡有你剛建立的 Provider。<br>
+                    如果還沒看到 Provider，先不要往下，因為下一頁的 Channel 會建不起來。
+                </div>
                 <span class="slide-number">4 / 14</span>
             </div>
         </div>
@@ -315,6 +327,12 @@ Gmail 密碼：_______________</pre>
                 <h3>步驟 4：取得 Channel ID 和 Channel Secret</h3>
                 <p>在 <strong>Basic settings</strong> 頁面，你可以找到 <strong>Channel ID</strong>（純數字）和 <strong>Channel Secret</strong>（英數混合），把它們複製到記事本。</p>
                 <img src="images/CH01/ch01_06_line_channel_id.png" alt="Channel ID 和 Channel Secret" class="screenshot">
+
+                <div class="box info">
+                    <strong>這兩個值要記到哪裡？</strong><br>
+                    直接貼到你剛剛建立的 <code>龍蝦課程-帳號清單.txt</code> 裡。<br>
+                    這裡先不要管安裝，先把三組 LINE 資料收齊最重要。
+                </div>
 
                 <pre>📝 記下來！
 Channel ID：_______________
@@ -354,6 +372,14 @@ Channel Secret：_______________</pre>
                     🚨 <strong>再次強調</strong>：跳過這一步 = 每次對話收到雙重回覆！阿亮老師上課時，每期總會有同學忘記做這一步。
                 </div>
 
+                <div class="box info">
+                    <strong>這一頁做完後請自我檢查：</strong><br>
+                    1. 你的記事本裡已經有 <code>Channel ID</code>、<code>Channel Secret</code>、<code>Channel Access Token</code><br>
+                    2. LINE 回應模式是 <strong>Bot</strong><br>
+                    3. 自動回應訊息是 <strong>停用</strong><br>
+                    4. Webhook 是 <strong>啟用</strong>
+                </div>
+
                 <pre>📝 記下來！
 Channel Access Token：_______________</pre>
                 <span class="slide-number">6 / 14</span>
@@ -386,6 +412,12 @@ Channel Access Token：_______________</pre>
 
                 <div class="box warning">
                     ⚠️ <strong>Bot Token 就是你機器人的鑰匙</strong>，任何人拿到都可以操控你的機器人。千萬不要分享給不認識的人！
+                </div>
+
+                <div class="box info">
+                    <strong>這頁做完後，你的記事本裡應該再多一行：</strong><br>
+                    <code>Telegram Bot Token：...</code><br>
+                    後面安裝 Telegram 通道時，直接從這裡複製貼上。
                 </div>
 
                 <pre>📝 記下來！
@@ -423,6 +455,12 @@ Telegram Bot Token：_______________</pre>
 
                 <div class="box info">
                     💡 <strong>免費額度</strong>：Gemini 2.5 Flash 每分鐘 30 次請求、Gemini 2.5 Pro 每分鐘 5 次，個人使用綽綽有餘！
+                </div>
+
+                <div class="box warning">
+                    <strong>這頁最重要的不是看懂模型，是先把 Key 記下來。</strong><br>
+                    你只要先完成一件事：把剛生成的 Gemini API Key 貼進記事本。<br>
+                    如果你沒有立刻複製，重新回頭找有時會浪費很多時間。
                 </div>
 
                 <pre>📝 記下來！
@@ -469,6 +507,12 @@ Google AI API Key：_______________（以 AIza 開頭）</pre>
                 <img src="images/CH01/ch01_11_openai_api_key.png" alt="OpenAI API Key 建立成功" class="screenshot" style="max-width: 48%; display: inline-block;">
                 <img src="images/CH01/ch01_12_anthropic_api_key.png" alt="Anthropic Console API Key" class="screenshot" style="max-width: 48%; display: inline-block; float: right;">
 
+                <div class="box info">
+                    <strong>學生版最簡單結論：</strong><br>
+                    如果你只是先把龍蝦裝起來，這頁可以先不做。<br>
+                    先有 <code>Gemini API Key</code> 就能往下走。OpenAI 和 Anthropic 屬於加選項。
+                </div>
+
                 <span class="slide-number">9 / 14</span>
             </div>
         </div>
@@ -492,6 +536,12 @@ LINE 伺服器（日本） 🇯🇵
 
                 <div class="box info">
                     💡 <strong>免費版小限制</strong>：每次重啟 ngrok，網址會改變，需手動到 LINE 後台更新 Webhook URL。一天通常只需做一次。在 CH12 學了 <strong>Cloudflare Tunnel</strong> 後就能徹底解決。
+                </div>
+
+                <div class="box warning">
+                    <strong>這一頁你只要記住一件事：</strong><br>
+                    現在先把 <code>Authtoken</code> 複製下來，貼進記事本。<br>
+                    真正安裝 ngrok 和貼入 token，是到 <code>CH5</code> 才做。
                 </div>
 
                 <pre>📝 記下來！
@@ -528,6 +578,11 @@ ngrok Authtoken：_______________</pre>
                 <pre>📝 記下來！
 GitHub 帳號：_______________
 GitHub 密碼：_______________</pre>
+
+                <div class="box info">
+                    <strong>如果你明天的課以安裝龍蝦為主，GitHub 這頁不是最優先。</strong><br>
+                    先把帳號註冊好即可，真正大量用到 GitHub 是後面的 Codespaces 和 Claude Code 章節。
+                </div>
                 <span class="slide-number">11 / 14</span>
             </div>
         </div>
@@ -567,6 +622,11 @@ GitHub 密碼：_______________</pre>
                         <h3>📊 查看帳號額度</h3>
                         <p>按 <code>Ctrl+Shift+Q</code> 查看帳號概況和 AI 額度使用情形。完全免費，不用擔心！</p>
                     </div>
+                </div>
+                <div class="box warning">
+                    <strong>這一頁做完的標準很簡單：</strong><br>
+                    Antigravity 能正常打開，而且你已經成功用 Google 帳號登入。<br>
+                    如果還沒登入成功，先停在這裡處理，不要急著往後跳。
                 </div>
                 <span class="slide-number">12 / 14</span>
             </div>
@@ -618,6 +678,11 @@ GitHub 密碼：_______________</pre>
 
                 <div class="box info">
                     💡 <strong>最重要的四項</strong>：Gmail、LINE 三組資料、Gemini API Key、ngrok Authtoken。其他可以等用到再申請。
+                </div>
+                <div class="box warning">
+                    <strong>如果你是明天要帶學生實作，最低門檻先盯這五項：</strong><br>
+                    Gmail、LINE 三組資料、Gemini API Key、ngrok Authtoken。<br>
+                    這五項沒齊，CH5 安裝時最容易卡住。
                 </div>
                 <span class="slide-number">13 / 14</span>
             </div>

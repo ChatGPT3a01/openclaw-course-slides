@@ -168,6 +168,11 @@
                         <li>初步認識龍蝦的人格如何影響對話風格</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 820px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="resources/取得Line_User_ID.gs" download style="color:#667eea; font-weight:700; text-decoration:none;">取得 Line User ID GAS 程式</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../附錄B_疑難排解大全/book/附錄B_疑難排解大全.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">疑難排解大全</a></p>
+                </div>
                 <span class="slide-number">1 / 15</span>
             </div>
         </div>
@@ -180,6 +185,11 @@
 
                 <img src="images/CH06/ch06_01_line_first_chat.png" alt="LINE 首次對話" class="screenshot">
 
+                <div class="box info">
+                    <strong>開始這一章前，先確認兩件事：</strong><br>
+                    1. 你在 CH5 已經完成配對，LINE 傳訊息時龍蝦真的會回。<br>
+                    2. 如果你想看到自己設定的人格語氣，<code>IDENTITY.md</code> 要放在 <code>C:\Users\user\.openclaw\workspace\IDENTITY.md</code>，改完後要執行 <code>openclaw gateway restart</code>。
+                </div>
                 <p>龍蝦會記住你們聊過的內容——這就是<strong>多輪對話</strong>的基礎。接下來認識五種對話模式：</p>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
@@ -286,6 +296,13 @@
                 <div class="box success">
                     ✅ <strong>四步模式</strong>：① 給背景 → ② 先得到粗略版本 → ③ 逐步修改 → ④ 最後處理格式。記住這個模式，對話品質會好很多！
                 </div>
+                <div class="box info">
+                    <strong>學生可以直接照這個順序練一次：</strong><br>
+                    第一則先下完整需求。<br>
+                    第二則只改一件事，例如「改正式一點」或「縮成 200 字」。<br>
+                    第三則再補格式，例如「改成條列式」或「加標題」。<br>
+                    不要一開始就丟十個要求，龍蝦比較容易抓錯重點。
+                </div>
                 <span class="slide-number">4 / 15</span>
             </div>
         </div>
@@ -373,6 +390,12 @@
                 <div class="box info">
                     💡 <strong>小技巧</strong>：對話太長時，較早的訊息會被自動裁剪（短期記憶有容量限制）。重要的資訊讓龍蝦存進長期記憶比較保險：「記住這件事：......」
                 </div>
+                <div class="box info">
+                    <strong>這頁要先講清楚一件事：</strong><br>
+                    這裡說的 <code>workspace/</code>，Windows 最常見路徑就是 <code>C:\Users\user\.openclaw\workspace\</code>。<br>
+                    <code>IDENTITY.md</code>、<code>SOUL.md</code>、<code>USER.md</code> 都是在這個資料夾裡。<br>
+                    改完這些檔案後，記得重啟一次：<code>openclaw gateway restart</code>。
+                </div>
                 <span class="slide-number">6 / 15</span>
             </div>
         </div>
@@ -410,6 +433,12 @@
 
                 <div class="box info">
                     💡 想從根本上改變龍蝦的個性、說話風格、甚至專業領域，需要修改 <code>IDENTITY.md</code> 和 <code>SOUL.md</code>——詳見 <strong>CH10 龍蝦人格設定</strong>。
+                </div>
+                <div class="box warning">
+                    <strong>檔案要放哪裡？</strong><br>
+                    <code>IDENTITY.md</code>：<code>C:\Users\user\.openclaw\workspace\IDENTITY.md</code><br>
+                    <code>SOUL.md</code>：<code>C:\Users\user\.openclaw\workspace\SOUL.md</code><br>
+                    如果你改了人格檔案卻沒變化，先檢查是不是放錯資料夾，然後再執行 <code>openclaw gateway restart</code>。
                 </div>
                 <span class="slide-number">7 / 15</span>
             </div>
@@ -456,6 +485,10 @@
             <div class="content-card">
                 <h2>6.9 取得你的 LINE User ID</h2>
                 <p>後面好幾個章節都會用到 <code>userId</code>——推播訊息、排程通知、語音通話都需要它。先搞清楚它是什麼、怎麼拿到手。</p>
+                <div class="box info">
+                    <strong>如果你前面章節已經看過 <code>userId</code> 這個詞，詳細怎麼取得就在這裡：</strong><br>
+                    本章的 <strong>6.10 到 6.13</strong> 會把三種取得方式一步一步講完。
+                </div>
 
                 <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
                     <div class="concept-card">
@@ -475,6 +508,11 @@
                 <div class="box warning">
                     ⚠️ <strong>userId 不是 LINE ID！</strong><br>
                     <code>userId</code> 是系統產生的 <code>U</code> 開頭 33 字元字串（例如 <code>U1a2b3c4d5e6f7g8h9i0j...</code>），跟你設定的 LINE ID（@xxx）<strong>完全不同</strong>。無法自己查，只能透過程式取得。
+                </div>
+                <div class="box info">
+                    <strong>這一章真正要你做的事只有一件：</strong><br>
+                    把自己的 <code>userId</code> 找出來，然後存進記事本。<br>
+                    建議直接記在 <code>龍蝦課程-帳號清單.txt</code>，後面 CH11、CH20、CH21 都會再用到。
                 </div>
 
                 <h3>哪些章節會用到 User ID？</h3>
@@ -530,12 +568,18 @@
                         <p><strong>優點：</strong>不需要 OpenClaw，完全獨立運作</p>
                         <p><strong>適用：</strong>還沒安裝 OpenClaw 的人，或需要取得<strong>群組 groupId</strong></p>
                         <p><strong>步驟：</strong>建立 GAS → 貼程式碼 → 填 Token → 部署 Web App → 設 Webhook → 傳訊息取得 ID</p>
-                        <p style="font-size: 15px; color: #e65100; font-weight: 600;">詳見教學資源或附錄</p>
+                        <p style="font-size: 15px; color: #e65100; font-weight: 600;">程式碼在本章上方的「⬇️ GAS 程式碼」，完整排錯請看<a href="../附錄B_疑難排解大全/book/附錄B_疑難排解大全.md" target="_blank" style="color:#e65100; text-decoration: underline;">附錄 B 疑難排解大全</a></p>
                     </div>
                 </div>
 
                 <div class="box success">
                     🎯 <strong>取得 userId 後，把它存在記事本裡</strong>——只要對方沒有封鎖你的 Bot，userId 就<strong>永遠有效</strong>，不需要重複取得。之後在 <code>HEARTBEAT.md</code>、推播指令、技能設定中直接貼上即可。
+                </div>
+                <div class="box info">
+                    <strong>新手建議優先順序：</strong><br>
+                    已經裝好 OpenClaw 的人，先用 <strong>方法一 Dashboard</strong>。<br>
+                    如果你正在除錯，才用 <strong>方法二 終端機日誌</strong>。<br>
+                    如果你還沒裝 OpenClaw，或想另外查群組 ID，再用 <strong>方法三 GAS</strong>。
                 </div>
 
                 <h3>取得群組 groupId</h3>
@@ -566,7 +610,7 @@
                 <h3>Step 3：貼上程式碼</h3>
                 <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
                     <span style="color: #e65100; font-weight: 600;">👆 動作：</span>把編輯器裡原本的 <code>myFunction()</code> <strong>全部刪除</strong><br>
-                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點簡報上方的「<strong>⬇️ GAS 程式碼</strong>」下載 <code>.gs</code> 檔案<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點簡報上方的「<a href="resources/取得Line_User_ID.gs" download style="color:#e65100; font-weight:700; text-decoration: underline;">⬇️ GAS 程式碼</a>」下載 <code>.gs</code> 檔案<br>
                     <span style="color: #e65100; font-weight: 600;">👆 動作：</span>用記事本打開 → <code>Ctrl+A</code> 全選 → <code>Ctrl+C</code> 複製 → 回到 GAS 編輯器 <code>Ctrl+V</code> 貼上<br>
                     <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>編輯器裡出現完整的程式碼
                 </div>
@@ -581,6 +625,11 @@
                     <span style="color: #e65100; font-weight: 600;">👆 動作：</span>到 LINE Developers Console → 你的 Bot → <strong>Messaging API</strong> → 複製 <strong>Channel access token</strong><br>
                     <span style="color: #e65100; font-weight: 600;">👆 動作：</span>把引號裡的中文替換成你的 Token → 按 <code>Ctrl+S</code> 儲存<br>
                     <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>看起來像 <code>'xYz123abc456def789ghi...'</code>（Token 很長，正常的）
+                </div>
+                <div class="box warning">
+                    <strong>這裡要貼的是哪一個 Token？</strong><br>
+                    要貼的是 <strong>Channel Access Token</strong>，不是 Channel ID，也不是 Channel Secret。<br>
+                    如果貼錯，後面 Bot 不會正常回你 userId。
                 </div>
                 <span class="slide-number">11 / 15</span>
             </div>
@@ -622,6 +671,11 @@
                     <span style="color: #e65100; font-weight: 600;">👆 動作：</span>貼上剛才複製的 GAS 部署網址 → 按「<strong>Save</strong>」<br>
                     <span style="color: #e65100; font-weight: 600;">👆 動作：</span>確認「<strong>Use webhook</strong>」是<strong>開啟</strong>的<br>
                     <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>Webhook URL 已更新為 GAS 網址
+                </div>
+                <div class="box info">
+                    <strong>做這一步時要記住：</strong><br>
+                    你現在是暫時把 LINE 訊息改送去 GAS，不是永遠改掉。<br>
+                    所以原本 OpenClaw 用的 Webhook 網址一定要先備份，等拿到 <code>userId</code> 之後再改回來。
                 </div>
                 <span class="slide-number">12 / 15</span>
             </div>
@@ -676,6 +730,12 @@ U1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
                 <div class="box success">
                     🎯 <strong>userId 永不過期</strong>——只要對方沒封鎖 Bot，userId 就永遠有效。存好一次，之後在 <code>HEARTBEAT.md</code>、CLI 推播、技能設定中直接貼上即可。
                 </div>
+                <div class="box info">
+                    <strong>改回去時怎麼改？</strong><br>
+                    回到 LINE Developers Console 的 <strong>Messaging API → Webhook settings</strong>。<br>
+                    把 GAS 網址刪掉，貼回你剛才備份的原始網址，例如 <code>https://xxxx.ngrok-free.app/line/webhook</code>。<br>
+                    按 <strong>Save</strong> 後，再按一次 <strong>Verify</strong> 確認恢復成功。
+                </div>
                 <span class="slide-number">13 / 15</span>
             </div>
         </div>
@@ -708,6 +768,10 @@ U1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
                         <td><strong>可以</strong>。對方加你的 LINE Bot 為好友、完成配對流程就能聊。每個人的對話和記憶獨立，龍蝦不會搞混。</td>
                     </tr>
                 </table>
+                <div class="box info">
+                    <strong>Windows 使用者可直接這樣理解：</strong><br>
+                    上面寫的 <code>~/.openclaw/workspace/</code>，在你的電腦通常就是 <code>C:\Users\user\.openclaw\workspace\</code>。
+                </div>
                 <span class="slide-number">14 / 15</span>
             </div>
         </div>

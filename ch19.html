@@ -167,6 +167,11 @@
                         <li>認識實際的應用場景</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 820px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/node-templates/NODE-家裡桌機.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">NODE 範本</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/scripts/keep-alive.ps1" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">keep-alive.ps1</a></p>
+                </div>
                 <span class="slide-number">1 / 10</span>
             </div>
         </div>
@@ -187,6 +192,12 @@
                     <tr><td>運算效能不夠</td><td>小筆電跑 AI 很慢</td><td>把 AI 運算丟給效能好的節點</td></tr>
                     <tr><td>多人協作</td><td>每人各自操作</td><td>龍蝦之間可以互相傳遞任務</td></tr>
                 </table>
+                <div class="box info">
+                    <strong>這章最重要的分工先記住：</strong><br>
+                    <strong>Primary</strong> 是對外接 LINE / Telegram 的那一台。<br>
+                    <strong>Worker</strong> 是真正去操作桌面、檔案、瀏覽器或跑 AI 的那幾台。<br>
+                    所以不是每台都接同一個 LINE Bot，而是由 Primary 對外，Worker 在背後做事。
+                </div>
                 <span class="slide-number">2 / 10</span>
             </div>
         </div>
@@ -265,6 +276,13 @@
 - 平日：18:00-23:00
 - 假日：全天</pre>
 
+                <div class="box info">
+                    <strong>這個檔案要放哪裡：</strong><br>
+                    在每一台 <strong>Worker 電腦</strong> 的工作區裡建立 <code>NODE.md</code>。<br>
+                    Windows 最常見位置是：<code>C:\Users\你的名稱\.openclaw\workspace\NODE.md</code><br>
+                    也就是說，每台 Worker 都可以有自己不同的 <code>NODE.md</code>。
+                </div>
+
                 <h3>主控節點的分派邏輯</h3>
                 <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="concept-card">
@@ -283,6 +301,11 @@
 
                 <div class="box info">
                     💡 一個 Nodes 網路裡只有<strong>一個 Primary</strong>，但可以有<strong>多個 Worker</strong>（最多 5 個）。
+                </div>
+                <div class="box warning">
+                    <strong>學生最容易搞混的點：</strong><br>
+                    <code>NODE.md</code> 不是寫在 LINE 後台，也不是只寫在 Primary。<br>
+                    它是寫在每台節點電腦自己的工作區裡，讓主控知道這台機器能做什麼。
                 </div>
                 <span class="slide-number">4 / 10</span>
             </div>
@@ -303,6 +326,12 @@ openclaw config set nodes.role primary
 # 產生節點金鑰（讓其他節點能安全連線）
 openclaw nodes init</pre>
 
+                <div class="box info">
+                    <strong>這三行要在哪裡打：</strong><br>
+                    這三行要在你要當 <strong>Primary</strong> 的那一台電腦的 <strong>PowerShell / 終端機</strong> 輸入。<br>
+                    最常見就是：雲端主機、Codespaces，或一台 24 小時開機的電腦。
+                </div>
+
                 <pre style="color: #4ec9b0;">🔑 Nodes 初始化完成！
    節點 ID：node-abc123
    連線金鑰：sk-nodes-xxxxxxxxxxxxxxxx
@@ -319,6 +348,29 @@ openclaw config set nodes.role worker
 
 # 連線到主控節點
 openclaw nodes join --primary https://你的主控域名:18789 --key sk-nodes-xxxxxxxxxxxxxxxx</pre>
+
+                <div class="box info">
+                    <strong>這三行則要在另一台要當 <span style="font-weight:700;">Worker</span> 的電腦上打。</strong><br>
+                    也就是說：Primary 跟 Worker 的設定，是分別在各自那台機器的 <strong>PowerShell / 終端機</strong> 輸入，不是在同一個視窗裡全部完成。
+                </div>
+
+                <div class="box warning">
+                    <strong><code>https://你的主控域名:18789</code> 是什麼意思？</strong><br>
+                    這裡不是照打範例字串。<br>
+                    你要換成 Primary 真正可以被 Worker 連到的網址，例如：<br>
+                    <code>https://bot.example.com</code><br>
+                    或你實際的對外網址。<br>
+                    如果你的主控是走 Cloudflare / 固定網域，就填那個正式網址。
+                </div>
+
+                <div class="box success">
+                    <strong>最穩的實作順序：</strong><br>
+                    1. 先把 Primary 的網址穩定好，確定外部可連。<br>
+                    2. 在 Primary 上跑 <code>openclaw nodes init</code> 拿到金鑰。<br>
+                    3. 去 Worker 那台電腦跑 <code>openclaw nodes join ...</code>。<br>
+                    4. 兩邊都確認 Gateway 正在運行。<br>
+                    5. 再去 Primary 查節點清單。
+                </div>
 
                 <pre style="color: #4ec9b0;">✅ 已成功連線到主控節點！
    主控：https://lobster.你的域名.com:18789
@@ -353,6 +405,12 @@ openclaw nodes join --primary https://你的主控域名:18789 --key sk-nodes-xx
     能力：file-access, browser, office-tools
     在線時段：平日 09:00-18:00</pre>
 
+                <div class="box info">
+                    <strong><code>openclaw nodes list</code> 要在哪裡打：</strong><br>
+                    這一行請在 <strong>Primary 那台電腦</strong> 的 <strong>PowerShell / 終端機</strong> 輸入。<br>
+                    因為只有主控節點最清楚整個節點網路目前有哪些 Worker 在線。
+                </div>
+
                 <h3>步驟五：測試分派任務</h3>
                 <pre>你（LINE）：幫我看看辦公室電腦桌面上有什麼檔案
 龍蝦：📡 分派任務到「辦公室筆電」...
@@ -361,6 +419,13 @@ openclaw nodes join --primary https://你的主控域名:18789 --key sk-nodes-xx
       - 本月報表.xlsx
       - 專案進度.docx
       共 3 個檔案。</pre>
+                <div class="box success">
+                    <strong>第一次驗證要怎麼測最清楚：</strong><br>
+                    不要一開始就叫它搬檔案。<br>
+                    先用這種「只讀取」的任務測，例如：<br>
+                    <code>幫我看看辦公室電腦桌面上有什麼檔案</code><br>
+                    這樣最容易確認：真的有分派出去，而且真的是那台 Worker 在回。
+                </div>
                 <span class="slide-number">6 / 10</span>
             </div>
         </div>
@@ -391,6 +456,13 @@ openclaw nodes join --primary https://你的主控域名:18789 --key sk-nodes-xx
 
                 <div class="box info">
                     💡 簡單的聊天由雲端節點處理（24 小時在線），需要操控桌面的任務則分派給家裡桌機。
+                </div>
+                <div class="box info">
+                    <strong>這個範例最適合學生先照著做。</strong><br>
+                    因為只需要兩台：<br>
+                    一台雲端 / 24 小時開機主機當 Primary。<br>
+                    一台家裡電腦當 Worker。<br>
+                    先把兩台模式跑通，再考慮加第三台。
                 </div>
                 <span class="slide-number">7 / 10</span>
             </div>
@@ -426,6 +498,11 @@ openclaw nodes join --primary https://你的主控域名:18789 --key sk-nodes-xx
 
                 <div class="box warning">
                     ⚡ 「龍蝦對龍蝦」的協作目前還在早期階段，但概念本身非常有潛力——想像未來每個人的 AI 助手之間可以互相溝通協作！
+                </div>
+                <div class="box warning">
+                    <strong>這一頁先當概念了解，不建議當第一個實作。</strong><br>
+                    第一次上課先把「Primary + 1 個 Worker」做通最重要。<br>
+                    跨多台互傳檔案、多人協作，等前面穩了再進一步玩。
                 </div>
                 <span class="slide-number">8 / 10</span>
             </div>
@@ -467,6 +544,13 @@ openclaw nodes join --primary https://你的主控域名:18789 --key sk-nodes-xx
 
                 <div class="box info">
                     💡 <strong>Nodes vs CH14 多重分身</strong>：多重分身是「一台電腦上跑多個 Gateway」（多個獨立龍蝦）；Nodes 是「多台電腦上的龍蝦串在一起」（一個龍蝦網路）。兩者可搭配使用。
+                </div>
+                <div class="box warning">
+                    <strong>這章最穩的排查順序：</strong><br>
+                    先確認 Primary 的網址真的能被外部連到。<br>
+                    再確認 Worker 是不是用正確金鑰執行 <code>openclaw nodes join ...</code>。<br>
+                    再到 Primary 跑 <code>openclaw nodes list</code> 看 Worker 有沒有在線。<br>
+                    最後才去 LINE 測任務分派。
                 </div>
                 <span class="slide-number">9 / 10</span>
             </div>

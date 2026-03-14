@@ -167,6 +167,11 @@
                         <li>在 LINE 上成功與龍蝦對話，驗證安裝成功</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 800px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/checklists/CH5-安裝前檢查清單.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">CH5 安裝前檢查清單</a></p>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/installer/Readme.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">安裝器說明</a></p>
+                </div>
                 <span class="slide-number">1 / 16</span>
             </div>
         </div>
@@ -194,7 +199,19 @@
                 </table>
 
                 <div class="box info">
-                    💡 <strong>選擇建議</strong>：什麼都不想管 → <strong>方式一</strong>｜有 NVIDIA 顯卡想免費 → <strong>方式三</strong>｜電腦太舊 → <strong>方式四</strong>｜想自己動手 → <strong>方式二</strong>｜想雲端一鍵 → <strong>方式五</strong>
+                    💡 <strong>選擇建議</strong><br>
+                    什麼都不想管 → <strong>方式一</strong><br>
+                    有 NVIDIA 顯卡想免費 → <strong>方式三</strong><br>
+                    電腦太舊 → <strong>方式四</strong><br>
+                    想自己動手 → <strong>方式二</strong><br>
+                    想雲端一鍵 → <strong>方式五</strong>
+                </div>
+                <div class="box warning">
+                    <strong>學生版最簡單選法：</strong><br>
+                    Windows 新手先走 <strong>方式一</strong>。<br>
+                    想完全手動學會每一步，再走 <strong>方式二</strong>。<br>
+                    沒有好電腦但有 GitHub，就走 <strong>方式四</strong>。<br>
+                    不要五種都試，先選一條走到底最重要。
                 </div>
                 <span class="slide-number">2 / 16</span>
             </div>
@@ -217,7 +234,15 @@
                 </table>
 
                 <div class="box warning">
-                    ⚠️ <strong>例外</strong>：方式三（Ollama）不需要 AI API Key。方式四（Codespaces）不需要 ngrok Authtoken。選擇 <strong>OpenAI OAuth 免費登入</strong>也不需要 API Key（只要有 ChatGPT 帳號就行）。
+                    ⚠️ <strong>例外</strong><br>
+                    方式三（Ollama）不需要 AI API Key。<br>
+                    方式四（Codespaces）不需要 ngrok Authtoken。<br>
+                    選擇 <strong>OpenAI OAuth 免費登入</strong>也不需要 API Key（只要有 ChatGPT 帳號就行）。
+                </div>
+                <div class="box info">
+                    <strong>開始安裝前，請先把這些資料放在手邊：</strong><br>
+                    最好先打開你在 CH1 做的 <code>龍蝦課程-帳號清單.txt</code>。<br>
+                    安裝過程中會一直用到：<code>Channel ID</code>、<code>Channel Secret</code>、<code>Channel Access Token</code>、<code>Gemini API Key</code>、<code>ngrok Authtoken</code>。
                 </div>
 
                 <h3>AI 模型選擇</h3>
@@ -266,6 +291,11 @@
                 <div class="box info">
                     💡 安裝程式有<strong>密碼保護</strong>，密碼會在課堂或教學社群中提供。這是確保安裝程式配合正確的教學版本使用。
                 </div>
+                <div class="box warning">
+                    <strong>這一頁做完後，你應該看到什麼？</strong><br>
+                    安裝程式畫面已經正常打開，而且你已經進到選單畫面。<br>
+                    如果連選單都沒看到，就先不要往後，先處理 go.bat 啟動問題。
+                </div>
                 <span class="slide-number">4 / 16</span>
             </div>
         </div>
@@ -300,6 +330,17 @@
                 </div>
 
                 <p>最後設定 <strong>ngrok Authtoken</strong>，然後選擇 <strong>[9] 啟動 OpenClaw + ngrok</strong>，把顯示的 <code>ngrok-free.app</code> 網址複製起來！</p>
+                <div class="box info">
+                    <strong>這一步做完後，請立刻做兩件事：</strong><br>
+                    1. 把畫面上顯示的 <code>https://xxxx.ngrok-free.app</code> 複製下來<br>
+                    2. 不要關掉這個視窗，因為 Gateway 和 ngrok 還在這裡運行
+                </div>
+                <div class="box info">
+                    <strong>如果你是新手，這樣選最穩：</strong><br>
+                    有 <code>Gemini API Key</code> 就選 <strong>Google</strong>。<br>
+                    有 ChatGPT 帳號、想走免 Key，就選 <strong>OpenAI → OAuth</strong>。<br>
+                    看到要你選模型時，Google 先選課堂建議的 Gemini 模型；OpenAI 免費帳號先選 <code>GPT-5.2</code>。
+                </div>
                 <span class="slide-number">5 / 16</span>
             </div>
         </div>
@@ -356,6 +397,12 @@ ngrok http 18789             # 視窗二</pre>
                 <div class="box info">
                     💡 <code>-g</code> 代表 global（全域安裝），<code>@latest</code> 代表最新版本。<code>18789</code> 是 OpenClaw Gateway 的預設連接埠。Mac/Linux 用戶可用：<code>curl -fsSL https://openclaw.ai/install.sh | bash</code>
                 </div>
+                <div class="box warning">
+                    <strong>這一大段怎麼做才不會亂？</strong><br>
+                    從步驟 0 到步驟 8，都在 <strong>同一個 PowerShell 視窗</strong> 依序執行。<br>
+                    到步驟 9 才另外再開第二個 PowerShell 視窗跑 <code>ngrok http 18789</code>。<br>
+                    也就是最後會有兩個視窗：一個跑 <code>openclaw gateway start</code>，一個跑 <code>ngrok</code>。
+                </div>
                 <span class="slide-number">6 / 16</span>
             </div>
         </div>
@@ -397,6 +444,18 @@ openclaw onboard --install-daemon
                 <div class="box warning">
                     ⚠️ 不確定 VRAM 大小？在 Windows 搜尋列輸入 <code>dxdiag</code>，切到「顯示」分頁查看「顯示記憶體」。Ollama 服務需一直在背景運行！
                 </div>
+                <div class="box info">
+                    <strong>這條路線做完後要確認三件事：</strong><br>
+                    1. <code>ollama --version</code> 有成功顯示版本<br>
+                    2. <code>ollama run 你下載的模型</code> 真的能回話<br>
+                    3. <code>openclaw onboard</code> 裡的 provider 已經選成 <code>Ollama</code>
+                </div>
+                <div class="box info">
+                    <strong>最容易填錯的地方：</strong><br>
+                    <code>Default model</code> 一定要填你剛剛真的 <code>pull</code> 下來的完整模型名。<br>
+                    例如你剛剛執行的是 <code>ollama pull llama3.1:8b</code>，這裡就要填 <code>llama3.1:8b</code>，不能只寫 <code>llama</code> 或 <code>8b</code>。<br>
+                    如果後面龍蝦完全不回，先確認 Ollama 程式還在背景執行中。
+                </div>
                 <span class="slide-number">7 / 16</span>
             </div>
         </div>
@@ -431,6 +490,19 @@ openclaw onboard --install-daemon
 
                 <div class="box info">
                     💡 Codespaces <strong>不需要 ngrok</strong>！GitHub 會自動幫你公開端口。記得設定端口為 <strong>Make Public</strong>。
+                </div>
+                <div class="box warning">
+                    <strong>這條路線最容易漏掉的地方：</strong><br>
+                    當 OpenClaw 跑起來後，要去 Ports / 連接埠面板把對應埠設成 <strong>Public / Make Public</strong>。<br>
+                    否則 LINE 雖然有網址，外面還是連不進來。
+                </div>
+                <div class="box info">
+                    <strong>學生版最簡單操作順序：</strong><br>
+                    1. Codespace 開好後，在終端機安裝並啟動 OpenClaw。<br>
+                    2. 找到底下的 <strong>Ports / 連接埠</strong> 面板。<br>
+                    3. 找到 OpenClaw 使用的埠號，把它改成 <strong>Public</strong>。<br>
+                    4. 複製那個公開網址，再自己補上 <code>/line/webhook</code> 貼回 LINE 後台。<br>
+                    例如：<code>https://你的codespace-18789.app.github.dev/line/webhook</code>
                 </div>
                 <span class="slide-number">8 / 16</span>
             </div>
@@ -472,6 +544,17 @@ openclaw onboard --install-daemon
                         </ul>
                     </div>
                 </div>
+                <div class="box info">
+                    <strong>環境變數到底要填什麼？</strong><br>
+                    至少要填這幾個：<code>LINE Channel ID</code>、<code>LINE Channel Secret</code>、<code>LINE Channel Access Token</code>、你選的 <code>AI API Key</code>。<br>
+                    如果你是用 Gemini，就填 Gemini Key；如果是 OpenAI，就填 OpenAI Key。
+                </div>
+                <div class="box warning">
+                    <strong>這一頁原則很簡單：</strong><br>
+                    Zeabur 要你填的環境變數，本質上就是把你在 CH1 收集到的值，一格一格貼進去。<br>
+                    看到欄位名稱像 <code>LINE_CHANNEL_ID</code>、<code>LINE_CHANNEL_SECRET</code>、<code>LINE_CHANNEL_ACCESS_TOKEN</code>、<code>GEMINI_API_KEY</code> 時，就貼對應的值。<br>
+                    貼完之後按儲存，等 Zeabur 部署完成，再把它給你的公開網址拿去做 LINE Webhook。
+                </div>
                 <span class="slide-number">9 / 16</span>
             </div>
         </div>
@@ -502,6 +585,23 @@ openclaw onboard --install-daemon
                 <div class="box warning">
                     ⚠️ <strong>別忘了關閉 LINE 自動回覆</strong>：回應模式設成 <strong>Bot</strong>、自動回應訊息設成<strong>停用</strong>、Webhook 設成<strong>啟用</strong>。否則龍蝦會回覆兩則訊息！
                 </div>
+                <div class="box info">
+                    <strong>這一步最重要的細節：</strong><br>
+                    Webhook URL 一定要貼完整，最後面要有 <code>/line/webhook</code>。<br>
+                    例如：<code>https://xxxx.ngrok-free.app/line/webhook</code><br>
+                    不是只貼 <code>https://xxxx.ngrok-free.app</code>。
+                </div>
+                <div class="box info">
+                    <strong>LINE 後台要去哪裡改？</strong><br>
+                    登入 <code>manager.line.biz</code> 後，進到你的官方帳號。<br>
+                    找 <strong>設定</strong> 或 <strong>Messaging API</strong> 相關區塊中的 <strong>Webhook URL</strong>。<br>
+                    貼上網址後先按儲存，再按 <strong>Verify</strong> 驗證。
+                </div>
+                <div class="box info">
+                    <strong>看到什麼才算這一步成功？</strong><br>
+                    你按下 <strong>Verify</strong> 之後，LINE 畫面要顯示 <strong>Success</strong>。<br>
+                    如果不是 Success，就先不要做下一步配對，先把網址或通道設定修好。
+                </div>
                 <span class="slide-number">10 / 16</span>
             </div>
         </div>
@@ -530,6 +630,28 @@ openclaw onboard --install-daemon
                 <div class="box info">
                     💡 如果你在 CH4 製作了 <code>IDENTITY.md</code>，把它複製到 <code>~/.openclaw/workspace/</code> 目錄，然後執行 <code>openclaw gateway restart</code>，龍蝦就會用你設定的個性來回答！
                 </div>
+                <div class="box warning">
+                    <strong>Windows 使用者的正式路徑：</strong><br>
+                    把 CH4 做好的檔案放到 <code>C:\Users\user\.openclaw\workspace\IDENTITY.md</code><br>
+                    放好之後，再執行一次 <code>openclaw gateway restart</code>。
+                </div>
+                <div class="box info">
+                    <strong>這一步做完後，真正的成功畫面是：</strong><br>
+                    你在 LINE 再傳一次訊息，龍蝦會正常回你，不是只有配對碼，也不是完全沒反應。<br>
+                    如果放了 <code>IDENTITY.md</code>，它的語氣也會開始變成你設定的樣子。
+                </div>
+                <div class="box info">
+                    <strong>安裝成功後，建議立刻做下一件事：</strong><br>
+                    先到 <strong>CH6</strong> 把你的 <code>userId</code> 取出來並記好。<br>
+                    後面的推播、HEARTBEAT、通知技能都會再用到這個值。
+                </div>
+                <div class="box warning">
+                    <strong>如果你傳了訊息卻完全沒收到配對碼：</strong><br>
+                    先回頭檢查三件事：<br>
+                    1. Gateway 還有沒有在跑<br>
+                    2. Webhook Verify 是不是 Success<br>
+                    3. LINE 官方帳號是不是已經加好友，而且自動回應訊息已停用
+                </div>
                 <span class="slide-number">11 / 16</span>
             </div>
         </div>
@@ -543,7 +665,10 @@ openclaw onboard --install-daemon
                 <img src="images/CH05/ch05_06_openclaw_doctor.png" alt="openclaw doctor 健康檢查" class="screenshot">
 
                 <h3>使用 doctor 指令</h3>
-                <pre>openclaw doctor</pre>
+                <pre>openclaw doctor
+
+# 嘗試自動修復部分小問題
+openclaw doctor -fix</pre>
 
                 <p>它會檢查以下項目，用 ✅ 和 ❌ 告訴你結果：</p>
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
@@ -563,6 +688,27 @@ openclaw gateway status
 # 換 AI 模型（不用重新安裝！）
 openclaw config set agents.defaults.model.primary "gemini-3-flash"
 openclaw gateway restart</pre>
+                <div class="box info">
+                    <strong>新手先記兩個檢查就夠：</strong><br>
+                    如果你懷疑沒裝好，先跑 <code>openclaw doctor</code>。<br>
+                    如果你懷疑龍蝦根本沒在跑，再跑 <code>openclaw gateway status</code>。
+                </div>
+                <div class="box info">
+                    <strong><code>openclaw doctor -fix</code> 是做什麼？</strong><br>
+                    它會在檢查完之後，嘗試自動修復一部分常見的小問題。<br>
+                    可以把它理解成「先檢查，再幫你順手修能修的地方」。
+                </div>
+                <div class="box warning">
+                    <strong>學生最實用的判讀方法：</strong><br>
+                    <code>doctor</code> 裡如果一堆都是 ✅，代表安裝大致正常。<br>
+                    如果有 ❌，就先修那一項，不要同時亂改很多地方。
+                </div>
+                <div class="box warning">
+                    <strong>使用時機：</strong><br>
+                    先跑一次 <code>openclaw doctor</code> 看哪裡有問題。<br>
+                    如果只是一般設定或相依套件的小錯誤，再試 <code>openclaw doctor -fix</code>。<br>
+                    如果是 Webhook、Token、路徑貼錯這種資料問題，還是要手動改。
+                </div>
                 <span class="slide-number">12 / 16</span>
             </div>
         </div>
@@ -593,6 +739,11 @@ openclaw gateway restart</pre>
 
                 <div class="box success" style="margin-top: 15px;">
                     ✅ 除了上面這些差異，<code>npm install</code>、<code>openclaw</code>、<code>ngrok</code> 等核心指令在 Mac 和 Windows 上<strong>完全一樣</strong>！
+                </div>
+                <div class="box info" style="margin-top: 15px;">
+                    <strong>Mac 使用者最簡單建議：</strong><br>
+                    如果你不想處理系統差異，直接走 <strong>Codespaces</strong> 會最省事。<br>
+                    如果你熟悉 Terminal，再走手動安裝或 Ollama。
                 </div>
                 <span class="slide-number">13 / 16</span>
             </div>
@@ -627,6 +778,11 @@ openclaw gateway restart</pre>
 
                 <div class="box warning" style="margin-top: 15px;">
                     💡 <strong>放心更新！</strong>更新 OpenClaw 不會影響你現有的設定和技能。<code>IDENTITY.md</code>、<code>SOUL.md</code>、已安裝的技能、LINE 頻道設定等等都會原封不動地保留。
+                </div>
+                <div class="box info" style="margin-top: 15px;">
+                    <strong>更新前如果不放心：</strong><br>
+                    先把 <code>C:\Users\user\.openclaw\workspace\</code> 整個備份一份。<br>
+                    對新手來說，先備份再更新最安心。
                 </div>
                 <span class="slide-number">14 / 16</span>
             </div>
@@ -672,6 +828,11 @@ openclaw gateway restart</pre>
                         <td>免費版每次重啟都換網址，需要更新 LINE Webhook URL</td>
                     </tr>
                 </table>
+                <div class="box info">
+                    <strong>FAQ 看法：</strong><br>
+                    如果你現在卡住，不要一口氣看完整張表。<br>
+                    先找最接近你眼前症狀的那一列，例如「不是可辨識的命令」、「Webhook 驗證失敗」、「龍蝦回兩次」。
+                </div>
                 <span class="slide-number">15 / 16</span>
             </div>
         </div>

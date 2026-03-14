@@ -167,6 +167,10 @@
                         <li>實戰建立一個「雙龍蝦」系統</li>
                     </ul>
                 </div>
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.92); border: 2px dashed #667eea; padding: 18px 24px; border-radius: 15px; text-align: center; max-width: 780px;">
+                    <h3 style="margin-top: 0; color: #764ba2;">🔗 對應資源</h3>
+                    <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/config-examples/cloudflare-multi.yml" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">cloudflare-multi.yml 範例</a></p>
+                </div>
                 <span class="slide-number">1 / 10</span>
             </div>
         </div>
@@ -197,6 +201,11 @@ Discord ───┘</pre>
 
                 <div class="box warning">
                     ⚡ 這時候，你就需要「多重分身」——同時跑多隻龍蝦，每隻有獨立的設定。
+                </div>
+                <div class="box info">
+                    <strong>先記一個判斷：</strong><br>
+                    如果你只是想讓同一隻龍蝦同時回 LINE、Telegram、Discord，那是 <strong>CH13 的多通道</strong>。<br>
+                    如果你想要 <strong>不同人格、不同工作區、不同 Bot、不同模型</strong>，才是本章的「多隻龍蝦」。
                 </div>
                 <span class="slide-number">2 / 10</span>
             </div>
@@ -251,6 +260,7 @@ Telegram ──── Gateway C（port 18791）─── 英文教師人設
                 <h2>14.2 設定多個工作區與設定檔</h2>
 
                 <h3>建立第二隻龍蝦的工作區</h3>
+                <p>以下指令都在 <strong>PowerShell / 終端機</strong> 輸入，不是在 LINE、瀏覽器或 Dashboard 裡做。</p>
                 <pre># 建立新的工作區資料夾
 mkdir C:\Users\你的名稱\.openclaw\workspace-work
 
@@ -260,18 +270,31 @@ Copy-Item C:\Users\你的名稱\.openclaw\workspace\* `
 
                 <img src="images/CH14/ch14_02_workspace_folders.png" alt="多工作區資料夾" class="screenshot">
 
+                <div class="box info">
+                    <strong>這一步做完後，請去檔案總管確認：</strong><br>
+                    你應該會看到 <code>C:\Users\你的名稱\.openclaw\workspace-work</code> 資料夾，裡面至少有 <code>IDENTITY.md</code>、<code>SOUL.md</code>、<code>USER.md</code>。
+                </div>
+
                 <h3>建立第二份設定檔</h3>
                 <pre># 複製一份設定檔
 Copy-Item C:\Users\你的名稱\.openclaw\openclaw.json `
     C:\Users\你的名稱\.openclaw\openclaw-work.json</pre>
 
-                <p>修改 <code>openclaw-work.json</code> 的內容：</p>
+                <p>接著用記事本打開第二份設定檔：</p>
+                <pre>notepad C:\Users\你的名稱\.openclaw\openclaw-work.json</pre>
+
+                <p>修改 <code>openclaw-work.json</code> 時，至少要改這幾個地方：</p>
                 <ul>
                     <li><strong>Gateway 埠號</strong>——改成 <code>18790</code>（不能跟第一隻一樣）</li>
                     <li><strong>LINE Channel 資訊</strong>——換成第二個 LINE Bot 的 Channel ID、Secret、Token</li>
                     <li><strong>AI 模型</strong>——可以用不同的模型</li>
                     <li><strong>工作區路徑</strong>——指向 <code>workspace-work</code></li>
                 </ul>
+                <div class="box warning">
+                    <strong>最容易出錯的地方：</strong><br>
+                    第二隻龍蝦不能沿用第一隻的埠號，也不能沿用第一個 LINE Bot 的 Webhook 設定。<br>
+                    你要把它當成「另一隻獨立的龍蝦」來設定。
+                </div>
                 <span class="slide-number">4 / 10</span>
             </div>
         </div>
@@ -288,6 +311,14 @@ openclaw gateway start
 openclaw gateway start --config C:\Users\你的名稱\.openclaw\openclaw-work.json</pre>
 
                 <p>兩隻龍蝦會分別在不同的埠號上運行。如果你用 Cloudflare Tunnel（CH12），需要為每隻龍蝦設定不同的子域名。</p>
+
+                <div class="box info">
+                    <strong>怎麼開比較穩？</strong><br>
+                    建議開 <strong>兩個 PowerShell 視窗</strong>：<br>
+                    第一個視窗跑第一隻龍蝦。<br>
+                    第二個視窗跑第二隻龍蝦。<br>
+                    這樣哪一隻出錯，你會比較容易看出是哪個視窗的問題。
+                </div>
 
                 <div class="box info">
                     💡 <strong>資源佔用很低</strong>：每隻龍蝦的 Gateway 大約佔 100-200MB 記憶體。8GB RAM 的電腦同時跑 2-3 隻完全沒問題。真正消耗資源的是 AI 模型的 API 呼叫（在雲端處理）。
@@ -311,6 +342,11 @@ openclaw gateway start --config C:\Users\你的名稱\.openclaw\openclaw-work.js
                         <h3>🔑 可共用 API Key</h3>
                         <p>多隻龍蝦可以共用同一個 AI API Key，費用合併計算</p>
                     </div>
+                </div>
+                <div class="box success">
+                    <strong>這一步做完後先測：</strong><br>
+                    第一隻龍蝦原本的 LINE Bot 還要能正常回。<br>
+                    第二隻龍蝦要先完成自己的 Webhook 設定後，才會開始回覆。
                 </div>
                 <span class="slide-number">5 / 10</span>
             </div>
@@ -344,6 +380,12 @@ openclaw gateway start --config C:\Users\你的名稱\.openclaw\openclaw-work.js
 New-Item -ItemType SymbolicLink `
     -Path "C:\Users\你的名稱\.openclaw\workspace-work\USER.md" `
     -Target "C:\Users\你的名稱\.openclaw\workspace\USER.md" -Force</pre>
+
+                <div class="box warning">
+                    <strong>新手建議：</strong><br>
+                    第一次做雙龍蝦時，先不要共用任何檔案，保持兩隻完全獨立最不容易亂。<br>
+                    等你已經確認兩隻都能正常運作，再考慮共用 <code>USER.md</code>。
+                </div>
 
                 <h3>訊息路由</h3>
                 <p>每個通道連到哪隻龍蝦，訊息就去哪。使用者感知不到背後有多隻龍蝦——他們只是在跟不同的 Bot 聊天。</p>
@@ -380,6 +422,14 @@ New-Item -ItemType SymbolicLink `
 
                 <div class="box info">
                     💡 這比跑多隻龍蝦<strong>簡單得多</strong>，適合「不想搞太複雜但想有不同風格」的使用者。
+                </div>
+
+                <div class="box info">
+                    <strong>這一頁怎麼做？</strong><br>
+                    用記事本打開 <code>C:\Users\你的名稱\.openclaw\workspace\IDENTITY.md</code>，把多種模式寫進去。<br>
+                    存檔後回到 <strong>PowerShell / 終端機</strong> 輸入 <code>openclaw gateway restart</code>，再去 LINE 實測：<br>
+                    <code>切換到工作模式</code><br>
+                    <code>切換到學習模式</code>
                 </div>
 
                 <div class="concept-grid" style="grid-template-columns: repeat(3, 1fr);">
@@ -424,6 +474,12 @@ New-Item -ItemType SymbolicLink `
                     <li>設定 Cloudflare Tunnel 第二條路由（或用 ngrok）</li>
                     <li>啟動兩隻龍蝦並分別測試</li>
                 </ol>
+                <div class="box info">
+                    <strong>這 5 步分別在哪裡做：</strong><br>
+                    第 1 步在 <strong>瀏覽器</strong> 的 LINE Developers Console。<br>
+                    第 2、3、5 步在 <strong>PowerShell / 檔案總管 / 記事本</strong>。<br>
+                    第 4 步如果你走 Cloudflare，就是在 <strong>PowerShell + Cloudflare 後台</strong> 一起做。
+                </div>
                 <span class="slide-number">8 / 10</span>
             </div>
         </div>
@@ -448,6 +504,13 @@ cloudflared tunnel route dns lobster work.mylobster.xyz
 # 第二個 Bot 的 Webhook URL：
 # https://work.mylobster.xyz/line/webhook</pre>
 
+                <div class="box info">
+                    <strong>這一頁的意思：</strong><br>
+                    第一隻龍蝦繼續用 <code>bot.mylobster.xyz</code> 指到 <code>18789</code>。<br>
+                    第二隻龍蝦新增一個子網域，例如 <code>work.mylobster.xyz</code>，指到 <code>18790</code>。<br>
+                    然後第二個 LINE Bot 的 Webhook URL 就填 <code>https://work.mylobster.xyz/line/webhook</code>。
+                </div>
+
                 <h3>常見問題</h3>
                 <div class="concept-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
                     <div class="concept-card">
@@ -462,6 +525,12 @@ cloudflared tunnel route dns lobster work.mylobster.xyz
                         <h3>🔐 配對獨立嗎？</h3>
                         <p>是的。每隻龍蝦有自己的配對系統，兩邊都需要各自完成配對。</p>
                     </div>
+                </div>
+                <div class="box warning">
+                    <strong>最常見的失敗原因：</strong><br>
+                    第二個 Bot 的 Webhook 還是填到第一隻的網址。<br>
+                    第二隻設定檔的埠號沒改。<br>
+                    第二個 Gateway 根本沒有啟動成功。
                 </div>
                 <span class="slide-number">9 / 10</span>
             </div>
@@ -498,7 +567,7 @@ cloudflared tunnel route dns lobster work.mylobster.xyz
                 </div>
 
                 <div class="box success" style="text-align: left; margin-top: 20px;">
-                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH15 70+ 技能——讓龍蝦無所不能</strong><br>
+                    <p style="margin-bottom: 0;">📖 <strong>下一章預告：CH15 60+ 技能——讓龍蝦無所不能</strong><br>
                     進入第五篇「技能篇」！OpenClaw 有一個強大的 <strong>Skills（技能）系統</strong>，可以讓龍蝦學會各種新本領——天氣查詢、Email 管理、日曆整合、AI 拍照......看看龍蝦還能變得多強！</p>
                 </div>
 
