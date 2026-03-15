@@ -335,15 +335,15 @@
                 <ol>
                     <li>安裝程式會要求你貼上 <strong>ngrok Authtoken</strong>（從 <code>dashboard.ngrok.com</code> 複製）</li>
                     <li>全部設定完成後，選擇 <strong>[9] 啟動 OpenClaw + ngrok</strong></li>
-                    <li>畫面會顯示 ngrok 的公開網址：</li>
+                    <li>畫面會顯示 ngrok 的公開網址，找到 <strong>Forwarding</strong> 那一行：</li>
                 </ol>
-                <pre>🦞 OpenClaw Gateway 已啟動！
-📡 ngrok 通道已建立：https://xxxx-xx-xx-xxx-xx.ngrok-free.app</pre>
+                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot">
 
                 <div class="box success">
                     <strong>請立刻做兩件事：</strong><br>
-                    1. 把 <code>https://xxxx.ngrok-free.app</code> 這段網址<strong>複製</strong>下來（等等貼到 LINE Webhook）<br>
-                    2. <strong>不要關掉這個視窗</strong>！Gateway 和 ngrok 都在這裡運行，關掉龍蝦就斷線了
+                    1. 找到 <strong>Forwarding</strong> 那一行，把 <code>https://xxxx.ngrok-free.app</code> 這段網址<strong>複製</strong>下來<br>
+                    2. <strong>不要關掉這個視窗</strong>！Gateway 和 ngrok 都在這裡運行，關掉龍蝦就斷線了<br>
+                    3. 帶著這個網址 → 去做「5.7 設定 LINE Webhook」
                 </div>
 
                 <h3>安裝後補填 User ID</h3>
@@ -431,10 +431,20 @@ ngrok http 18789             # ← 視窗二：啟動通道
                     到<strong>步驟 9</strong> 才另外再開<strong>第二個 PowerShell 視窗</strong>跑 <code>ngrok http 18789</code>。<br>
                     最後會有兩個視窗同時開著：一個跑龍蝦，一個跑 ngrok。<strong>兩個都不能關！</strong>
                 </div>
+                <h3>ngrok 啟動後的畫面</h3>
+                <p>執行 <code>ngrok http 18789</code> 之後，你會看到這個畫面：</p>
+                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot">
+
                 <div class="box success">
-                    <strong>步驟 9 做完後，你應該看到什麼？</strong><br>
-                    ngrok 視窗顯示 <code>Forwarding https://xxxx.ngrok-free.app → http://localhost:18789</code><br>
-                    把那個 <code>https://</code> 開頭的網址<strong>複製</strong>下來 → 等等要貼到 LINE Webhook！
+                    <strong>找到網址了嗎？</strong><br>
+                    1. 找到 <strong>Forwarding</strong> 那一行<br>
+                    2. 複製 <code>https://</code> 開頭、<code>.ngrok-free.app</code> 結尾的那段網址<br>
+                    3. <strong>不要關掉這個視窗！</strong>關掉 = 龍蝦斷線<br>
+                    4. 帶著這個網址 → 去做下面的 LINE Webhook 設定
+                </div>
+                <div class="box warning">
+                    <strong>注意：ngrok 免費版每次重啟都會換網址！</strong><br>
+                    如果你關掉 ngrok 再重開，網址會變，要重新去 LINE 後台更新 Webhook URL。
                 </div>
                 <span class="slide-number">6 / 16</span>
             </div>
@@ -518,11 +528,16 @@ ngrok http 18789             # ← 視窗二：啟動通道
                     <code>Default model</code> 一定要填你剛剛真的 <code>pull</code> 下來的<strong>完整模型名</strong>。<br>
                     例如你執行的是 <code>ollama pull llama3.1:8b</code>，就要填 <code>llama3.1:8b</code>，不能只寫 <code>llama</code> 或 <code>8b</code>。
                 </div>
+                <h3>ngrok 啟動後的畫面</h3>
+                <p>執行 <code>ngrok http 18789</code> 後，你會看到這個畫面：</p>
+                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot">
+
                 <div class="box success">
-                    <strong>步驟 10 做完後，你應該看到什麼？</strong><br>
-                    ngrok 視窗顯示 <code>Forwarding https://xxxx.ngrok-free.app → http://localhost:18789</code><br>
-                    把 <code>https://</code> 開頭的網址<strong>複製</strong>下來 → 等等要貼到 LINE Webhook！<br>
-                    <strong>Ollama + OpenClaw + ngrok 三個視窗都不能關！</strong>
+                    <strong>步驟 10 做完後，你手上應該有：</strong><br>
+                    1. 一段 <code>https://xxxx.ngrok-free.app</code> 的網址（已複製）<br>
+                    2. 三個 PowerShell 視窗同時開著：Ollama + OpenClaw Gateway + ngrok<br>
+                    3. <strong>三個都不能關！</strong>關任何一個龍蝦就斷線<br>
+                    4. 帶著網址 → 去做下面的 LINE Webhook 設定
                 </div>
                 <span class="slide-number">7 / 16</span>
             </div>
@@ -651,11 +666,13 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                 <h2>5.7 設定 LINE Webhook 與驗證</h2>
                 <div class="box warning">
                     <strong>走到這一頁之前，請先確認你已經取得了龍蝦的公開網址：</strong><br>
-                    方式一/二/三 → 從 ngrok 視窗複製 <code>https://xxxx.ngrok-free.app</code><br>
+                    方式一/二/三 → 從 ngrok 畫面的 <strong>Forwarding</strong> 行複製 <code>https://xxxx.ngrok-free.app</code><br>
                     方式四 → 從 Codespace Ports 面板複製公開網址<br>
                     方式五 → 從 Zeabur 專案頁面複製 <code>.zeabur.app</code> 網址<br>
                     <strong>如果你還沒有網址，請先回去把 ngrok 或雲端服務跑起來！</strong>
                 </div>
+                <p>方式一/二/三的同學，你的 ngrok 畫面應該長這樣（從這裡複製網址）：</p>
+                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot" style="max-height: 200px; object-fit: contain;">
                 <p>現在要做最後一步：告訴 LINE「我的龍蝦在這裡，有訊息請送過來」——就像在郵局登記收件地址。</p>
 
                 <img src="images/CH05/ch05_05_line_webhook.png" alt="設定 LINE Webhook" class="screenshot">

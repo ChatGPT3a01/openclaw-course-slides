@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ngrok 運行畫面</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #f5f5f5;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+        .terminal-window {
+            width: 900px;
+            background: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .terminal-titlebar {
+            background: #323233;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ff5f57; }
+        .dot-yellow { background: #febc2e; }
+        .dot-green { background: #28c840; }
+        .terminal-title {
+            color: #aaa;
+            font-size: 13px;
+            margin-left: 10px;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .terminal-body {
+            padding: 20px 24px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #d4d4d4;
+        }
+        .ngrok-header {
+            color: #00ff41;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 16px;
+        }
+        .label {
+            color: #888;
+            display: inline-block;
+            width: 260px;
+        }
+        .value {
+            color: #e0e0e0;
+        }
+        .value-green {
+            color: #00ff41;
+            font-weight: bold;
+        }
+        .forwarding-box {
+            margin: 16px 0;
+            padding: 12px 16px;
+            border: 2px solid #00ff41;
+            border-radius: 8px;
+            background: rgba(0, 255, 65, 0.08);
+        }
+        .forwarding-url {
+            color: #00ff41;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .forwarding-arrow {
+            color: #888;
+            margin: 0 8px;
+        }
+        .forwarding-local {
+            color: #aaa;
+        }
+        .annotation {
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: #ff6b35;
+            color: white;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+        .annotation-arrow {
+            font-size: 24px;
+            display: block;
+            text-align: center;
+            color: #ff6b35;
+            margin-top: 4px;
+        }
+        .connections-header {
+            color: #888;
+            margin-top: 16px;
+            border-top: 1px solid #333;
+            padding-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-window">
+        <div class="terminal-titlebar">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+            <span class="terminal-title">Windows PowerShell — ngrok http 18789</span>
+        </div>
+        <div class="terminal-body">
+            <div class="ngrok-header">ngrok</div>
+
+            <div><span class="label">Session Status</span><span class="value-green">online</span></div>
+            <div><span class="label">Account</span><span class="value">student@example.com (Plan: Free)</span></div>
+            <div><span class="label">Version</span><span class="value">3.19.1</span></div>
+            <div><span class="label">Region</span><span class="value">Japan (jp)</span></div>
+            <div><span class="label">Latency</span><span class="value">12ms</span></div>
+            <div><span class="label">Web Interface</span><span class="value">http://127.0.0.1:4040</span></div>
+
+            <div class="annotation-arrow">↓↓↓ 找到這一行！複製網址！↓↓↓</div>
+
+            <div class="forwarding-box">
+                <div>
+                    <span class="label" style="color: #00ff41;">Forwarding</span>
+                    <span class="forwarding-url">https://a1b2-203-69-113-42.ngrok-free.app</span>
+                    <span class="forwarding-arrow">→</span>
+                    <span class="forwarding-local">http://localhost:18789</span>
+                </div>
+            </div>
+
+            <div class="annotation">
+                👆 複製 https:// 開頭的這段網址，等等貼到 LINE Webhook！
+            </div>
+
+            <div class="connections-header">
+                <div><span class="label">Connections</span><span class="value">ttl&nbsp;&nbsp;&nbsp;&nbsp;opn&nbsp;&nbsp;&nbsp;&nbsp;rt1&nbsp;&nbsp;&nbsp;&nbsp;rt5&nbsp;&nbsp;&nbsp;&nbsp;p50&nbsp;&nbsp;&nbsp;&nbsp;p90</span></div>
+                <div><span class="label"></span><span class="value">0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.00&nbsp;&nbsp;&nbsp;0.00&nbsp;&nbsp;&nbsp;0.00&nbsp;&nbsp;&nbsp;0.00</span></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
