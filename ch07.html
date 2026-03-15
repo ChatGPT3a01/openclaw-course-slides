@@ -251,13 +251,26 @@
 
                 <img src="images/CH07/ch07_02_bot_token.png" alt="BotFather 建立機器人" class="screenshot">
 
-                <h3>步驟流程</h3>
+                <div class="box info">
+                    💡 <strong>BotFather 目前有兩種 UI</strong>：新版的<strong>表單式介面</strong>（點按鈕填表單）和傳統的<strong>指令式介面</strong>（打指令對話）。兩種都能用，效果完全一樣。下面以指令式為主、表單式為輔說明。
+                </div>
+
+                <h3>步驟流程（指令式）</h3>
                 <table>
                     <tr><th>步驟</th><th>你做的事</th><th>BotFather 的回應</th></tr>
                     <tr><td><strong>步驟 1</strong></td><td>在 <strong>BotFather 聊天視窗的輸入框</strong> 輸入 <code>/newbot</code></td><td>問你機器人的顯示名稱</td></tr>
                     <tr><td><strong>步驟 2</strong></td><td>直接在 <strong>同一個聊天視窗</strong> 輸入顯示名稱（可中文）<br>例如：<code>龍蝦小助手</code></td><td>問你機器人的 username</td></tr>
                     <tr><td><strong>步驟 3</strong></td><td>再直接在 <strong>同一個聊天視窗</strong> 輸入英文 username（必須以 <code>bot</code> 結尾）<br>例如：<code>my_lobster_ai_bot</code></td><td>恭喜！給你 Bot Token</td></tr>
                 </table>
+
+                <h3>步驟流程（表單式）</h3>
+                <p>如果你看到的是<strong>按鈕和表單</strong>而不是純文字對話，那是 BotFather 的新版介面：</p>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>點畫面上的「<strong>Create a new bot</strong>」按鈕<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>在表單欄位填入「Bot 名稱」和「Bot username」<br>
+                    <span style="color: #e65100; font-weight: 600;">👆 動作：</span>按「<strong>Create bot</strong>」送出<br>
+                    <span style="color: #1b5e20; font-weight: 600;">👀 結果：</span>BotFather 回覆你 Bot Token，效果和指令式完全相同
+                </div>
 
                 <h3>取得 Bot Token</h3>
                 <pre>7123456789:AAHxxx-xxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
