@@ -172,7 +172,7 @@
                     <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/checklists/CH5-安裝前檢查清單.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">CH5 安裝前檢查清單</a></p>
                     <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/installer/Readme.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">安裝器說明</a></p>
                 </div>
-                <span class="slide-number">1 / 16</span>
+                <span class="slide-number">1 / 17</span>
             </div>
         </div>
 
@@ -213,7 +213,7 @@
                     沒有好電腦但有 GitHub，就走 <strong>方式四</strong>。<br>
                     不要五種都試，先選一條走到底最重要。
                 </div>
-                <span class="slide-number">2 / 16</span>
+                <span class="slide-number">2 / 17</span>
             </div>
         </div>
 
@@ -259,7 +259,7 @@
                 <div class="box info">
                     💡 <strong>免費用 GPT？</strong>OpenAI 支援 OAuth 網頁授權登入，不需要 API Key！設定時選「OAuth / Codex 授權」，瀏覽器會跳出 ChatGPT 登入頁面，登入後就能免費使用。<strong>注意：免費 ChatGPT 帳號只能選 GPT-5.2，選 5.4 會無法連線。</strong>
                 </div>
-                <span class="slide-number">3 / 16</span>
+                <span class="slide-number">3 / 17</span>
             </div>
         </div>
 
@@ -297,7 +297,7 @@
                     安裝程式畫面已經正常打開，而且你已經進到選單畫面。<br>
                     如果連選單都沒看到，就先不要往後，先處理 go.bat 啟動問題。
                 </div>
-                <span class="slide-number">4 / 16</span>
+                <span class="slide-number">4 / 17</span>
             </div>
         </div>
 
@@ -356,7 +356,7 @@ openclaw gateway restart</pre>
                     有 ChatGPT 帳號、想走免 Key，就選 <strong>OpenAI → OAuth</strong>。<br>
                     看到要你選模型時，Google 先選課堂建議的 Gemini 模型；OpenAI 免費帳號先選 <code>GPT-5.2</code>。
                 </div>
-                <span class="slide-number">5 / 16</span>
+                <span class="slide-number">5 / 17</span>
             </div>
         </div>
 
@@ -393,7 +393,7 @@ npm install -g openclaw@latest
 openclaw --version
 
 # 步驟 5. 初始化設定精靈（照著問題回答）
-openclaw onboard --install-daemon
+openclaw onboard
 # → Yes → QuickStart → 選 AI 廠商 → 填 API Key 或選 OAuth → 選模型 → 選 LINE
 
 # ===== 第三階段：設定 LINE 通道 =====
@@ -446,7 +446,7 @@ ngrok http 18789             # ← 視窗二：啟動通道
                     <strong>注意：ngrok 免費版每次重啟都會換網址！</strong><br>
                     如果你關掉 ngrok 再重開，網址會變，要重新去 LINE 後台更新 Webhook URL。
                 </div>
-                <span class="slide-number">6 / 16</span>
+                <span class="slide-number">6 / 17</span>
             </div>
         </div>
 
@@ -492,7 +492,7 @@ npm install -g openclaw@latest
 openclaw --version
 
 # 步驟 6. 初始化設定
-openclaw onboard --install-daemon
+openclaw onboard
 # → Yes → QuickStart → Model provider 選「Ollama」
 # → Default model 填 llama3.1:8b（要填完整名稱！）
 # → Select channel 選「LINE」
@@ -539,7 +539,7 @@ ngrok http 18789             # ← 視窗二：啟動通道
                     3. <strong>三個都不能關！</strong>關任何一個龍蝦就斷線<br>
                     4. 帶著網址 → 去做下面的 LINE Webhook 設定
                 </div>
-                <span class="slide-number">7 / 16</span>
+                <span class="slide-number">7 / 17</span>
             </div>
         </div>
 
@@ -575,7 +575,7 @@ ngrok http 18789             # ← 視窗二：啟動通道
                 <h3>在 Codespace 終端機設定龍蝦</h3>
                 <pre>
 # 步驟 7. 初始化設定
-openclaw onboard --install-daemon
+openclaw onboard
 # → Yes → QuickStart → 選 AI（推薦 Qwen，完全免費）→ 選 LINE
 
 # 步驟 8. 安裝 LINE 外掛 + 設定四把鑰匙
@@ -603,7 +603,7 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     <code>https://你的codespace名稱-18789.app.github.dev/line/webhook</code><br>
                     把這個網址<strong>複製</strong>下來 → 等等貼到 LINE Webhook！
                 </div>
-                <span class="slide-number">8 / 16</span>
+                <span class="slide-number">8 / 17</span>
             </div>
         </div>
 
@@ -656,7 +656,7 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     <code>/opt/openclaw/providers/zeabur-ai-hub.json5</code><br>
                     修改後記得<strong>重新啟動服務</strong>。
                 </div>
-                <span class="slide-number">9 / 16</span>
+                <span class="slide-number">9 / 17</span>
             </div>
         </div>
 
@@ -712,7 +712,7 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     你按下 <strong>Verify</strong> 之後，LINE 畫面要顯示 <strong>Success</strong>。<br>
                     如果不是 Success，就先不要做下一步配對，先把網址或通道設定修好。
                 </div>
-                <span class="slide-number">10 / 16</span>
+                <span class="slide-number">10 / 17</span>
             </div>
         </div>
 
@@ -762,7 +762,7 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     2. Webhook Verify 是不是 Success<br>
                     3. LINE 官方帳號是不是已經加好友，而且自動回應訊息已停用
                 </div>
-                <span class="slide-number">11 / 16</span>
+                <span class="slide-number">11 / 17</span>
             </div>
         </div>
 
@@ -819,11 +819,77 @@ openclaw gateway restart</pre>
                     如果只是一般設定或相依套件的小錯誤，再試 <code>openclaw doctor -fix</code>。<br>
                     如果是 Webhook、Token、路徑貼錯這種資料問題，還是要手動改。
                 </div>
-                <span class="slide-number">12 / 16</span>
+                <span class="slide-number">12 / 17</span>
             </div>
         </div>
 
-        <!-- Slide 13: Mac 使用者安裝指南 -->
+        <!-- Slide 13: 每日啟動 SOP 與故障排除 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>5.8b 每日啟動 SOP & 故障排除</h2>
+                <p>安裝只做一次，但<strong>每天開機都要重新啟動龍蝦</strong>。這一頁是你的「每日開機清單」和「故障自救手冊」。</p>
+
+                <h3>每日啟動流程（地端方式一/二/三）</h3>
+                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
+                    <span style="color: #e65100; font-weight: 600;">步驟 1：</span>打開 PowerShell，重啟 Gateway<br>
+                    <pre style="margin: 8px 0;">openclaw gateway restart</pre>
+                    <span style="color: #e65100; font-weight: 600;">步驟 2：</span>啟動 ngrok（另開一個 PowerShell 視窗）<br>
+                    <pre style="margin: 8px 0;">ngrok http 18789</pre>
+                    <span style="color: #e65100; font-weight: 600;">步驟 3：</span>等 ngrok 出現 <code>Forwarding</code> 網址後，打開瀏覽器確認<br>
+                    <pre style="margin: 8px 0;">http://127.0.0.1:18789/</pre>
+                    <span style="color: #1b5e20; font-weight: 600;">看到 Dashboard 頁面 → 代表 Gateway OK</span><br><br>
+                    <span style="color: #e65100; font-weight: 600;">步驟 4：</span>如果 ngrok 重啟換了新網址 → 去 LINE 後台更新 Webhook URL
+                </div>
+
+                <div class="box warning">
+                    ⚠️ <strong>免費版 ngrok 每次重啟網址都會變！</strong>要把新的 <code>https://xxxx.ngrok-free.app/line/webhook</code> 貼到 LINE 後台。付費版或 Cloudflare Tunnel（CH12）可以固定網址。
+                </div>
+
+                <h3>快速狀態檢查（懷疑哪裡壞了就跑這些）</h3>
+                <table style="font-size: 15px;">
+                    <tr><th style="width: 40%;">檢查項目</th><th>指令 / 方法</th></tr>
+                    <tr><td>Gateway 有沒有在跑</td><td><code>openclaw gateway status</code></td></tr>
+                    <tr><td>Dashboard 打得開嗎</td><td>瀏覽器開 <code>http://127.0.0.1:18789/</code></td></tr>
+                    <tr><td>ngrok 有沒有在跑</td><td>看 ngrok 視窗有沒有 <code>Forwarding</code> 那一行</td></tr>
+                    <tr><td>LINE Webhook 通嗎</td><td>LINE 後台按 <strong>Verify</strong> → 要顯示 Success</td></tr>
+                    <tr><td>全面健康檢查</td><td><code>openclaw doctor</code></td></tr>
+                    <tr><td>最近的錯誤紀錄</td><td>查看 log：<code>%TEMP%\openclaw\</code> 資料夾內</td></tr>
+                </table>
+
+                <h3>從零恢復（什麼都爛掉時的急救）</h3>
+                <pre>
+# 1. 確認 OpenClaw 還在
+openclaw --version
+
+# 2. 強制重裝 Gateway（不影響設定檔）
+openclaw gateway install --force
+
+# 3. 重啟 Gateway
+openclaw gateway restart
+
+# 4. 啟動 ngrok
+ngrok http 18789
+
+# 5. 複製新的 ngrok 網址，去 LINE 後台更新 Webhook
+# 6. LINE 後台按 Verify → Success
+# 7. 第一次訊息若要求授權：
+openclaw pairing approve line 你的配對碼</pre>
+
+                <div class="box success">
+                    ✅ <strong><code>gateway install --force</code></strong> 是你的「終極急救鍵」——它會重新安裝 Gateway 的系統服務，但<strong>不會刪除你的設定檔和 workspace</strong>。大部分「不知道為什麼壞掉」的問題跑完這個就會好。
+                </div>
+
+                <div class="box info">
+                    <strong>Codespaces / Zeabur 用戶看這裡：</strong><br>
+                    你不需要跑 ngrok，也不需要每天啟動。<br>
+                    Codespaces 閒置 30 分鐘會休眠，回 GitHub 重新啟動就好。<br>
+                    Zeabur 是 24 小時運行，不需要手動啟動。
+                </div>
+                <span class="slide-number">13 / 17</span>
+            </div>
+        </div>
+
+        <!-- Slide 14: Mac 使用者安裝指南 -->
         <div class="slide">
             <div class="content-card">
                 <h2>🍎 Mac 使用者安裝指南</h2>
@@ -855,7 +921,7 @@ openclaw gateway restart</pre>
                     如果你不想處理系統差異，直接走 <strong>Codespaces</strong> 會最省事。<br>
                     如果你熟悉 Terminal，再走手動安裝或 Ollama。
                 </div>
-                <span class="slide-number">13 / 16</span>
+                <span class="slide-number">14 / 17</span>
             </div>
         </div>
 
@@ -894,7 +960,7 @@ openclaw gateway restart</pre>
                     先把 <code>C:\Users\user\.openclaw\workspace\</code> 整個備份一份。<br>
                     對新手來說，先備份再更新最安心。
                 </div>
-                <span class="slide-number">14 / 16</span>
+                <span class="slide-number">15 / 17</span>
             </div>
         </div>
 
@@ -937,13 +1003,17 @@ openclaw gateway restart</pre>
                         <td><strong>ngrok 重啟換網址</strong></td>
                         <td>免費版每次重啟都換網址，需要更新 LINE Webhook URL</td>
                     </tr>
+                    <tr>
+                        <td><strong>不知道為什麼壞掉了</strong></td>
+                        <td>終極急救：<code>openclaw gateway install --force</code> → <code>openclaw gateway restart</code>（重裝 Gateway 但不影響設定檔）</td>
+                    </tr>
                 </table>
                 <div class="box info">
                     <strong>FAQ 看法：</strong><br>
                     如果你現在卡住，不要一口氣看完整張表。<br>
                     先找最接近你眼前症狀的那一列，例如「不是可辨識的命令」、「Webhook 驗證失敗」、「龍蝦回兩次」。
                 </div>
-                <span class="slide-number">15 / 16</span>
+                <span class="slide-number">16 / 17</span>
             </div>
         </div>
 
@@ -981,7 +1051,7 @@ openclaw gateway restart</pre>
                         前往 CH6 ➡️
                     </a>
                 </div>
-                <span class="slide-number">16 / 16</span>
+                <span class="slide-number">17 / 17</span>
             </div>
         </div>
 
