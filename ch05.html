@@ -350,6 +350,29 @@
                 <p>配對成功後（見 5.7 節），從 Gateway log 中取得你的 LINE User ID（<code>U</code> 開頭 + 32 碼），再補填：</p>
                 <pre>openclaw config set channels.line.adminUserId "你的User ID"
 openclaw gateway restart</pre>
+
+                <div class="box success">
+                    <strong>自動安裝完成後，你會多一個「Liang.cmd」快捷工具：</strong><br>
+                    位置在安裝資料夾內，雙擊就能用。它提供：<br>
+                    <strong>選項 1</strong>：一鍵啟動 OpenClaw + ngrok（每天開機用這個）<br>
+                    <strong>選項 2</strong>：一鍵檢查所有狀態（Gateway / ngrok / Webhook 全檢查）<br>
+                    <strong>選項 3</strong>：完整操作導航（忘記步驟時看這個）<br>
+                    <strong>選項 4</strong>：常用指令速查
+                </div>
+
+                <div class="box info">
+                    <strong>自動安裝程式會把 ngrok 放在：</strong><br>
+                    <code>C:\OpenClaw_Auto\ngrok_dir\ngrok.exe</code><br>
+                    如果你手動啟動 ngrok，要用完整路徑，或直接用 Liang.cmd 一鍵啟動。
+                </div>
+
+                <div class="box info">
+                    <strong>進階技巧：讓 ngrok 在背景跑（不占視窗）</strong><br>
+                    在 PowerShell 中執行：<br>
+                    <code>Start-Process -FilePath 'C:\OpenClaw_Auto\ngrok_dir\ngrok.exe' -ArgumentList 'http','http://127.0.0.1:18789' -WindowStyle Hidden</code><br>
+                    ngrok 會在背景運行，不會佔一個視窗。Liang.cmd 的選項 1 就是這樣做的。
+                </div>
+
                 <div class="box info">
                     <strong>如果你是新手，這樣選最穩：</strong><br>
                     有 <code>Gemini API Key</code> 就選 <strong>Google</strong>。<br>
@@ -445,6 +468,42 @@ ngrok http 18789             # ← 視窗二：啟動通道
                 <div class="box warning">
                     <strong>注意：ngrok 免費版每次重啟都會換網址！</strong><br>
                     如果你關掉 ngrok 再重開，網址會變，要重新去 LINE 後台更新 Webhook URL。
+                </div>
+
+                <h3>每日開機啟動流程（安裝完後每天要做的事）</h3>
+                <div style="background: #f8f9fa; border: 2px solid #667eea; border-radius: 12px; padding: 20px; margin: 15px 0;">
+                    <p style="margin-bottom: 10px; font-weight: 700; color: #667eea;">電腦重開機後，龍蝦不會自動跑，要手動啟動：</p>
+                    <pre style="margin: 8px 0;">
+# 視窗一：啟動龍蝦 Gateway
+openclaw gateway restart
+
+# 視窗二（另開 PowerShell）：啟動 ngrok
+ngrok http 18789
+
+# 確認 Gateway 活著（瀏覽器打開看看）
+http://127.0.0.1:18789/
+
+# 如果 ngrok 網址變了 → 去 LINE 後台更新 Webhook URL</pre>
+                </div>
+
+                <h3>常用指令速查表</h3>
+                <table style="font-size: 15px;">
+                    <tr><th style="width: 45%;">用途</th><th>指令</th></tr>
+                    <tr><td>啟動 / 重啟 Gateway</td><td><code>openclaw gateway restart</code></td></tr>
+                    <tr><td>檢查 Gateway 狀態</td><td><code>openclaw gateway status</code></td></tr>
+                    <tr><td>啟動 ngrok 通道</td><td><code>ngrok http 18789</code></td></tr>
+                    <tr><td>配對 LINE 帳號</td><td><code>openclaw pairing approve line 配對碼</code></td></tr>
+                    <tr><td>全面健康檢查</td><td><code>openclaw doctor</code></td></tr>
+                    <tr><td>強制重裝 Gateway（急救）</td><td><code>openclaw gateway install --force</code></td></tr>
+                    <tr><td>檢查版本</td><td><code>openclaw --version</code></td></tr>
+                    <tr><td>打開 Dashboard</td><td>瀏覽器開 <code>http://127.0.0.1:18789/</code></td></tr>
+                </table>
+
+                <div class="box info">
+                    <strong>進階技巧：讓 ngrok 在背景跑</strong><br>
+                    不想開兩個視窗？用 PowerShell 讓 ngrok 隱藏執行：<br>
+                    <code>Start-Process ngrok -ArgumentList 'http','18789' -WindowStyle Hidden</code><br>
+                    這樣 ngrok 會在背景跑，只剩一個視窗。
                 </div>
                 <span class="slide-number">6 / 17</span>
             </div>
@@ -756,9 +815,16 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     後面的推播、HEARTBEAT、通知技能都會再用到這個值。
                 </div>
                 <div class="box warning">
+                    <strong>LINE 顯示「access not configured」怎麼辦？</strong><br>
+                    這代表龍蝦收到訊息了，但還沒認識你。這是<strong>正常的第一次訊息</strong>！<br>
+                    看 LINE 上龍蝦回覆的<strong>配對碼</strong>（pairing code），然後在 PowerShell 執行：<br>
+                    <code>openclaw pairing approve line 配對碼</code><br>
+                    輸入完再回 LINE 傳第二次訊息，龍蝦就會正常回覆了。
+                </div>
+                <div class="box warning">
                     <strong>如果你傳了訊息卻完全沒收到配對碼：</strong><br>
                     先回頭檢查三件事：<br>
-                    1. Gateway 還有沒有在跑<br>
+                    1. Gateway 還有沒有在跑（<code>openclaw gateway status</code>）<br>
                     2. Webhook Verify 是不是 Success<br>
                     3. LINE 官方帳號是不是已經加好友，而且自動回應訊息已停用
                 </div>
@@ -798,26 +864,44 @@ openclaw gateway status
 # 換 AI 模型（不用重新安裝！）
 openclaw config set agents.defaults.model.primary "gemini-3-flash"
 openclaw gateway restart</pre>
+
+                <h3>進階狀態檢查（從 Liang.cmd 學來的）</h3>
+                <p>除了 <code>doctor</code>，你也可以手動逐項檢查：</p>
+                <pre>
+# 檢查 port 18789 有沒有在用（Gateway 跑在這個 port）
+Get-NetTCPConnection -LocalPort 18789
+
+# 檢查 node 程序有沒有在跑
+Get-Process node
+
+# 檢查 ngrok 程序有沒有在跑
+Get-Process ngrok
+
+# 用瀏覽器測試 Gateway 首頁
+# → 打開 http://127.0.0.1:18789/  看到 Dashboard 就是正常
+
+# 查看最近的錯誤紀錄
+Get-Content "$env:TEMP\openclaw\openclaw-*.log" -Tail 20</pre>
+
+                <div class="box info">
+                    <strong>重要路徑速查（Windows）：</strong><br>
+                    設定檔：<code>C:\Users\你\.openclaw\openclaw.json</code><br>
+                    人格檔案：<code>C:\Users\你\.openclaw\workspace\</code><br>
+                    錯誤紀錄：<code>%TEMP%\openclaw\openclaw-YYYY-MM-DD.log</code><br>
+                    自動安裝的 ngrok：<code>C:\OpenClaw_Auto\ngrok_dir\ngrok.exe</code><br>
+                    ngrok log：<code>C:\OpenClaw_Auto\ngrok-agent.log</code>
+                </div>
+
                 <div class="box info">
                     <strong>新手先記兩個檢查就夠：</strong><br>
                     如果你懷疑沒裝好，先跑 <code>openclaw doctor</code>。<br>
-                    如果你懷疑龍蝦根本沒在跑，再跑 <code>openclaw gateway status</code>。
-                </div>
-                <div class="box info">
-                    <strong><code>openclaw doctor -fix</code> 是做什麼？</strong><br>
-                    它會在檢查完之後，嘗試自動修復一部分常見的小問題。<br>
-                    可以把它理解成「先檢查，再幫你順手修能修的地方」。
+                    如果你懷疑龍蝦根本沒在跑，再跑 <code>openclaw gateway status</code>。<br>
+                    如果以上都沒問題但 LINE 不回，打開 <code>http://127.0.0.1:18789/</code> 看看。
                 </div>
                 <div class="box warning">
                     <strong>學生最實用的判讀方法：</strong><br>
                     <code>doctor</code> 裡如果一堆都是 ✅，代表安裝大致正常。<br>
                     如果有 ❌，就先修那一項，不要同時亂改很多地方。
-                </div>
-                <div class="box warning">
-                    <strong>使用時機：</strong><br>
-                    先跑一次 <code>openclaw doctor</code> 看哪裡有問題。<br>
-                    如果只是一般設定或相依套件的小錯誤，再試 <code>openclaw doctor -fix</code>。<br>
-                    如果是 Webhook、Token、路徑貼錯這種資料問題，還是要手動改。
                 </div>
                 <span class="slide-number">12 / 17</span>
             </div>
@@ -1009,9 +1093,12 @@ openclaw gateway restart</pre>
                     </tr>
                 </table>
                 <div class="box info">
-                    <strong>FAQ 看法：</strong><br>
-                    如果你現在卡住，不要一口氣看完整張表。<br>
-                    先找最接近你眼前症狀的那一列，例如「不是可辨識的命令」、「Webhook 驗證失敗」、「龍蝦回兩次」。
+                    <strong>排查黃金順序（從 Liang.cmd 學來的）：</strong><br>
+                    <strong>第一步</strong>：<code>openclaw gateway status</code> → Gateway 在跑嗎？<br>
+                    <strong>第二步</strong>：瀏覽器開 <code>http://127.0.0.1:18789/</code> → Dashboard 打得開嗎？<br>
+                    <strong>第三步</strong>：看 ngrok 視窗 → 有 Forwarding 網址嗎？<br>
+                    <strong>第四步</strong>：LINE 後台按 Verify → 顯示 Success 嗎？<br>
+                    哪一步失敗就修哪一步，<strong>不要跳步</strong>。
                 </div>
                 <span class="slide-number">16 / 17</span>
             </div>
