@@ -172,7 +172,7 @@
                     <p style="font-size: 17px; margin-bottom: 8px;"><a href="../resources/checklists/CH5-安裝前檢查清單.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">CH5 安裝前檢查清單</a></p>
                     <p style="font-size: 17px; margin-bottom: 0;"><a href="../resources/installer/Readme.md" target="_blank" style="color:#667eea; font-weight:700; text-decoration:none;">安裝器說明</a></p>
                 </div>
-                <span class="slide-number">1 / 17</span>
+                <span class="slide-number">1 / 16</span>
             </div>
         </div>
 
@@ -213,7 +213,7 @@
                     沒有好電腦但有 GitHub，就走 <strong>方式四</strong>。<br>
                     不要五種都試，先選一條走到底最重要。
                 </div>
-                <span class="slide-number">2 / 17</span>
+                <span class="slide-number">2 / 16</span>
             </div>
         </div>
 
@@ -229,7 +229,6 @@
                     <tr><td>LINE Channel ID</td><td>LINE Developers Console</td><td>讓龍蝦知道連哪個 LINE 帳號</td></tr>
                     <tr><td>LINE Channel Secret</td><td>LINE Developers Console</td><td>驗證訊息來源的密鑰</td></tr>
                     <tr><td>LINE Channel Access Token</td><td>LINE Developers（點 Issue）</td><td>龍蝦發送訊息的授權碼</td></tr>
-                    <tr><td>LINE User ID（adminUserId）</td><td>安裝後從 Gateway log 或 Dashboard 取得<br>（<code>U</code> 開頭 + 32 碼，可安裝後補填）</td><td>設定龍蝦的管理員身分</td></tr>
                     <tr><td>AI API Key 或 OAuth 帳號</td><td>Google AI Studio / OpenAI / Anthropic</td><td>龍蝦的大腦（OpenAI 可用 OAuth 免費登入，不需 Key）</td></tr>
                     <tr><td>ngrok Authtoken</td><td>ngrok Dashboard</td><td>建立通道讓 LINE 連到你的電腦</td></tr>
                 </table>
@@ -259,7 +258,7 @@
                 <div class="box info">
                     💡 <strong>免費用 GPT？</strong>OpenAI 支援 OAuth 網頁授權登入，不需要 API Key！設定時選「OAuth / Codex 授權」，瀏覽器會跳出 ChatGPT 登入頁面，登入後就能免費使用。<strong>注意：免費 ChatGPT 帳號只能選 GPT-5.2，選 5.4 會無法連線。</strong>
                 </div>
-                <span class="slide-number">3 / 17</span>
+                <span class="slide-number">3 / 16</span>
             </div>
         </div>
 
@@ -297,7 +296,7 @@
                     安裝程式畫面已經正常打開，而且你已經進到選單畫面。<br>
                     如果連選單都沒看到，就先不要往後，先處理 go.bat 啟動問題。
                 </div>
-                <span class="slide-number">4 / 17</span>
+                <span class="slide-number">4 / 16</span>
             </div>
         </div>
 
@@ -319,67 +318,30 @@
                 </table>
 
                 <h3>設定 LINE 頻道資料</h3>
-                <p>安裝程式會依序問你 LINE 的資料，請一個一個貼上：</p>
+                <p>安裝程式會依序問你三個 LINE 的資料：</p>
                 <ol>
-                    <li>貼上 <strong>LINE Channel ID</strong>（一串數字，約 10 碼）</li>
-                    <li>貼上 <strong>LINE Channel Secret</strong>（英數混合，約 32 碼）</li>
-                    <li>貼上 <strong>LINE Channel Access Token</strong>（超長！超過 100 字元）</li>
+                    <li>輸入 <strong>LINE Channel ID</strong>（一串數字）</li>
+                    <li>輸入 <strong>LINE Channel Secret</strong>（英數混合）</li>
+                    <li>輸入 <strong>LINE Channel Access Token</strong>（超長英數字串）</li>
                 </ol>
 
                 <div class="box warning">
-                    ⚠️ Channel Access Token 超過 100 字元，手動打字一定會出錯！<br>
-                    <strong>正確做法：</strong>先在記事本或 CH1 的帳號清單裡複製好，回到 PowerShell 視窗按<strong>右鍵貼上</strong>（不是 Ctrl+V）。
+                    ⚠️ Channel Access Token 超過 100 字元，建議先在記事本裡複製好，然後在 PowerShell 按<strong>右鍵貼上</strong>。
                 </div>
 
-                <h3>設定 ngrok 並啟動</h3>
-                <ol>
-                    <li>安裝程式會要求你貼上 <strong>ngrok Authtoken</strong>（從 <code>dashboard.ngrok.com</code> 複製）</li>
-                    <li>全部設定完成後，選擇 <strong>[9] 啟動 OpenClaw + ngrok</strong></li>
-                    <li>畫面會顯示 ngrok 的公開網址，找到 <strong>Forwarding</strong> 那一行：</li>
-                </ol>
-                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot">
-
-                <div class="box success">
-                    <strong>請立刻做兩件事：</strong><br>
-                    1. 找到 <strong>Forwarding</strong> 那一行，把 <code>https://xxxx.ngrok-free.app</code> 這段網址<strong>複製</strong>下來<br>
-                    2. <strong>不要關掉這個視窗</strong>！Gateway 和 ngrok 都在這裡運行，關掉龍蝦就斷線了<br>
-                    3. 帶著這個網址 → 去做「5.7 設定 LINE Webhook」
-                </div>
-
-                <h3>安裝後補填 User ID</h3>
-                <p>配對成功後（見 5.7 節），從 Gateway log 中取得你的 LINE User ID（<code>U</code> 開頭 + 32 碼），再補填：</p>
-                <pre>openclaw config set channels.line.adminUserId "你的User ID"
-openclaw gateway restart</pre>
-
-                <div class="box success">
-                    <strong>自動安裝完成後，你會多一個「Liang.cmd」快捷工具：</strong><br>
-                    位置在安裝資料夾內，雙擊就能用。它提供：<br>
-                    <strong>選項 1</strong>：一鍵啟動 OpenClaw + ngrok（每天開機用這個）<br>
-                    <strong>選項 2</strong>：一鍵檢查所有狀態（Gateway / ngrok / Webhook 全檢查）<br>
-                    <strong>選項 3</strong>：完整操作導航（忘記步驟時看這個）<br>
-                    <strong>選項 4</strong>：常用指令速查
-                </div>
-
+                <p>最後設定 <strong>ngrok Authtoken</strong>，然後選擇 <strong>[9] 啟動 OpenClaw + ngrok</strong>，把顯示的 <code>ngrok-free.app</code> 網址複製起來！</p>
                 <div class="box info">
-                    <strong>自動安裝程式會把 ngrok 放在：</strong><br>
-                    <code>C:\OpenClaw_Auto\ngrok_dir\ngrok.exe</code><br>
-                    如果你手動啟動 ngrok，要用完整路徑，或直接用 Liang.cmd 一鍵啟動。
+                    <strong>這一步做完後，請立刻做兩件事：</strong><br>
+                    1. 把畫面上顯示的 <code>https://xxxx.ngrok-free.app</code> 複製下來<br>
+                    2. 不要關掉這個視窗，因為 Gateway 和 ngrok 還在這裡運行
                 </div>
-
-                <div class="box info">
-                    <strong>進階技巧：讓 ngrok 在背景跑（不占視窗）</strong><br>
-                    在 PowerShell 中執行：<br>
-                    <code>Start-Process -FilePath 'C:\OpenClaw_Auto\ngrok_dir\ngrok.exe' -ArgumentList 'http','http://127.0.0.1:18789' -WindowStyle Hidden</code><br>
-                    ngrok 會在背景運行，不會佔一個視窗。Liang.cmd 的選項 1 就是這樣做的。
-                </div>
-
                 <div class="box info">
                     <strong>如果你是新手，這樣選最穩：</strong><br>
                     有 <code>Gemini API Key</code> 就選 <strong>Google</strong>。<br>
                     有 ChatGPT 帳號、想走免 Key，就選 <strong>OpenAI → OAuth</strong>。<br>
                     看到要你選模型時，Google 先選課堂建議的 Gemini 模型；OpenAI 免費帳號先選 <code>GPT-5.2</code>。
                 </div>
-                <span class="slide-number">5 / 17</span>
+                <span class="slide-number">5 / 16</span>
             </div>
         </div>
 
@@ -389,123 +351,59 @@ openclaw gateway restart</pre>
                 <h2>5.4 方式二：手動 npm 安裝（進階用戶）</h2>
                 <p>喜歡自己動手、想理解每個步驟背後的原理？手動安裝就像自己從頭煮一道菜——步驟多但你會清楚知道每樣材料是什麼。</p>
 
-                <h3>完整步驟流程（一行一行照著做）</h3>
+                <h3>完整步驟流程</h3>
                 <pre>
-# ===== 第一階段：環境準備 =====
-
-# 步驟 0. 設定 PowerShell 執行權限（首次安裝必做！否則會閃退）
+# 0. 設定 PowerShell 執行權限（首次安裝必做！否則會閃退）
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-# 步驟 1. 確認 Node.js 已安裝（需要 v22+）
+# 1. 確認 Node.js（需要 v22+）
 node -v
-# → 如果顯示「不是可辨識的命令」→ 去 https://nodejs.org/ 下載 LTS 版安裝
-# → 裝完後關掉 PowerShell 重新開一個！
 
-# 步驟 2. 確認 Git 已安裝
+# 2. 確認 Git
 git --version
-# → 如果沒裝 → 去 https://git-scm.com/ 下載安裝
 
-# ===== 第二階段：安裝 OpenClaw =====
-
-# 步驟 3. 安裝 OpenClaw
+# 3. 安裝 OpenClaw（二擇一）
 npm install -g openclaw@latest
-# → 等 2-5 分鐘，看到 "added xxx packages" 就成功
+# 或用一行式安裝（自動處理所有相依套件）：
+# powershell -c "irm https://openclaw.ai/install.ps1 | iex"
 
-# 步驟 4. 確認安裝成功
+# 4. 確認安裝成功
 openclaw --version
 
-# 步驟 5. 初始化設定精靈（照著問題回答）
-openclaw onboard
-# → Yes → QuickStart → 選 AI 廠商 → 填 API Key 或選 OAuth → 選模型 → 選 LINE
+# 5. 初始化設定
+openclaw onboard --install-daemon
 
-# ===== 第三階段：設定 LINE 通道 =====
-
-# 步驟 6. 安裝 LINE 外掛
+# 6. 安裝 LINE 外掛
 openclaw plugins install @openclaw/line
 
-# 步驟 7. 設定 LINE 頻道（四把鑰匙，一行一行執行）
+# 7. 設定 LINE 頻道（三把鑰匙）
 openclaw config set channels.line.channelId "你的Channel ID"
 openclaw config set channels.line.channelSecret "你的Channel Secret"
 openclaw config set channels.line.channelAccessToken "你的Channel Access Token"
-openclaw config set channels.line.adminUserId "你的User ID"
-# → User ID 是 U 開頭 + 32 碼，可安裝後從 Gateway log 取得再補填
 
-# ===== 第四階段：設定 ngrok + 啟動 =====
-
-# 步驟 8. 安裝 ngrok
+# 8. 安裝 ngrok
 winget install ngrok.ngrok
-# → 設定 ngrok 認證
 ngrok config add-authtoken 你的ngrok_authtoken
 
-# 步驟 9. 啟動龍蝦！（需要開兩個 PowerShell 視窗）
-openclaw gateway start      # ← 視窗一：啟動龍蝦
-# → 另開一個新的 PowerShell 視窗 ↓
-ngrok http 18789             # ← 視窗二：啟動通道
-# → 複製畫面上顯示的 https://xxxx.ngrok-free.app 網址！</pre>
+# 9. 啟動龍蝦（開兩個 PowerShell 視窗）
+openclaw gateway start      # 視窗一
+ngrok http 18789             # 視窗二</pre>
 
                 <div class="box warning">
                     ⚠️ <strong>步驟 0 不能跳過！</strong>如果沒有設定 PowerShell 執行權限，安裝過程中腳本可能會自動閃退。只需要做一次，之後就不用再設定了。
                 </div>
 
+                <div class="box info">
+                    💡 <code>-g</code> 代表 global（全域安裝），<code>@latest</code> 代表最新版本。<code>18789</code> 是 OpenClaw Gateway 的預設連接埠。Mac/Linux 用戶可用：<code>curl -fsSL https://openclaw.ai/install.sh | bash</code>
+                </div>
                 <div class="box warning">
                     <strong>這一大段怎麼做才不會亂？</strong><br>
-                    <strong>步驟 0 ~ 8</strong> 都在<strong>同一個 PowerShell 視窗</strong>依序執行。<br>
-                    到<strong>步驟 9</strong> 才另外再開<strong>第二個 PowerShell 視窗</strong>跑 <code>ngrok http 18789</code>。<br>
-                    最後會有兩個視窗同時開著：一個跑龍蝦，一個跑 ngrok。<strong>兩個都不能關！</strong>
+                    從步驟 0 到步驟 8，都在 <strong>同一個 PowerShell 視窗</strong> 依序執行。<br>
+                    到步驟 9 才另外再開第二個 PowerShell 視窗跑 <code>ngrok http 18789</code>。<br>
+                    也就是最後會有兩個視窗：一個跑 <code>openclaw gateway start</code>，一個跑 <code>ngrok</code>。
                 </div>
-                <h3>ngrok 啟動後的畫面</h3>
-                <p>執行 <code>ngrok http 18789</code> 之後，你會看到這個畫面：</p>
-                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot">
-
-                <div class="box success">
-                    <strong>找到網址了嗎？</strong><br>
-                    1. 找到 <strong>Forwarding</strong> 那一行<br>
-                    2. 複製 <code>https://</code> 開頭、<code>.ngrok-free.app</code> 結尾的那段網址<br>
-                    3. <strong>不要關掉這個視窗！</strong>關掉 = 龍蝦斷線<br>
-                    4. 帶著這個網址 → 去做下面的 LINE Webhook 設定
-                </div>
-                <div class="box warning">
-                    <strong>注意：ngrok 免費版每次重啟都會換網址！</strong><br>
-                    如果你關掉 ngrok 再重開，網址會變，要重新去 LINE 後台更新 Webhook URL。
-                </div>
-
-                <h3>每日開機啟動流程（安裝完後每天要做的事）</h3>
-                <div style="background: #f8f9fa; border: 2px solid #667eea; border-radius: 12px; padding: 20px; margin: 15px 0;">
-                    <p style="margin-bottom: 10px; font-weight: 700; color: #667eea;">電腦重開機後，龍蝦不會自動跑，要手動啟動：</p>
-                    <pre style="margin: 8px 0;">
-# 視窗一：啟動龍蝦 Gateway
-openclaw gateway restart
-
-# 視窗二（另開 PowerShell）：啟動 ngrok
-ngrok http 18789
-
-# 確認 Gateway 活著（瀏覽器打開看看）
-http://127.0.0.1:18789/
-
-# 如果 ngrok 網址變了 → 去 LINE 後台更新 Webhook URL</pre>
-                </div>
-
-                <h3>常用指令速查表</h3>
-                <table style="font-size: 15px;">
-                    <tr><th style="width: 45%;">用途</th><th>指令</th></tr>
-                    <tr><td>啟動 / 重啟 Gateway</td><td><code>openclaw gateway restart</code></td></tr>
-                    <tr><td>檢查 Gateway 狀態</td><td><code>openclaw gateway status</code></td></tr>
-                    <tr><td>啟動 ngrok 通道</td><td><code>ngrok http 18789</code></td></tr>
-                    <tr><td>配對 LINE 帳號</td><td><code>openclaw pairing approve line 配對碼</code></td></tr>
-                    <tr><td>全面健康檢查</td><td><code>openclaw doctor</code></td></tr>
-                    <tr><td>強制重裝 Gateway（急救）</td><td><code>openclaw gateway install --force</code></td></tr>
-                    <tr><td>檢查版本</td><td><code>openclaw --version</code></td></tr>
-                    <tr><td>打開 Dashboard</td><td>瀏覽器開 <code>http://127.0.0.1:18789/</code></td></tr>
-                </table>
-
-                <div class="box info">
-                    <strong>進階技巧：讓 ngrok 在背景跑</strong><br>
-                    不想開兩個視窗？用 PowerShell 讓 ngrok 隱藏執行：<br>
-                    <code>Start-Process ngrok -ArgumentList 'http','18789' -WindowStyle Hidden</code><br>
-                    這樣 ngrok 會在背景跑，只剩一個視窗。
-                </div>
-                <span class="slide-number">6 / 17</span>
+                <span class="slide-number">6 / 16</span>
             </div>
         </div>
 
@@ -524,81 +422,41 @@ http://127.0.0.1:18789/
                     <tr><td>RTX 3090 / RTX 4080+</td><td>16GB+</td><td>Llama 3.3 70B（最強）</td><td>非常流暢</td></tr>
                 </table>
 
-                <h3>完整安裝步驟（一行一行照著做）</h3>
+                <h3>安裝步驟</h3>
                 <pre>
-# ===== 第一階段：安裝 Ollama + 下載模型 =====
+# 1. 安裝 Ollama：https://ollama.com/
+ollama --version
 
-# 步驟 1. 安裝 Ollama：去 https://ollama.com/ 下載安裝
-ollama --version    # 確認安裝成功
+# 2. 下載 AI 模型（根據顯卡選擇）
+ollama pull llama3.1:8b     # 8GB 顯卡推薦
+ollama pull qwen3:14b       # 12GB 顯卡
+ollama pull llama3.3:70b    # 16GB+ 顯卡
 
-# 步驟 2. 下載 AI 模型（根據你的顯卡選一個）
-ollama pull llama3.1:8b     # 8GB 顯卡推薦（選這個就好）
-# ollama pull qwen3:14b     # 12GB 顯卡
-# ollama pull llama3.3:70b  # 16GB+ 顯卡
+# 3. 測試模型
+ollama run llama3.1:8b      # 按 Ctrl+D 或 /bye 離開
 
-# 步驟 3. 測試模型能不能回話
-ollama run llama3.1:8b
-# → 打幾句話測試，能回就 OK → 輸入 /bye 離開
-
-# ===== 第二階段：安裝 OpenClaw =====
-
-# 步驟 4. 安裝 Node.js + Git（如果還沒裝，見方式二步驟 0-2）
-node -v       # 需要 v22+
-git --version
-
-# 步驟 5. 安裝 OpenClaw
+# 4. 安裝 OpenClaw + 設定
 npm install -g openclaw@latest
-openclaw --version
-
-# 步驟 6. 初始化設定
-openclaw onboard
-# → Yes → QuickStart → Model provider 選「Ollama」
-# → Default model 填 llama3.1:8b（要填完整名稱！）
-# → Select channel 選「LINE」
-
-# ===== 第三階段：設定 LINE 通道 =====
-
-# 步驟 7. 安裝 LINE 外掛
-openclaw plugins install @openclaw/line
-
-# 步驟 8. 設定 LINE 頻道（四把鑰匙）
-openclaw config set channels.line.channelId "你的Channel ID"
-openclaw config set channels.line.channelSecret "你的Channel Secret"
-openclaw config set channels.line.channelAccessToken "你的Channel Access Token"
-openclaw config set channels.line.adminUserId "你的User ID"
-
-# ===== 第四階段：設定 ngrok + 啟動 =====
-
-# 步驟 9. 安裝 ngrok
-winget install ngrok.ngrok
-ngrok config add-authtoken 你的ngrok_authtoken
-
-# 步驟 10. 啟動龍蝦！（開兩個 PowerShell 視窗）
-openclaw gateway start      # ← 視窗一：啟動龍蝦
-# → 另開新的 PowerShell 視窗 ↓
-ngrok http 18789             # ← 視窗二：啟動通道
-# → 複製 https://xxxx.ngrok-free.app 網址！</pre>
+openclaw onboard --install-daemon
+# → Model provider 選「Ollama」
+# → Default model 填你下載的模型名稱</pre>
 
                 <div class="box warning">
-                    ⚠️ 不確定 VRAM 大小？在 Windows 搜尋列輸入 <code>dxdiag</code>，切到「顯示」分頁查看「顯示記憶體」。
+                    ⚠️ 不確定 VRAM 大小？在 Windows 搜尋列輸入 <code>dxdiag</code>，切到「顯示」分頁查看「顯示記憶體」。Ollama 服務需一直在背景運行！
                 </div>
-                <div class="box warning">
+                <div class="box info">
+                    <strong>這條路線做完後要確認三件事：</strong><br>
+                    1. <code>ollama --version</code> 有成功顯示版本<br>
+                    2. <code>ollama run 你下載的模型</code> 真的能回話<br>
+                    3. <code>openclaw onboard</code> 裡的 provider 已經選成 <code>Ollama</code>
+                </div>
+                <div class="box info">
                     <strong>最容易填錯的地方：</strong><br>
-                    <code>Default model</code> 一定要填你剛剛真的 <code>pull</code> 下來的<strong>完整模型名</strong>。<br>
-                    例如你執行的是 <code>ollama pull llama3.1:8b</code>，就要填 <code>llama3.1:8b</code>，不能只寫 <code>llama</code> 或 <code>8b</code>。
+                    <code>Default model</code> 一定要填你剛剛真的 <code>pull</code> 下來的完整模型名。<br>
+                    例如你剛剛執行的是 <code>ollama pull llama3.1:8b</code>，這裡就要填 <code>llama3.1:8b</code>，不能只寫 <code>llama</code> 或 <code>8b</code>。<br>
+                    如果後面龍蝦完全不回，先確認 Ollama 程式還在背景執行中。
                 </div>
-                <h3>ngrok 啟動後的畫面</h3>
-                <p>執行 <code>ngrok http 18789</code> 後，你會看到這個畫面：</p>
-                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot">
-
-                <div class="box success">
-                    <strong>步驟 10 做完後，你手上應該有：</strong><br>
-                    1. 一段 <code>https://xxxx.ngrok-free.app</code> 的網址（已複製）<br>
-                    2. 三個 PowerShell 視窗同時開著：Ollama + OpenClaw Gateway + ngrok<br>
-                    3. <strong>三個都不能關！</strong>關任何一個龍蝦就斷線<br>
-                    4. 帶著網址 → 去做下面的 LINE Webhook 設定
-                </div>
-                <span class="slide-number">7 / 17</span>
+                <span class="slide-number">7 / 16</span>
             </div>
         </div>
 
@@ -619,50 +477,34 @@ ngrok http 18789             # ← 視窗二：啟動通道
 
                 <img src="images/CH05/ch05_02_create_repo.png" alt="建立 GitHub 倉庫" class="screenshot">
 
-                <h3>操作流程（一步一步照著做）</h3>
+                <h3>操作流程</h3>
                 <ol>
-                    <li>登入 GitHub → 右上角「+」→「New repository」</li>
-                    <li>Repository name 填 <code>openclaw-ai-bot</code>，選 <strong>Public</strong>，勾 <strong>Add a README</strong> → Create</li>
-                    <li>點「Add file」→「Create new file」→ 檔名輸入 <code>.devcontainer/devcontainer.json</code>（前面有個點！）→ 貼上設定內容 → Commit</li>
-                    <li>同樣方式新增 <code>package.json</code> → Commit</li>
-                    <li>按綠色「Code」→ 切到「Codespaces」→ <strong>Create codespace on main</strong></li>
-                    <li>等 2-3 分鐘，瀏覽器打開類似 VS Code 的畫面</li>
+                    <li>在 GitHub 建立新倉庫（Public，勾選 Add README）</li>
+                    <li>新增 <code>.devcontainer/devcontainer.json</code> 設定檔</li>
+                    <li>新增 <code>package.json</code></li>
+                    <li>點擊 Code → Codespaces → <strong>Create codespace on main</strong></li>
+                    <li>在終端機執行 <code>openclaw onboard --install-daemon</code></li>
                 </ol>
 
                 <img src="images/CH05/ch05_03_create_codespace.png" alt="建立 Codespace" class="screenshot">
 
-                <h3>在 Codespace 終端機設定龍蝦</h3>
-                <pre>
-# 步驟 7. 初始化設定
-openclaw onboard
-# → Yes → QuickStart → 選 AI（推薦 Qwen，完全免費）→ 選 LINE
-
-# 步驟 8. 安裝 LINE 外掛 + 設定四把鑰匙
-openclaw plugins install @openclaw/line
-openclaw config set channels.line.channelId "你的Channel ID"
-openclaw config set channels.line.channelSecret "你的Channel Secret"
-openclaw config set channels.line.channelAccessToken "你的Channel Access Token"
-openclaw config set channels.line.adminUserId "你的User ID"
-
-# 步驟 9. 啟動龍蝦
-openclaw gateway start
-
-# 步驟 10. 取得公開網址
-echo "https://${CODESPACE_NAME}-18789.app.github.dev"
-# → 複製這個網址！</pre>
-
+                <div class="box info">
+                    💡 Codespaces <strong>不需要 ngrok</strong>！GitHub 會自動幫你公開端口。記得設定端口為 <strong>Make Public</strong>。
+                </div>
                 <div class="box warning">
-                    ⚠️ <strong>最關鍵的一步：設端口為 Public！</strong><br>
-                    在 Codespace 下方找到 <strong>「Ports / 連接埠」</strong> 面板 → 找到 <strong>18789</strong> 埠 → 右鍵 → <strong>Port Visibility → Public</strong><br>
-                    如果沒改成 Public，LINE 雖然有網址但<strong>連不進來</strong>！
+                    <strong>這條路線最容易漏掉的地方：</strong><br>
+                    當 OpenClaw 跑起來後，要去 Ports / 連接埠面板把對應埠設成 <strong>Public / Make Public</strong>。<br>
+                    否則 LINE 雖然有網址，外面還是連不進來。
                 </div>
-                <div class="box success">
-                    <strong>Codespaces 不需要 ngrok！</strong><br>
-                    GitHub 直接給你公開網址，你的 Webhook URL 就是：<br>
-                    <code>https://你的codespace名稱-18789.app.github.dev/line/webhook</code><br>
-                    把這個網址<strong>複製</strong>下來 → 等等貼到 LINE Webhook！
+                <div class="box info">
+                    <strong>學生版最簡單操作順序：</strong><br>
+                    1. Codespace 開好後，在終端機安裝並啟動 OpenClaw。<br>
+                    2. 找到底下的 <strong>Ports / 連接埠</strong> 面板。<br>
+                    3. 找到 OpenClaw 使用的埠號，把它改成 <strong>Public</strong>。<br>
+                    4. 複製那個公開網址，再自己補上 <code>/line/webhook</code> 貼回 LINE 後台。<br>
+                    例如：<code>https://你的codespace-18789.app.github.dev/line/webhook</code>
                 </div>
-                <span class="slide-number">8 / 17</span>
+                <span class="slide-number">8 / 16</span>
             </div>
         </div>
 
@@ -670,52 +512,50 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
         <div class="slide">
             <div class="content-card">
                 <h2>方式五：Zeabur 一鍵雲端部署</h2>
-                <p>Zeabur 是台灣團隊開發的雲端部署平台。OpenClaw 官方有現成的部署範本，點幾下就能讓龍蝦在雲端 24 小時運行。<strong>不需要 ngrok！</strong></p>
+                <p>Zeabur 是台灣團隊開發的雲端部署平台，只需要幾個點擊就能把龍蝦部署到雲端。適合想要「設定完就忘」的使用者。</p>
 
                 <img src="images/CH05/ch05_04_zeabur_deploy.png" alt="Zeabur 部署" class="screenshot">
 
-                <h3>操作流程（一步一步照著做）</h3>
+                <h3>操作流程</h3>
                 <ol>
-                    <li><strong>註冊 Zeabur</strong>：前往 <code>https://zeabur.com/</code> → 點 Sign Up → 建議用 GitHub 帳號登入（一秒搞定）</li>
-                    <li><strong>打開官方模板</strong>：前往 <code>https://zeabur.com/zh-TW/templates/VTZ4FX</code></li>
-                    <li>點頁面上的 <strong>「部署」</strong> 按鈕 → 等 1-2 分鐘自動建立完成</li>
-                    <li>部署完成後，進入專案頁面 → 找到 OpenClaw 服務的<strong>公開網址</strong>（<code>.zeabur.app</code> 結尾）</li>
-                    <li>打開 Web UI 管理介面 → 在裡面設定 AI 模型和 LINE 頻道</li>
+                    <li>前往 <strong>zeabur.com</strong> 建立帳號</li>
+                    <li>建立新專案，選擇 <strong>Deploy from GitHub</strong></li>
+                    <li>連結你的 GitHub 倉庫（和方式四一樣的倉庫可以直接用）</li>
+                    <li>設定環境變數（LINE Channel ID / Secret / Token、AI API Key）</li>
+                    <li>Zeabur 會自動部署、自動給你一個公開的 HTTPS 網址</li>
                 </ol>
 
                 <div class="concept-grid" style="grid-template-columns: 1fr 1fr;">
                     <div class="concept-card">
                         <h3>✅ 優點</h3>
                         <ul>
-                            <li>官方模板，點幾下就好</li>
+                            <li>設定簡單，點幾下就好</li>
                             <li>24 小時在線，不用開電腦</li>
                             <li>自動 HTTPS，不需要 ngrok</li>
-                            <li>有 Web UI 管理介面</li>
+                            <li>台灣團隊，中文支援好</li>
                         </ul>
                     </div>
                     <div class="concept-card">
                         <h3>⚠️ 注意事項</h3>
                         <ul>
-                            <li>需付費（依用量計費）</li>
-                            <li>最低 2 vCPU / 4 GB RAM</li>
+                            <li>免費方案有資源限制</li>
+                            <li>超過免費額度需要付費</li>
                             <li>需要 GitHub 帳號</li>
-                            <li>預算有限建議選方式四</li>
                         </ul>
                     </div>
                 </div>
-                <div class="box success">
-                    <strong>你的 Webhook URL 就是：</strong><br>
-                    <code>https://你的服務名稱.zeabur.app/line/webhook</code><br>
-                    把這個網址<strong>複製</strong>下來 → 等等貼到 LINE Webhook！<br>
-                    <strong>不需要 ngrok！</strong>Zeabur 已經幫你做好外部連線了。
+                <div class="box info">
+                    <strong>環境變數到底要填什麼？</strong><br>
+                    至少要填這幾個：<code>LINE Channel ID</code>、<code>LINE Channel Secret</code>、<code>LINE Channel Access Token</code>、你選的 <code>AI API Key</code>。<br>
+                    如果你是用 Gemini，就填 Gemini Key；如果是 OpenAI，就填 OpenAI Key。
                 </div>
                 <div class="box warning">
-                    <strong>如果要改 AI 模型設定：</strong><br>
-                    在 Zeabur 服務頁面 →「設定」→「檔案」→ 找到<br>
-                    <code>/opt/openclaw/providers/zeabur-ai-hub.json5</code><br>
-                    修改後記得<strong>重新啟動服務</strong>。
+                    <strong>這一頁原則很簡單：</strong><br>
+                    Zeabur 要你填的環境變數，本質上就是把你在 CH1 收集到的值，一格一格貼進去。<br>
+                    看到欄位名稱像 <code>LINE_CHANNEL_ID</code>、<code>LINE_CHANNEL_SECRET</code>、<code>LINE_CHANNEL_ACCESS_TOKEN</code>、<code>GEMINI_API_KEY</code> 時，就貼對應的值。<br>
+                    貼完之後按儲存，等 Zeabur 部署完成，再把它給你的公開網址拿去做 LINE Webhook。
                 </div>
-                <span class="slide-number">9 / 17</span>
+                <span class="slide-number">9 / 16</span>
             </div>
         </div>
 
@@ -723,16 +563,7 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
         <div class="slide">
             <div class="content-card">
                 <h2>5.7 設定 LINE Webhook 與驗證</h2>
-                <div class="box warning">
-                    <strong>走到這一頁之前，請先確認你已經取得了龍蝦的公開網址：</strong><br>
-                    方式一/二/三 → 從 ngrok 畫面的 <strong>Forwarding</strong> 行複製 <code>https://xxxx.ngrok-free.app</code><br>
-                    方式四 → 從 Codespace Ports 面板複製公開網址<br>
-                    方式五 → 從 Zeabur 專案頁面複製 <code>.zeabur.app</code> 網址<br>
-                    <strong>如果你還沒有網址，請先回去把 ngrok 或雲端服務跑起來！</strong>
-                </div>
-                <p>方式一/二/三的同學，你的 ngrok 畫面應該長這樣（從這裡複製網址）：</p>
-                <img src="images/CH05/ch05_07_ngrok_running.png" alt="ngrok 運行畫面 — 複製 Forwarding 網址" class="screenshot" style="max-height: 200px; object-fit: contain;">
-                <p>現在要做最後一步：告訴 LINE「我的龍蝦在這裡，有訊息請送過來」——就像在郵局登記收件地址。</p>
+                <p>不管用哪種安裝方式，最後都要做這一步：告訴 LINE「我的龍蝦在這裡，有訊息請送過來」——就像在郵局登記收件地址。</p>
 
                 <img src="images/CH05/ch05_05_line_webhook.png" alt="設定 LINE Webhook" class="screenshot">
 
@@ -771,7 +602,7 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     你按下 <strong>Verify</strong> 之後，LINE 畫面要顯示 <strong>Success</strong>。<br>
                     如果不是 Success，就先不要做下一步配對，先把網址或通道設定修好。
                 </div>
-                <span class="slide-number">10 / 17</span>
+                <span class="slide-number">10 / 16</span>
             </div>
         </div>
 
@@ -815,20 +646,13 @@ echo "https://${CODESPACE_NAME}-18789.app.github.dev"
                     後面的推播、HEARTBEAT、通知技能都會再用到這個值。
                 </div>
                 <div class="box warning">
-                    <strong>LINE 顯示「access not configured」怎麼辦？</strong><br>
-                    這代表龍蝦收到訊息了，但還沒認識你。這是<strong>正常的第一次訊息</strong>！<br>
-                    看 LINE 上龍蝦回覆的<strong>配對碼</strong>（pairing code），然後在 PowerShell 執行：<br>
-                    <code>openclaw pairing approve line 配對碼</code><br>
-                    輸入完再回 LINE 傳第二次訊息，龍蝦就會正常回覆了。
-                </div>
-                <div class="box warning">
                     <strong>如果你傳了訊息卻完全沒收到配對碼：</strong><br>
                     先回頭檢查三件事：<br>
-                    1. Gateway 還有沒有在跑（<code>openclaw gateway status</code>）<br>
+                    1. Gateway 還有沒有在跑<br>
                     2. Webhook Verify 是不是 Success<br>
                     3. LINE 官方帳號是不是已經加好友，而且自動回應訊息已停用
                 </div>
-                <span class="slide-number">11 / 17</span>
+                <span class="slide-number">11 / 16</span>
             </div>
         </div>
 
@@ -864,116 +688,32 @@ openclaw gateway status
 # 換 AI 模型（不用重新安裝！）
 openclaw config set agents.defaults.model.primary "gemini-3-flash"
 openclaw gateway restart</pre>
-
-                <h3>進階狀態檢查（從 Liang.cmd 學來的）</h3>
-                <p>除了 <code>doctor</code>，你也可以手動逐項檢查：</p>
-                <pre>
-# 檢查 port 18789 有沒有在用（Gateway 跑在這個 port）
-Get-NetTCPConnection -LocalPort 18789
-
-# 檢查 node 程序有沒有在跑
-Get-Process node
-
-# 檢查 ngrok 程序有沒有在跑
-Get-Process ngrok
-
-# 用瀏覽器測試 Gateway 首頁
-# → 打開 http://127.0.0.1:18789/  看到 Dashboard 就是正常
-
-# 查看最近的錯誤紀錄
-Get-Content "$env:TEMP\openclaw\openclaw-*.log" -Tail 20</pre>
-
-                <div class="box info">
-                    <strong>重要路徑速查（Windows）：</strong><br>
-                    設定檔：<code>C:\Users\你\.openclaw\openclaw.json</code><br>
-                    人格檔案：<code>C:\Users\你\.openclaw\workspace\</code><br>
-                    錯誤紀錄：<code>%TEMP%\openclaw\openclaw-YYYY-MM-DD.log</code><br>
-                    自動安裝的 ngrok：<code>C:\OpenClaw_Auto\ngrok_dir\ngrok.exe</code><br>
-                    ngrok log：<code>C:\OpenClaw_Auto\ngrok-agent.log</code>
-                </div>
-
                 <div class="box info">
                     <strong>新手先記兩個檢查就夠：</strong><br>
                     如果你懷疑沒裝好，先跑 <code>openclaw doctor</code>。<br>
-                    如果你懷疑龍蝦根本沒在跑，再跑 <code>openclaw gateway status</code>。<br>
-                    如果以上都沒問題但 LINE 不回，打開 <code>http://127.0.0.1:18789/</code> 看看。
+                    如果你懷疑龍蝦根本沒在跑，再跑 <code>openclaw gateway status</code>。
+                </div>
+                <div class="box info">
+                    <strong><code>openclaw doctor -fix</code> 是做什麼？</strong><br>
+                    它會在檢查完之後，嘗試自動修復一部分常見的小問題。<br>
+                    可以把它理解成「先檢查，再幫你順手修能修的地方」。
                 </div>
                 <div class="box warning">
                     <strong>學生最實用的判讀方法：</strong><br>
                     <code>doctor</code> 裡如果一堆都是 ✅，代表安裝大致正常。<br>
                     如果有 ❌，就先修那一項，不要同時亂改很多地方。
                 </div>
-                <span class="slide-number">12 / 17</span>
-            </div>
-        </div>
-
-        <!-- Slide 13: 每日啟動 SOP 與故障排除 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>5.8b 每日啟動 SOP & 故障排除</h2>
-                <p>安裝只做一次，但<strong>每天開機都要重新啟動龍蝦</strong>。這一頁是你的「每日開機清單」和「故障自救手冊」。</p>
-
-                <h3>每日啟動流程（地端方式一/二/三）</h3>
-                <div style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 20px; margin: 10px 0;">
-                    <span style="color: #e65100; font-weight: 600;">步驟 1：</span>打開 PowerShell，重啟 Gateway<br>
-                    <pre style="margin: 8px 0;">openclaw gateway restart</pre>
-                    <span style="color: #e65100; font-weight: 600;">步驟 2：</span>啟動 ngrok（另開一個 PowerShell 視窗）<br>
-                    <pre style="margin: 8px 0;">ngrok http 18789</pre>
-                    <span style="color: #e65100; font-weight: 600;">步驟 3：</span>等 ngrok 出現 <code>Forwarding</code> 網址後，打開瀏覽器確認<br>
-                    <pre style="margin: 8px 0;">http://127.0.0.1:18789/</pre>
-                    <span style="color: #1b5e20; font-weight: 600;">看到 Dashboard 頁面 → 代表 Gateway OK</span><br><br>
-                    <span style="color: #e65100; font-weight: 600;">步驟 4：</span>如果 ngrok 重啟換了新網址 → 去 LINE 後台更新 Webhook URL
-                </div>
-
                 <div class="box warning">
-                    ⚠️ <strong>免費版 ngrok 每次重啟網址都會變！</strong>要把新的 <code>https://xxxx.ngrok-free.app/line/webhook</code> 貼到 LINE 後台。付費版或 Cloudflare Tunnel（CH12）可以固定網址。
+                    <strong>使用時機：</strong><br>
+                    先跑一次 <code>openclaw doctor</code> 看哪裡有問題。<br>
+                    如果只是一般設定或相依套件的小錯誤，再試 <code>openclaw doctor -fix</code>。<br>
+                    如果是 Webhook、Token、路徑貼錯這種資料問題，還是要手動改。
                 </div>
-
-                <h3>快速狀態檢查（懷疑哪裡壞了就跑這些）</h3>
-                <table style="font-size: 15px;">
-                    <tr><th style="width: 40%;">檢查項目</th><th>指令 / 方法</th></tr>
-                    <tr><td>Gateway 有沒有在跑</td><td><code>openclaw gateway status</code></td></tr>
-                    <tr><td>Dashboard 打得開嗎</td><td>瀏覽器開 <code>http://127.0.0.1:18789/</code></td></tr>
-                    <tr><td>ngrok 有沒有在跑</td><td>看 ngrok 視窗有沒有 <code>Forwarding</code> 那一行</td></tr>
-                    <tr><td>LINE Webhook 通嗎</td><td>LINE 後台按 <strong>Verify</strong> → 要顯示 Success</td></tr>
-                    <tr><td>全面健康檢查</td><td><code>openclaw doctor</code></td></tr>
-                    <tr><td>最近的錯誤紀錄</td><td>查看 log：<code>%TEMP%\openclaw\</code> 資料夾內</td></tr>
-                </table>
-
-                <h3>從零恢復（什麼都爛掉時的急救）</h3>
-                <pre>
-# 1. 確認 OpenClaw 還在
-openclaw --version
-
-# 2. 強制重裝 Gateway（不影響設定檔）
-openclaw gateway install --force
-
-# 3. 重啟 Gateway
-openclaw gateway restart
-
-# 4. 啟動 ngrok
-ngrok http 18789
-
-# 5. 複製新的 ngrok 網址，去 LINE 後台更新 Webhook
-# 6. LINE 後台按 Verify → Success
-# 7. 第一次訊息若要求授權：
-openclaw pairing approve line 你的配對碼</pre>
-
-                <div class="box success">
-                    ✅ <strong><code>gateway install --force</code></strong> 是你的「終極急救鍵」——它會重新安裝 Gateway 的系統服務，但<strong>不會刪除你的設定檔和 workspace</strong>。大部分「不知道為什麼壞掉」的問題跑完這個就會好。
-                </div>
-
-                <div class="box info">
-                    <strong>Codespaces / Zeabur 用戶看這裡：</strong><br>
-                    你不需要跑 ngrok，也不需要每天啟動。<br>
-                    Codespaces 閒置 30 分鐘會休眠，回 GitHub 重新啟動就好。<br>
-                    Zeabur 是 24 小時運行，不需要手動啟動。
-                </div>
-                <span class="slide-number">13 / 17</span>
+                <span class="slide-number">12 / 16</span>
             </div>
         </div>
 
-        <!-- Slide 14: Mac 使用者安裝指南 -->
+        <!-- Slide 13: Mac 使用者安裝指南 -->
         <div class="slide">
             <div class="content-card">
                 <h2>🍎 Mac 使用者安裝指南</h2>
@@ -1005,7 +745,7 @@ openclaw pairing approve line 你的配對碼</pre>
                     如果你不想處理系統差異，直接走 <strong>Codespaces</strong> 會最省事。<br>
                     如果你熟悉 Terminal，再走手動安裝或 Ollama。
                 </div>
-                <span class="slide-number">14 / 17</span>
+                <span class="slide-number">13 / 16</span>
             </div>
         </div>
 
@@ -1044,7 +784,7 @@ openclaw gateway restart</pre>
                     先把 <code>C:\Users\user\.openclaw\workspace\</code> 整個備份一份。<br>
                     對新手來說，先備份再更新最安心。
                 </div>
-                <span class="slide-number">15 / 17</span>
+                <span class="slide-number">14 / 16</span>
             </div>
         </div>
 
@@ -1087,20 +827,13 @@ openclaw gateway restart</pre>
                         <td><strong>ngrok 重啟換網址</strong></td>
                         <td>免費版每次重啟都換網址，需要更新 LINE Webhook URL</td>
                     </tr>
-                    <tr>
-                        <td><strong>不知道為什麼壞掉了</strong></td>
-                        <td>終極急救：<code>openclaw gateway install --force</code> → <code>openclaw gateway restart</code>（重裝 Gateway 但不影響設定檔）</td>
-                    </tr>
                 </table>
                 <div class="box info">
-                    <strong>排查黃金順序（從 Liang.cmd 學來的）：</strong><br>
-                    <strong>第一步</strong>：<code>openclaw gateway status</code> → Gateway 在跑嗎？<br>
-                    <strong>第二步</strong>：瀏覽器開 <code>http://127.0.0.1:18789/</code> → Dashboard 打得開嗎？<br>
-                    <strong>第三步</strong>：看 ngrok 視窗 → 有 Forwarding 網址嗎？<br>
-                    <strong>第四步</strong>：LINE 後台按 Verify → 顯示 Success 嗎？<br>
-                    哪一步失敗就修哪一步，<strong>不要跳步</strong>。
+                    <strong>FAQ 看法：</strong><br>
+                    如果你現在卡住，不要一口氣看完整張表。<br>
+                    先找最接近你眼前症狀的那一列，例如「不是可辨識的命令」、「Webhook 驗證失敗」、「龍蝦回兩次」。
                 </div>
-                <span class="slide-number">16 / 17</span>
+                <span class="slide-number">15 / 16</span>
             </div>
         </div>
 
@@ -1138,7 +871,7 @@ openclaw gateway restart</pre>
                         前往 CH6 ➡️
                     </a>
                 </div>
-                <span class="slide-number">17 / 17</span>
+                <span class="slide-number">16 / 16</span>
             </div>
         </div>
 
